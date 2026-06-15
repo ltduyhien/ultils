@@ -1,0 +1,934 @@
+================================================================================
+DAY-ONE AT TELIA — FIELD REFERENCE
+================================================================================
+For: Tran Duy Hien Le · InfoSys consultant · Project Zaara
+Context: Office visit, laptop pickup, setup session with senior Telia engineer
+Last updated: prepared the night before
+--------------------------------------------------------------------------------
+HOW TO USE THIS FILE:
+- Skim sections 1-3 tonight so the conversation feels natural tomorrow.
+- Keep sections 4-9 open on your phone or second screen during setup.
+- Sections 10-12 are after-the-fact - read on the train home.
+- Don't read this out loud. It's a reference, not a script.
+================================================================================
+
+
+================================================================================
+SECTION 1 - WHAT TOMORROW ACTUALLY LOOKS LIKE
+================================================================================
+
+The shape of the day will probably be:
+
+09:00-10:00  Arrive, security desk, badge issued, escort to floor
+10:00-10:30  Introductions to the team, brief overview of where to sit
+10:30-12:30  Laptop handover, initial Telia OS image setup
+             - Windows login with Telia AD account
+             - First-boot policies push (BitLocker, antivirus, MDM)
+             - Network certificate enrollment
+             - Email/Teams/SharePoint sign-in
+12:30-13:30  Lunch (often informal, often joined by your senior)
+13:30-16:30  Technical setup with the senior engineer
+             - WSL2 install and Linux distribution
+             - Git, SSH keys, secrets store
+             - VPN / Telia network access
+             - GRC / Tiga role provisioning (or kicked off)
+             - Access to Zaara, Veera, Eva (often takes days, not minutes)
+             - Tooling: IDEs, terminals, project clones
+16:30-17:00  Wrap-up, what's next, follow-up actions captured
+
+This is a 50/50 estimate. Probably runs slower because corporate setup always
+runs slower than you think. Don't panic if you don't finish everything today.
+Two or three days to be fully operational is normal.
+
+
+================================================================================
+SECTION 2 - THE POSTURE - HOW TO APPEAR PROFESSIONAL
+================================================================================
+
+The single thing that signals "I've done this before" is COMPOSURE WITH
+UNCERTAINTY. New engineers signal newness by either pretending to know
+everything or by being visibly anxious. Seniors signal seniority by being
+calm about not knowing something specific while clearly being competent.
+
+Three rules:
+
+1. ASK QUESTIONS THAT SHOW STRUCTURE, NOT QUESTIONS THAT SHOW LACK.
+   Bad:  "How do I do X?"
+   Good: "What's the team's preferred way to do X - I've seen A and B before,
+          and want to match how you do it."
+   The second shows you have a frame and you're calibrating, not learning
+   from zero.
+
+2. WHEN YOU DON'T KNOW SOMETHING, SAY IT CLEANLY. NO HEDGING.
+   Bad:  "Yeah, I think I... um, I've kind of done that before..."
+   Good: "Haven't used that specific tool before - quick walkthrough would
+          help. I'll take notes."
+   Senior engineers respect "I don't know yet" infinitely more than fumbled
+   pretending. Pretending gets caught immediately and is the fastest way to
+   lose credibility.
+
+3. TAKE NOTES VISIBLY. ON PAPER OR IN A NOTEBOOK APP.
+   It signals you treat their time as valuable. It also means you don't ask
+   the same question twice, which is the second-fastest way to lose
+   credibility.
+
+
+================================================================================
+SECTION 3 - OPENING LINES AND CONVERSATION STARTERS
+================================================================================
+
+----- ARRIVAL / GREETING -----
+
+If meeting your senior in person for first time:
+  "Hi, [name] - good to meet you in person. Thanks for setting time aside
+   today, I know setup days eat your calendar."
+
+If you've spoken on Teams before:
+  "Good to finally put a face to the name. Thanks for the prep so far."
+
+Don't open with weather or commute. Open with appreciation for their time
+and a light acknowledgement that today will be a setup grind.
+
+
+----- OPENING TOPIC - SET EXPECTATIONS UPFRONT -----
+
+After settling in, before diving into setup:
+
+  "Before we dive in - mind if I ask how you usually like to run these
+   setup days? I can do the mechanical parts independently if you point
+   me at docs, or stay close if you'd rather walk through together.
+   Either's fine - just want to match your rhythm."
+
+This does three things:
+- Shows you respect their time
+- Lets them pick the mode that suits them
+- Signals you have agency (can work independently) but aren't pushy
+
+
+----- WHEN HE'S DRIVING THE SETUP - QUESTIONS TO ASK -----
+
+These are good to drop in as topics come up:
+
+ON THE LAPTOP IMAGE:
+  "Is the corporate image the same for everyone or are there role-specific
+   profiles? Asking because I'll need WSL and Docker - want to know if those
+   are pre-allowed or need a request."
+
+ON NETWORK / CERTIFICATES:
+  "What's the certificate story here - mTLS for internal services?
+   Self-signed CA we need to trust? Just want to know what to expect when
+   curl starts complaining."
+
+ON SECRETS:
+  "Where does the team store credentials and tokens? HashiCorp Vault,
+   Azure Key Vault, something Telia-built? I'd rather use the supported
+   pattern from day one than build a habit you'll have to break later."
+
+ON GRC / TIGA:
+  "What's the realistic timeline for Tiga roles - days, weeks? And is there
+   read-only access I can get on day one to start learning while the full
+   provisioning runs?"
+
+ON PROXY:
+  "Is there a corporate proxy I need to configure? Outbound through one
+   gateway, or is npm/pip/apt going direct?"
+
+ON THE TEAM'S TOOLING DEFAULTS:
+  "What's the team's editor of choice - VS Code, JetBrains, vim? Asking
+   because of any shared configs, snippets, or extensions worth picking up."
+
+ON DEVELOPMENT WORKFLOW:
+  "How does the team normally work on Zaara configs - clone a repo locally,
+   work in WSL, push to a central git? Or is it more SSH into a jumpbox
+   and edit there?"
+
+
+----- WHEN YOU'RE STUCK ON SOMETHING - HOW TO ASK -----
+
+Bad:
+  "It's not working."
+
+Good (three-line pattern):
+  "I'm hitting [SPECIFIC ERROR]. I've tried [WHAT YOU TRIED] and ruled out
+   [WHAT YOU CHECKED]. My guess is [HYPOTHESIS] - does that match?"
+
+This shows:
+- You can describe what's wrong precisely
+- You attempted something before asking
+- You have a hypothesis (even if wrong)
+- You're asking for confirmation, not rescue
+
+
+----- FOLLOW-UP QUESTIONS THAT LAND WELL -----
+
+After he explains something, useful follow-ups:
+
+  "How long has the team been on this pattern? Anything that's broken
+   recently that's good to know about?"
+
+  "Is there a doc somewhere with this written down, or is it tribal
+   knowledge I should capture for the next person?"
+
+  "What's the failure mode here - when this breaks, what's the symptom?"
+
+  "Is there a way I can verify this is working end-to-end right now?"
+
+The last one is the most senior question - it shows you think in terms of
+proving things work, not just assuming they do.
+
+
+----- TOPICS WORTH BRINGING UP -----
+
+If natural opportunities arise:
+
+ABOUT THE PROJECT:
+- "Anything I should know about Zaara that isn't in the KT slides?"
+- "What's the current state of the platform - steady, or are we in the
+   middle of any active fires?"
+- "Are there recurring incidents worth knowing about as I ramp up?"
+
+ABOUT THE TEAM:
+- "How does the team handle on-call - Bronze service hours mean no
+   weekend rota, right?"
+- "Daily stand-up, weekly ops review, anything else regular I should be on?"
+- "Who else should I introduce myself to in the first week?"
+
+ABOUT WORKING WITH TELIA:
+- "Who's the main Telia contact for day-to-day operational matters?"
+- "Anything I should know about working with the Accenture side -
+   Nelli/SAMI specifically?"
+- "When something needs CAB approval, what's the realistic lead time
+   for a routine Zaara change?"
+
+
+----- DON'T ASK -----
+
+- Anything about salary, hours, vacation - not the time, not the person
+- Strong opinions about tools you haven't used here yet
+- Anything that signals you're already thinking about leaving (career
+   trajectory questions, etc.)
+- Personal stuff about the senior unless he opens it himself
+- Questions you could trivially Google
+
+
+================================================================================
+SECTION 4 - WINDOWS / TELIA LAPTOP INITIAL SETUP
+================================================================================
+
+The corporate image probably takes care of:
+- Windows 11 Enterprise (most likely)
+- BitLocker disk encryption
+- Defender / corporate antivirus
+- MDM (Intune most likely - Telia is heavily Microsoft-stack)
+- Email (Outlook) and Teams pre-installed
+- Certificate enrolment
+
+Things to verify yourself:
+
+----- Check Windows version and edition -----
+  PowerShell:
+  > winver
+  Expected: shows version like "Windows 11 Enterprise 23H2" or similar
+
+  > Get-ComputerInfo | Select WindowsProductName, WindowsVersion, OsHardwareAbstractionLayer
+  Expected: WindowsProductName : Windows 11 Enterprise
+            WindowsVersion     : 23H2 (or newer)
+
+----- Check BitLocker is enabled -----
+  > manage-bde -status C:
+  Expected: "Conversion Status: Fully Encrypted"
+            "Protection Status: Protection On"
+  If "Protection Off" - flag to IT, this is required for compliance.
+
+----- Check domain join / Entra (Azure AD) join -----
+  > dsregcmd /status
+  Expected: AzureAdJoined : YES
+            DomainJoined  : YES (or NO if pure Entra)
+            DeviceName    : something like TELIA-LAPxxxxxx
+
+----- Check Intune enrolment -----
+  > dsregcmd /status | findstr "MdmEnrollment"
+  Or check Settings -> Accounts -> Access work or school
+
+----- Get your machine identifier -----
+  > hostname
+  Expected: laptop hostname (often something like FI-W-xxxxx)
+
+  > whoami
+  Expected: TELIA\hien.tran or similar
+
+  > whoami /upn
+  Expected: hien.tran.le@telia.com or similar
+
+
+================================================================================
+SECTION 5 - WSL2 (WINDOWS SUBSYSTEM FOR LINUX)
+================================================================================
+
+WSL2 is almost certainly the path for any Linux work. Telia might pre-allow
+or require a request. If you can't install yourself, ask early.
+
+----- Check if WSL is available / installed -----
+  PowerShell as Administrator:
+  > wsl --status
+  Expected (fresh): "The Windows Subsystem for Linux is not installed"
+  Expected (installed): shows default distro and default version
+
+  > wsl --version
+  Expected (modern): WSL version: 2.x.x.x
+                     Kernel version: 5.15.x
+
+----- Install WSL2 (if not yet installed) -----
+  PowerShell as Administrator:
+  > wsl --install
+  This installs WSL2 default features and Ubuntu by default. Reboot required.
+
+  Alternative explicit:
+  > wsl --install -d Ubuntu-22.04
+  (or whatever distro the team uses - ASK FIRST)
+
+----- List available distributions -----
+  > wsl --list --online
+  Expected: list including Ubuntu-22.04, Ubuntu-24.04, Debian, Kali, etc.
+
+----- List installed distributions -----
+  > wsl --list --verbose
+  Expected:
+    NAME            STATE           VERSION
+  * Ubuntu-22.04    Running         2
+
+----- Enter your distro -----
+  > wsl
+  or
+  > wsl -d Ubuntu-22.04
+  Expected: drops you into a bash prompt: hien@FI-W-xxxxx:~$
+
+----- First-time Ubuntu setup -----
+  On first launch it asks for username and password (this is the WSL Linux
+  user, separate from your Windows / Telia AD account).
+  Choose something simple - it's local to WSL.
+
+----- Update package lists and upgrade -----
+  $ sudo apt update
+  Expected: "Get:1 ..., Get:2 ..., Reading package lists... Done"
+
+  $ sudo apt upgrade -y
+  Expected: list of packages, "0 upgraded" if already current, or
+            shows pkgs to upgrade
+
+  If "Could not resolve" errors - it's a proxy/network issue, see Section 8.
+
+----- Check WSL2 networking -----
+  $ ip addr show eth0
+  Expected: an internal IP like 172.x.x.x (WSL bridges through Windows)
+
+  $ cat /etc/resolv.conf
+  Expected: nameserver pointing to Windows host or corporate DNS
+
+
+================================================================================
+SECTION 6 - ESSENTIAL TOOLS IN WSL / LINUX
+================================================================================
+
+The standard toolkit you'll want installed. Run each one to verify version.
+
+----- Git -----
+  $ sudo apt install -y git
+  $ git --version
+  Expected: git version 2.x.x
+
+  Configure your identity (CRITICAL - do this before any commit):
+  $ git config --global user.name "Hien Le"
+  $ git config --global user.email "hien.tran.le@telia.com"
+       (use your actual Telia email - confirm format with senior)
+  $ git config --global init.defaultBranch main
+  $ git config --global pull.rebase false
+
+  Verify:
+  $ git config --global --list
+  Expected: shows user.name, user.email, init.defaultBranch entries
+
+----- curl, wget (almost certainly pre-installed) -----
+  $ curl --version
+  Expected: curl 7.x or 8.x
+
+  $ wget --version
+  Expected: GNU Wget 1.21.x
+
+----- jq (essential for JSON, you'll use it for OpenSearch) -----
+  $ sudo apt install -y jq
+  $ jq --version
+  Expected: jq-1.6 or jq-1.7
+
+  Quick test:
+  $ echo '{"name":"test","value":42}' | jq .
+  Expected:
+    {
+      "name": "test",
+      "value": 42
+    }
+
+----- Python 3 + pip -----
+  $ python3 --version
+  Expected: Python 3.10.x or 3.11.x or 3.12.x
+
+  $ pip3 --version
+  If missing:
+  $ sudo apt install -y python3-pip python3-venv
+  $ pip3 --version
+  Expected: pip 23.x or 24.x
+
+----- Build tools (if not present, you'll hit walls compiling anything) -----
+  $ sudo apt install -y build-essential
+  $ gcc --version
+  Expected: gcc (Ubuntu 11.x.x) or similar
+
+----- Networking tools -----
+  $ sudo apt install -y net-tools dnsutils iputils-ping traceroute
+  Verify:
+  $ ping -c1 google.com         (or any allowed external host)
+  $ nslookup telia.fi           (or any Telia internal host once on VPN)
+  $ traceroute telia.fi
+
+----- Text editors -----
+  $ nano --version              (almost certainly there)
+  $ vim --version               (might need: sudo apt install -y vim)
+
+----- tmux (for keeping sessions alive across SSH) -----
+  $ sudo apt install -y tmux
+  $ tmux -V
+  Expected: tmux 3.2 or similar
+
+
+================================================================================
+SECTION 7 - SSH KEYS, CREDENTIALS, AND SECRETS
+================================================================================
+
+SSH keys are how you authenticate to git servers and remote machines.
+Generate them in WSL, not in Windows directly - that way the Linux toolchain
+sees them natively.
+
+----- Generate SSH key (Ed25519 - modern, recommended) -----
+  $ ssh-keygen -t ed25519 -C "hien.tran.le@telia.com"
+  Expected prompts:
+    Enter file in which to save the key (/home/hien/.ssh/id_ed25519):
+      [press Enter for default]
+    Enter passphrase (empty for no passphrase):
+      [use a strong passphrase - it's protecting access to internal git]
+    Enter same passphrase again:
+  Expected output:
+    Your identification has been saved in /home/hien/.ssh/id_ed25519
+    Your public key has been saved in /home/hien/.ssh/id_ed25519.pub
+    The key fingerprint is:
+    SHA256:... hien.tran.le@telia.com
+
+----- View the public key (paste into GitLab/Bitbucket/etc) -----
+  $ cat ~/.ssh/id_ed25519.pub
+  Expected: starts with "ssh-ed25519 AAAA..." and ends with your email
+
+----- Start ssh-agent and add the key (saves typing passphrase repeatedly) -----
+  $ eval "$(ssh-agent -s)"
+  Expected: Agent pid xxxxx
+
+  $ ssh-add ~/.ssh/id_ed25519
+  Expected: prompts for passphrase, then "Identity added"
+
+  $ ssh-add -l
+  Expected: shows your key fingerprint and email
+
+----- Test SSH to git server (assuming GitLab) -----
+  $ ssh -T git@gitlab.telia.com
+       (or whatever the actual hostname is - ASK)
+  Expected on success: "Welcome to GitLab, @hien.tran.le!" or similar
+  If "Permission denied (publickey)": key not added on the server side yet
+
+----- Check SSH config (~/.ssh/config) -----
+  Useful pattern for managing multiple hosts:
+  $ cat > ~/.ssh/config <<'EOF'
+  Host gitlab.telia.com
+      User git
+      IdentityFile ~/.ssh/id_ed25519
+      IdentitiesOnly yes
+  EOF
+  $ chmod 600 ~/.ssh/config
+
+----- SECRETS - WHERE THEY BELONG (AND DON'T) -----
+  - NEVER commit credentials to git. Period.
+  - NEVER store passwords in plain text in your home directory.
+  - Use the team's secrets manager (HashiCorp Vault, Azure Key Vault,
+    or Telia's equivalent - ASK).
+  - Environment variables are fine for short-lived process secrets,
+    but treat .env files as sensitive.
+  - For Git, use the credential helper:
+
+  $ git config --global credential.helper store
+       (stores in ~/.git-credentials - works but plaintext, ask team
+        if there's a better option like libsecret or a Windows helper)
+
+  Or for Windows credential integration from WSL:
+  $ git config --global credential.helper \
+    "/mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"
+
+----- GPG (if the team signs commits) -----
+  Some teams require GPG-signed commits. Ask.
+  $ sudo apt install -y gnupg
+  $ gpg --gen-key      (or gpg --full-generate-key for more options)
+
+
+================================================================================
+SECTION 8 - CORPORATE NETWORK - PROXY, CERTIFICATES, VPN
+================================================================================
+
+Telia almost certainly has:
+- A corporate proxy for outbound HTTP/HTTPS
+- An internal certificate authority (CA) - their own root cert
+- A VPN for accessing internal resources off the corporate LAN
+
+These are the most common day-one sources of "tools don't work" issues.
+
+----- DETECT PROXY ENVIRONMENT VARIABLES -----
+  $ env | grep -i proxy
+  If shows entries like:
+    http_proxy=http://proxy.telia.com:8080
+    https_proxy=http://proxy.telia.com:8080
+    no_proxy=localhost,127.0.0.1,.telia.com
+  Then proxy is configured. Otherwise, ask if one's needed.
+
+----- SET PROXY VARIABLES (if needed) -----
+  Add to ~/.bashrc or ~/.zshrc:
+  export http_proxy="http://proxy.telia.com:8080"
+  export https_proxy="http://proxy.telia.com:8080"
+  export no_proxy="localhost,127.0.0.1,.telia.com,.telia.fi"
+  export HTTP_PROXY=$http_proxy
+  export HTTPS_PROXY=$https_proxy
+  export NO_PROXY=$no_proxy
+
+  Reload:
+  $ source ~/.bashrc
+
+----- TEST PROXY -----
+  $ curl -v https://www.google.com
+  Expected: full handshake, response. If "Could not resolve" -> proxy not
+  set correctly. If "SSL certificate problem" -> see CA section below.
+
+----- TRUST THE CORPORATE ROOT CA -----
+  Telia's internal services use internal CA-signed certificates. Your
+  laptop trusts these out of the box because of Windows policy, but WSL
+  and tools like curl, pip, npm DON'T automatically inherit this trust.
+
+  Symptom of missing trust:
+    curl -v https://internal-tool.telia.fi
+    -> "SSL certificate problem: unable to get local issuer certificate"
+
+  Fix - get the corporate root CA cert (ASK for the file - probably .crt
+  or .pem format) and install it system-wide:
+
+  $ sudo cp telia-root-ca.crt /usr/local/share/ca-certificates/
+  $ sudo update-ca-certificates
+  Expected: "1 added, 0 removed; done."
+
+  Verify:
+  $ curl -v https://internal-tool.telia.fi
+  Should now succeed.
+
+  PYTHON specifically may need its own CA bundle:
+  $ pip install certifi
+  $ python3 -c "import certifi; print(certifi.where())"
+  -> shows path to cacert.pem
+  Then append the Telia root CA to that file or set:
+  $ export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+  $ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+
+  NPM:
+  $ npm config set cafile /etc/ssl/certs/ca-certificates.crt
+
+  GIT:
+  $ git config --global http.sslCAInfo /etc/ssl/certs/ca-certificates.crt
+
+----- VPN CHECK -----
+  Telia likely uses one of: Cisco AnyConnect, GlobalProtect, Zscaler.
+  These run on Windows and tunnel before WSL sees the network.
+
+  $ ip route
+  Look for routes that suggest VPN is active (often a tun0 interface
+  on the Windows side, but WSL2 sees it as transparent eth0).
+
+  Test internal hostname:
+  $ curl -v https://intranet.telia.com    (or whatever you're given)
+  If hangs or fails -> VPN probably down or not connected.
+
+----- DNS CHECK -----
+  $ cat /etc/resolv.conf
+  Expected: nameserver entries pointing to corporate DNS once VPN is up
+
+  $ nslookup zaara-fi-instance-01.telia.fi    (or whatever)
+  Expected: resolution to an internal IP. Tests both DNS and VPN.
+
+----- PORT CHECK FROM WSL -----
+  $ nc -zv internal-host 443
+  or
+  $ curl -v telnet://internal-host:443
+  Useful for testing whether a specific port is reachable through the
+  corporate network.
+
+
+================================================================================
+SECTION 9 - DEVELOPMENT TOOLING
+================================================================================
+
+----- VS Code (most likely the team default) -----
+  Install on Windows side, then add the "Remote - WSL" extension. This
+  lets you edit WSL files in VS Code natively.
+
+  In WSL, you can now type:
+  $ code .
+  And VS Code opens with the current WSL directory mounted. Magic.
+
+  Useful extensions to install:
+  - Remote - WSL                       (you'll need this immediately)
+  - GitLens                            (git history overlay)
+  - YAML                               (for Zabbix templates, K8s manifests)
+  - Docker                             (if you'll touch containers)
+  - REST Client                        (for testing the OpenSearch API in-editor)
+
+  Team-specific extensions: ASK. There may be a recommended-extensions
+  list in a shared repo.
+
+----- Docker / Podman (only if needed) -----
+  Telia may or may not allow Docker on workstations. Ask.
+  Docker Desktop for Windows + WSL2 backend is the standard pattern.
+
+  In WSL2 once Docker Desktop is set up:
+  $ docker --version
+  Expected: Docker version 24.x or 25.x
+
+  $ docker run hello-world
+  Expected: "Hello from Docker!" message
+
+----- Node.js (if any JS work) -----
+  Use nvm for Node so you can manage versions:
+  $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+  $ source ~/.bashrc
+  $ nvm install --lts
+  $ node --version
+  Expected: v20.x.x or v22.x.x
+
+  CONFIRM NPM REGISTRY:
+  Telia may have an internal mirror:
+  $ npm config get registry
+  Default: https://registry.npmjs.org/
+  Internal: probably https://artifacts.telia.com/npm/ (or similar - ASK)
+  Set if needed: $ npm config set registry https://artifacts.telia.com/npm/
+
+----- Python virtual environments -----
+  Always use venvs for project work, never install with sudo pip.
+  $ mkdir -p ~/projects/scratch && cd ~/projects/scratch
+  $ python3 -m venv .venv
+  $ source .venv/bin/activate
+  $ pip install --upgrade pip
+  $ pip install opensearch-py    (when you need it for Veera/Eva work)
+  $ deactivate
+
+----- Zabbix / OpenSearch client libraries (eventually, not day one) -----
+  Python:
+  $ pip install pyzabbix opensearch-py
+  These let you script against the Zabbix API and OpenSearch API.
+
+----- Terminal multiplexer setup (tmux quick config) -----
+  $ cat > ~/.tmux.conf <<'EOF'
+  set -g mouse on
+  set -g history-limit 10000
+  setw -g mode-keys vi
+  EOF
+
+
+================================================================================
+SECTION 10 - TELIA-SPECIFIC THINGS TO EXPECT
+================================================================================
+
+These come up in the access chain we've discussed. Confirm during setup:
+
+----- H2 REGISTRATION -----
+- The Telia identity registry. You should be registered as RM (Resource
+  Manager) or TS (Technical Specialist) before any role delegation works.
+- The senior may already have started this on your behalf, or it may need
+  to happen today.
+- Ask: "Am I already registered in H2? What's my role - RM or TS?"
+
+----- GRC ROLE DELEGATION -----
+- Once H2 is set, the GRC role gets delegated by the Resource Owner
+  (the KT material referenced "Jorge").
+- Ask: "Has the GRC delegation been initiated? Realistic timeline?"
+
+----- TIGA ROLES -----
+- These gate everything you do in Telia Now (incident handling, change
+  requesting).
+- Names you'll likely need:
+  * TeliaNOW FI Incident OSS DM Fixed DevOps    (incident handling)
+  * TeliaNOW FI Change Requester Internal       (raising CRs)
+  * TeliaNOW FI Chg Builder IT Prod DM&C BB     (executing changes)
+- Ask: "Which Tiga roles are being requested for me? Are there
+       read-only ones I can get sooner?"
+
+----- ACCESS TO ZAARA, VEERA, EVA -----
+- These are the actual systems you'll work on. Access usually trails
+  the identity provisioning by days.
+- Ask: "What's the access pattern for Zaara - SSH to a jumphost,
+       VPN + direct, or via Telia Now's UI only?"
+
+----- TELIA ENTERPRISE TOOLS -----
+- Confluence or SharePoint: documentation, usually SharePoint at Telia
+- Jira or Telia Now: ticket tracking
+- Probably an internal artifact repository (Nexus, Artifactory)
+- Probably an internal Git server (GitLab Enterprise, Bitbucket)
+- Ask: "What are the team's main documentation and code repositories?
+       Can I get access today or does that follow Tiga?"
+
+
+================================================================================
+SECTION 11 - WHAT THE SENIOR SHOULDN'T HAVE TO TELL YOU
+================================================================================
+
+Background knowledge - don't make him explain these. If he asks if you
+know any of these, a brief "yes, used it before for X" is fine.
+
+----- BASIC LINUX FILE PERMISSIONS -----
+  ls -l                            (read permissions string: drwxr-xr-x)
+  chmod 600 file                   (owner read/write only - for SSH keys)
+  chmod 755 script.sh              (owner all, group/others read+exec)
+  chown user:group file
+  sudo                             (run as root - sparingly)
+
+----- BASIC NAVIGATION -----
+  cd, ls, pwd, mkdir, rm, cp, mv, ln -s
+  find /path -name "*.log"
+  grep -r "pattern" /path
+  cat, less, head, tail
+  tail -f /var/log/something.log   (follow a log live)
+
+----- BASH BASICS -----
+  $variable
+  export FOO=bar
+  cmd1 | cmd2                      (pipe)
+  cmd > file                       (redirect stdout)
+  cmd 2> file                      (redirect stderr)
+  cmd1 && cmd2                     (run cmd2 only if cmd1 succeeds)
+  cmd1 || cmd2                     (run cmd2 only if cmd1 fails)
+
+----- PROCESS BASICS -----
+  ps aux | grep something          (find a process)
+  top, htop                        (live process viewer)
+  kill <pid>                       (signal a process)
+  systemctl status servicename     (check a systemd service)
+  journalctl -u servicename -f     (follow a service's logs)
+
+----- BASIC NETWORK INVESTIGATION -----
+  curl -v url                      (with verbose, see headers)
+  curl -k url                      (skip TLS verification - DEBUG only)
+  ss -tlnp                         (sockets listening + processes)
+  netstat -tlnp                    (older alternative)
+  dig hostname                     (DNS query)
+  nslookup hostname                (DNS query, simpler output)
+  ping host
+  traceroute host
+  nc -zv host port                 (test if port is reachable)
+
+----- GIT BASICS -----
+  git clone url
+  git status
+  git pull
+  git checkout -b feature/branch-name
+  git add -p                       (stage selectively, interactive)
+  git commit -m "message"
+  git push -u origin branch-name
+  git log --oneline -20
+
+----- THE CHECK-EVERYTHING DISCIPLINE -----
+  After setup, before declaring done:
+  - Can I clone an internal git repo?
+  - Can I push back?
+  - Can I curl a Telia internal URL successfully?
+  - Can I resolve internal DNS names?
+  - Do my IDE, terminal, and WSL all see the same git config?
+  - Did I lock my laptop when I went for coffee?
+
+
+================================================================================
+SECTION 12 - END-OF-DAY ACTIONS
+================================================================================
+
+Before leaving:
+
+1. SUMMARY EMAIL to your senior (and your InfoSys lead) - 5-line max:
+   - What got set up today
+   - What's pending (Tiga, GRC, access to X)
+   - What you'll work on tomorrow
+   - Any blockers
+   - Thanks
+
+   Template:
+   ----------------------------------------------------------------------
+   Subject: Day 1 setup - status & next steps
+
+   Hi [Senior],
+
+   Quick summary from today:
+   - Laptop set up, WSL2 + Ubuntu 22.04 working, dev tools installed
+   - SSH key generated and registered on [git server]
+   - Pending: Tiga roles (incident + change), GRC delegation,
+     Zaara environment access
+   - Tomorrow: I'll work through the KT documentation while access is
+     being provisioned, and continue on the [specific task] you
+     mentioned
+
+   Anything else you'd like me to capture or follow up on?
+
+   Thanks for the time today - really useful to walk through the setup
+   together.
+
+   Best,
+   Hien
+   ----------------------------------------------------------------------
+
+2. DOCUMENT WHAT YOU DID:
+   Create ~/notes/onboarding/day-1.md or a OneNote page. Capture:
+   - Each thing you installed and where
+   - Each credential / token created (NEVER the value, just "I have X
+     for Y" - file location, not contents)
+   - Each person you met (name, role, when to ask them what)
+   - Each question you still need to answer
+   This becomes your runbook for the next person and your reference
+   for week 1.
+
+3. LOCK YOUR LAPTOP when leaving the desk. Win+L. Always.
+
+4. STORE LAPTOP SECURELY overnight if taking home. If office-only,
+   leave it locked in your drawer if possible.
+
+5. CONFIRM WHEN YOU'RE BACK IN OFFICE - if it's not daily, agree this
+   tomorrow with the senior.
+
+
+================================================================================
+SECTION 13 - THE MENTAL DISCIPLINE - DON'T FORGET THESE
+================================================================================
+
+Things to remember even when tired:
+
+- It's okay to take 3-5 days to be fully productive. Everyone knows this.
+  Don't push for "useful today" - push for "set up properly."
+
+- Listen 70%, talk 30% on day one. The senior knows things you don't yet
+  know you need to know.
+
+- When the senior corrects you, say "good catch" or "thanks - noted" -
+  don't apologize repeatedly. Apologies pile up; corrections move on.
+
+- If you make a mistake (broke something, ran the wrong command), say
+  it immediately and clearly. Don't try to fix it silently. Senior
+  engineers respect "I just ran X and it errored - I'll back out and
+  ask before retrying" enormously.
+
+- DO NOT touch production systems on day one. Even if you have access.
+  Even if you're sure. Read-only is the only mode for week one.
+
+- DO NOT install random software from random sources. Stick to what the
+  team approves. The corporate image is curated for a reason.
+
+- DO NOT bypass anything that looks like a security control. If
+  something doesn't work because of a cert/proxy/policy, the fix is to
+  request the right access, not to work around the restriction.
+
+- DO NOT share credentials or tokens through chat/email/screenshots.
+  Use the team's secret-sharing pattern (Vault, 1Password Teams,
+  whatever they use). If unclear, ask before sharing.
+
+- Lock your laptop every time you leave the desk. Win+L.
+
+- Take breaks. Setup days are draining. A 10-minute walk between
+  install/permission/install/permission cycles keeps your judgment
+  sharp.
+
+
+================================================================================
+SECTION 14 - THE QUESTIONS TO LEAVE THE DAY WITH ANSWERS TO
+================================================================================
+
+If you walk out of the office with answers to these, you've had a good
+day:
+
+1. Who do I escalate to for technical questions in the first week?
+2. Where does the team's documentation live?
+3. Where does the team's code live? Do I have access?
+4. What's the timeline for full Tiga/GRC provisioning?
+5. What read-only access can I get TODAY to start learning?
+6. What's the team's daily/weekly rhythm (standups, reviews, on-call)?
+7. Who else should I meet in the first week?
+8. Is there a specific project / ticket / learning task I should pick
+   up first while access is being provisioned?
+9. What's the team's preferred way to ask for help when stuck?
+10. Anything specific to Telia culture I should know that isn't obvious?
+
+
+================================================================================
+SECTION 15 - EMERGENCY POCKETS - IF THINGS GO WRONG
+================================================================================
+
+If laptop won't boot:
+- Don't panic. Try the corporate IT support line first.
+- Note exactly what's on screen.
+
+If WSL won't install:
+- Probably needs admin rights or Hyper-V enabled.
+- "wsl --install" often fails on locked-down images; the senior may
+  need to enable Windows features for you.
+- Don't fight it - escalate via the right path.
+
+If you can't reach an internal site:
+- Check VPN connection first (corporate VPN app)
+- Check DNS resolution (nslookup)
+- Check certificate trust (curl -v shows the error)
+- Check proxy settings (env | grep -i proxy)
+
+If credentials don't work:
+- Don't retry many times - account lockout is real, often 3-5 failed
+  attempts.
+- After 2 failures, stop and ask.
+
+If you accidentally do something potentially serious:
+- Stop immediately. Don't try to fix it alone.
+- Tell the senior immediately. The earlier you escalate, the less
+  damage and the more credit for honesty.
+
+
+================================================================================
+SECTION 16 - FINAL THOUGHTS
+================================================================================
+
+Tomorrow isn't about impressing anyone with technical skills. The senior
+is not auditioning you on bash commands or Linux trivia. He's reading
+two things:
+
+1. Are you organized and curious?  Do you take notes, ask sharp questions,
+   verify things work end-to-end, document what you do?
+
+2. Can you handle uncertainty gracefully?  Tomorrow will involve waiting
+   for provisioning, working around blockers, and not-yet-knowing the
+   answer to things. The senior wants to see you stay productive and
+   composed when not everything works on the first try.
+
+If you nail those two, the technical mastery comes naturally over the
+weeks. The credibility from day one comes from posture and approach.
+
+The single best move you can make all day, when you don't know
+something: pause, look at him, and say:
+
+  "Walk me through that - I want to get it right."
+
+That sentence, used at the right moments, is the difference between
+"new hire who's learning" and "professional who's calibrating."
+
+
+================================================================================
+END OF REFERENCE - GOOD LUCK TOMORROW
+================================================================================
