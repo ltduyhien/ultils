@@ -1,0 +1,610 @@
+NOORA SHADOW KT PLAYBACK — FULL CORRECTED + EXPANDED SLIDE CONTENT
+=====================================================
+This replaces the previous txt version. Same corrections as before (the Daily Health
+Check slides were rebuilt because the original source mixed in content from an
+unrelated legacy system called "SevOneDDC" — confirmed by kt1_noora.txt: "SevOneDDC is
+a different old version" vs. "SevOne is [the] SevOne instance in Noora"). On top of
+that, this version adds 7 new slides for material that came up repeatedly across the
+KT/shadow transcripts but had no home in the original deck: a glossary, a Noora-vs-
+SevOneDDC callout, data retention/capacity detail, automation/crontab detail, a
+consolidated known-issues quick reference, a key-contacts map, and open items at
+handover.
+
+New slides are labelled e.g. "SLIDE 3B — NEW" and placed right after the slide they
+extend. Insert them at that point when you rebuild the deck; everything else keeps its
+original slide number so you can diff against the previous version easily.
+
+Still unresolved: Slide 2 says the shadow schedule ran "27 July to 11 August", Slide 25
+says "23 July - 6 August". No transcript states either date explicitly — confirm from
+your own records.
+=====================================================
+
+SLIDE 1 — Title
+Noora Shadow KT Playback
+(no content change)
+
+---
+
+SLIDE 2 — Noora Shadow Activities
+Schedule: 12 Shadow Sessions
+From 27 July to 11 August [DATE CONFLICTS WITH SLIDE 25 — confirm correct range]
+
+Objective
+- Knowledge Transfer: understand Noora's integration with SevOne (Noora's own SevOne NMS instance), SM/O, and Nelli, including device provisioning and data enrichment
+- Hands-on experience: participate in daily health checks, incident management, and problem resolution
+- Reverse Shadow preparation: execute tasks like application operations and user provisioning under incumbent team guidance
+- Knowledge validation: validate knowledge through tasks like device monitoring, alert management, and report rendering
+
+Scope Covered
+- Device provisioning: manage device provisioning workflows (SM/O-driven, 4 phases)
+- Technical support: configure devices, monitor SNMP settings, troubleshoot issues
+- Incident & problem management: identify, prioritize, and resolve incidents; perform root cause analysis
+- Application operations: perform daily health checks, monitor system capacity, generate SLA/KPI reports
+- SLA/KPI reporting: generate availability and operational KPI reports using SNMP polling and system logs
+- IT operations: support production activities, manage incidents, ensure governance control (GRC)
+
+---
+
+SLIDE 3 — About Noora
+Noora is a highly customized system, originally created for IP Backbone monitoring in
+Finland using SevOne NMS as its core. It has many custom components and automated
+functions layered on top, making it effectively a separate system that uses SevOne NMS
+as one component.
+
+Monitoring Capabilities
+Noora monitors Finnish Inter-Regional, Regional, and Local-Aggregation networks, as
+well as SD-WAN platforms. It also collects service-related data from TV, SDN, 3G, 4G,
+and 5G services, including network cross points.
+
+Users of Noora
+- SA Organization Units: network surveillance and threshold-based alarm handling for Finnish IP Backbone devices
+- Operational Network Teams: graphical user interfaces for real-time troubleshooting and data analysis
+- Business and Planning Units: performance data, reporting structures and statistical data for the Qlik system; network planning and build costs are calculated/predicted from Noora's data
+
+---
+
+SLIDE 3B — NEW — Noora vs. SevOneDDC: Don't Mix These Up
+Why this slide exists: several source documents used to build earlier KT material
+accidentally pulled in content from a different, unrelated system. This slide exists
+so nobody repeats that mistake.
+
+Noora
+- Telia Finland's IP Backbone monitoring system
+- Runs its OWN SevOne NMS instance (heavily customized) plus a large layer of custom provisioning, enrichment, and reporting components
+- Main server: ferguson; poller appliances: aura06-aura09; name server: massey
+- Fed by SM/O (main input), Tomaatti, SAP ERP, MIT, Satellite Systems
+- Reporting via Rasmus / Rasmus Admin / Horizon / Qlik; alarms go to Nelli
+- Owned/operated day-to-day by the Infosys support team (this KT track)
+
+SevOneDDC
+- A separate, older SevOne deployment - "a different old version" per Kurt/the team
+- Has its own login, its own Cluster Manager (with clusters referred to as c1/c2/p3/p4), its own User Manager/Tiga device-provisioning flow
+- Has roughly 4,000 alerts that, per the team, "no one is managing"
+- NOT part of this KT's operational scope - do not apply Noora procedures to it, and do not pull Noora facts from documents that are actually describing it (some IT-ops Q&A material in circulation is written about SevOneDDC, not Noora)
+
+Rule of thumb: if a procedure mentions generic cluster names like "c1/c2/p3/p4", or
+disk paths like /dev/sda2 with no Noora-specific context (ferguson, aura, SM/O, Rasmus,
+Nelli), it's probably SevOneDDC material, not Noora.
+
+---
+
+SLIDE 4 — Relevant Integration Endpoints [CORRECTED: Rasmus vs Rasmus Admin were conflated]
+| Endpoint | Primary Role | Key Focus |
+| SevOne NMS (Noora's core) | Core monitoring and data collection | Device/object provisioning, polling, cluster capacity |
+| Noora Health Portal | Operational health monitoring | Provisioning pipeline health, real-time checks, external data validation |
+| Rasmus | Operator-facing reporting | Device/group/alert reports, alert severity views |
+| Rasmus Admin | Grouping control & sandbox testing | Custom-provisioning grouping control; sandbox device/object testing during DHC |
+| Qlik System | Business intelligence | Long-term analysis, strategic/capacity planning (Infosys has no direct access - responsible only for the integration feeding it) |
+| Nelli | Alarm management | Incident handling, real-time alerts; receives Noora's threshold alarms; Nelli Pulse heartbeat confirms the integration is alive |
+
+Note: SevOne NMS here is Noora's own instance - not the unrelated legacy "SevOneDDC" system (see Slide 3B).
+
+---
+
+SLIDE 4B — NEW — Systems & Terminology Glossary
+- Noora - Telia's custom IP Backbone monitoring system, built around SevOne NMS
+- SevOne NMS - the core commercial monitoring engine Noora is built on (NOT SevOneDDC - see Slide 3B)
+- ferguson / aura06-aura09 / massey - Noora's application server / poller appliances / name server
+- Rasmus - operator-facing reporting front-end (device/group/alert reports)
+- Rasmus Admin - grouping-control and sandbox-testing tool (separate from Rasmus)
+- Horizon - an alternate reporting UI for capacity planners; access included in the Noora Tiga role
+- Qlik / QlikView / Qlik Sense - long-term business-intelligence reporting; "Sense" = Qlik Sense; Infosys maintains the data feed into it but has no direct access to the reports themselves
+- Nelli - Telia's alarm-handling system; receives Noora's threshold alarms; "Nelli Pulse" is Noora's debug-level heartbeat message confirming the integration is alive
+- SM/O (SurfManager & Operator) - the network orchestrator; Noora's primary input source; generates the 2 CSVs (device + object) that drive provisioning
+- Tomaatti, SAP ERP, MIT, Satellite Systems - other external systems feeding data/CSVs into Noora
+- TeliaNow - Telia's ticketing system for incidents/problems (replaced the older "Plaza" system)
+- Tiga - Telia's role/access-provisioning system; the "Noora Admin" Tiga role bundles Rasmus Admin access
+- Veha / TCAD - the LDAP domain and Telia Central Authentication Directory used to log into Noora's UIs
+- CMDB - Telia's configuration/resource database; used to look up system ownership and the right contact when in doubt
+- GRC - Governance, Risk & Compliance control, reviewed by Telia's Resource Manager on its own (separate) cadence
+
+---
+
+SLIDE 5 — Noora System Architecture
+(keep existing architecture screenshot/image)
+Noora is integrated with multiple systems:
+- Primarily receiving input from SurfManager & Operator (SM/O), a network orchestrator that automates device provisioning
+- Additional information from other BSS & OSS systems, such as Satellite Systems and Tomaatti
+- Also feeds from SAP ERP (material/stock data) and MIT
+
+---
+
+SLIDE 6 — SevOne NMS (Noora's Monitoring Engine) [CORRECTED: retitled from "SevOne Dashboard" to avoid confusion with the unrelated legacy "SevOneDDC" system]
+Observed Topics
+- Veha LDAP and authentication (TCAD login)
+- Real-time monitoring and troubleshooting
+- Historical data and capacity trends (per-peer license/capacity consumption)
+- Performance metrics collection and analysis
+- Customizable dashboards for network surveillance
+- Integration with SM/O and Nelli systems
+- SNMP polling for data collection (only collection method Noora uses)
+- Data processing and storage workflows (CONFIG vs DATA databases)
+- Device and object management
+- Alert management and threshold-based notifications
+
+Key Learnings
+- Understanding SevOne NMS's role as Noora's core monitoring engine (distinct from the older, separately-run "SevOneDDC" system)
+- Utilizing SevOne NMS dashboards for troubleshooting
+
+Critical System Components (from code walkthrough)
+1. Device Manager - configures/monitors devices, checks new devices and link relationships, manages device status
+2. Object Manager - manages interfaces/links, searches devices/links, resolves duplicate/deleted links, uses Calculation Editor
+3. Cluster Management - HA/redundancy, monitors cluster/peer status and resource usage (CPU/memory/disk)
+4. Report Manager - generates/distributes reports; native reports are mostly obsolete (7+ years old) - custom Rasmus reports are the real standard
+5. Instant Graphs - real-time visualization for troubleshooting
+6. TopN Reports - top performers/issues for capacity planning
+7. Calculation Editor (Administration > Monitoring Configuration) - verifies/corrects link expressions
+8. External Data Tab - monitors/manages external CSV feeds, flags parsing issues
+9. Provisioning Engine - automates device provisioning/enrichment from CSV, updates the SevOne DB across 4 phases
+10. SNMP Walk Function / SNMP OID Manager - verifies device activity and SNMP polling status
+
+---
+
+SLIDE 7 — Noora Health Portal (Overview)
+[Unchanged - directly confirmed via UI screenshots]
+Observed Topics
+- Veha LDAP and authentication
+- Device status and reachability
+- Discovery failures and issue identification
+- External Data tab for CSV file management
+- Device Dashboard for device monitoring
+- Provisioning Control for failing devices
+- Health Portal reports and location
+- Provisioning issues and troubleshooting
+- Admin and end-user procedures
+- Network engineer workflows
+
+Key Learnings
+- Understanding Noora Health Portal's role in operational health and real-time monitoring
+- Utilizing Noora Health Portal's dashboards for troubleshooting and data analysis
+
+---
+
+SLIDE 8 — Noora Health Portal - Features
+[Unchanged - directly confirmed via UI screenshots; see full detail in Noora-Health-Portal.md]
+Change Reports - compares device/object/group changes between two dates; audit trail for modifications
+System Reports - pre-built reports for cross-checking device categorization, validating install-base/hardware inventory, spotting duplicate devices and stale exporter groups
+External Data - Overview + Validation; tracks health of external feeds (file existence, readability, parsing status)
+Device Dashboard - single-device real-time/historical monitoring; health, performance, active alerts; links to Splunk/Sense/Rasmus/Horizon/Health
+Home dashboard (Action Required) - surfaces devices needing manual intervention: SNMP failures, missing OS support, missing control grouping
+Provisioning Control - live view of auto-provisioning pipeline; in-flight/completed/failed; re-provisioning option
+System Tools - Device Data Query, Raw Data Query, OID Validator, Device Deviations Dashboard, System Anomalies Dashboard, OG Tree Viewer
+System Control - System Statistics, Device Statistics, Control Groups, Constants, Rules Generic, Rules Advanced, Rules Enable
+
+---
+
+SLIDE 9 — Noora Health Portal – Features (continued)
+[Unchanged - matches confirmed UI + Health Portal doc]
+Summary
+- Admin/operations console for Noora's provisioning-to-monitoring pipeline
+- Triage newly-discovered devices automation couldn't fully onboard
+- Monitor live/historical state of the auto-provisioning pipeline
+- Query raw device/object/group/alert data on demand
+- Audit data quality at device and group levels
+- Explore object group hierarchy directly
+- Inspect system-wide capacity and statistics
+- Trace device pinning and provisioning rules
+- Audit changes over time for devices, objects, groups
+- Run pre-built cross-check reports against external inventory systems
+- Verify health of external data feeds
+- Drill into a single device's live/historical monitoring data
+
+---
+
+SLIDE 10 — Rasmus Admin [CORRECTED: removed SNMP-walk/SSH/disk-space/OS-verification items - those belong to the unrelated SevOneDDC source, not Rasmus Admin]
+Observed Topics
+- Veha LDAP authentication
+- Grouping control (custom provisioning grouping lives under Rasmus Admin)
+- Device group / sandbox testing: open device group, use the "sandbox" button, pick a device, view its object list
+- Pick a random device, get its objects, choose an object (e.g. top one), choose an indicator (e.g. jitter) to verify the chain is working end-to-end
+- Can select "topmost items" as a quick working-check
+- Purpose during Daily Health Check: confirm Rasmus Admin itself is functioning correctly (not for making real grouping changes casually - grouping normally comes from the Noora rule book and generally shouldn't be hand-edited here)
+- Rasmus Admin access is bundled into the "Noora Admin" Tiga role
+
+Key Learnings
+- Understanding Rasmus Admin's role in grouping control and as a sandbox health-check tool
+- Distinguishing Rasmus (reporting) from Rasmus Admin (grouping/sandbox) - related but separate tools
+
+---
+
+SLIDE 11 — Rasmus – Features [CORRECTED title: was mislabeled "Noora Health Portal - Features"]
+Run Device Report
+- Pulls performance data for a single device or specific interface
+- Search by device name or interface
+- Quick-access shortcuts for personal ("My...") and org-wide ("Most Used...") reports
+
+Run Group Report
+- Pulls aggregated performance data across a group of devices/objects
+- Search by report category and object group; shows member count
+- Enable filters for group members
+- Quick-access shortcuts (personal / org-wide)
+- Report configuration: name, description, time frame, Top N, Show Graph/Summary/Table/Alarms
+- Save/Reset options for a report configuration
+
+Run Alert Report
+- Pulls a filtered view of active/historical alerts
+- Select alert view (e.g. by severity) and severity level
+- Report configuration: name, description, time frame, alert state (e.g. Active alerts)
+- Results table: Start, Latest, Severity, Category, Device Name, Object Name, Object Description, Alert Name, Alert Description, Clear Message
+
+---
+
+SLIDE 12 — Rasmus – Features (continued) [CORRECTED title: was mislabeled "Noora Health Portal – Features (Continue)"]
+My Group Reports
+- Lists group reports with saved settings
+- Personal library of pre-configured, reusable group reports
+
+Support
+- Dedicated support tab for assistance and resources
+
+Key takeaways
+- Rasmus is the operator-facing performance and alert reporting front-end for Noora
+- Single-device/single-interface performance lookups
+- Group-level performance reporting with fine-grained configurability
+- Alert/alarm reporting filterable by severity and alert state
+- Personal report library for recurring reports
+
+---
+
+SLIDE 13 — Application Operations Shadowing
+Observed Daily Activities
+- Ensure availability of Noora's SevOne NMS to devices and end users
+- Provision users (add/remove) via Tiga and the SevOne User Manager
+- Login: TCAD (Telia Central Authentication Directory) / Veha LDAP credentials
+- Cluster Manager: check device count and license/capacity per peer (ferguson = main app server; aura06-aura09 = poller appliances observed)
+- Device Manager: check for newly created devices (typically fewer than 10-20/day; escalate to Kevin/Kurt if ~100 appear at once)
+- Cluster/peer capacity should stay well under 95% - SevOne stops polling if a peer reaches 100%
+- Check alert timestamps are current (SevOne NMS: ~330 alerts is normal, escalate if trending toward ~600)
+- Check rendering graphs from the Report Manager
+- CPU, memory, disk storage capacity and disk I/O from the cluster nodes (ferguson server graphs)
+- Dashboard rendering and alert-processing monitoring
+- System log analysis: one-liner scan of /var/log/provisor/*.log for "Fatal" entries
+- Structured troubleshooting with RCA; loop in Kurt Gunnelius (IP Network Engineer) or Kevin (Resource Manager) as needed
+
+Understanding Gained
+- Daily checklist order: server (ferguson) -> SevOne NMS -> Rasmus -> Rasmus Admin -> Noora Health Portal
+- Common issues: broken/duplicate links, corrupted CSV feeds, stale metadata, provisioning stuck at phase 2/3
+- Support model during shadowing: Infosys executes, Accenture observes and guides
+
+---
+
+SLIDE 14 — Application Code Walkthrough of Noora's SevOne NMS [CORRECTED title: was "...SevOne DDC appliance" - this is Noora's own SevOne NMS, not the unrelated SevOneDDC]
+Observed — Application Modules
+- Device Manager: configures/monitors devices, new devices, link relationships, device status
+- Object Manager: manages interfaces/links, resolves duplicate/deleted links via filters
+- Cluster Management: HA/redundancy, cluster status, CPU/memory/disk usage
+- Report Manager: generates/distributes reports, verifies graph rendering
+- Instant Graphs / TopN Reports: real-time visualization and capacity-planning views
+- Calculation Editor (Administration > Monitoring Configuration): verifies link expressions
+- External Data Tab: monitors CSV feed health (SAP, SM/O, Tomaatti, MIT, Satellite Systems)
+- Provisioning Engine: automates provisioning/enrichment from CSV across 4 phases
+- SNMP Walk / SNMP OID Manager: verifies device activity and polling status
+
+Configurations & Key Support Areas
+- Rules live in /opt/provisioning/cfg/ (_RULES_GENERIC.ini, _RULES_ADVANCED.ini, _RULES_ENABLE_OBJECTS.ini), drive provisioning phases 2-3
+- Config changes require Telia approval; Infosys does not edit Noora config independently
+- /var/www/custom/health/reports/ on ferguson = location of Noora Health Portal report PHP scripts
+
+Learning Outcome
+- Application flow: SM/O -> Noora provisioning (4 phases) -> SevOne database -> alert/report/Qlik export
+- Troubleshooting touchpoints: Object Manager, Calculation Editor, Device Dashboard, Provisioning Control, PHP/exporter logs
+
+---
+
+SLIDE 15 — Data Management Shadowing
+Observed
+- Data flow: SM/O generates 2 CSV files (device + object) -> Noora provisioning (4 phases) -> SevOne database -> Rasmus / Qlik export
+- Database interactions: no direct DB credential access held or needed so far; SevOne's CONFIG (replicated) vs DATA (per-appliance) split governs what a fix touches
+- Hot fixes for broken links are the most common data-management task - recurring root cause is malformed Tomaatti CSVs (e.g. stray blank lines)
+- No batch/bulk data activities observed; fixes are manual, one device/link at a time
+- Data duplication between systems (e.g. SM/O) is manual, not scripted; Noora's own config changes are automated/rule-based - Infosys does not hand-edit them
+- Cleanup script for a stuck provisioning engine: /opt/common/php/scripts/php run_cleanProvisioningEngine.php - 3 phases, self-documenting prompts, safe to run without second approval
+- Weekly Change Report review (Devices + Objects, 7-day window) reported to Telia - example: new groups ("LHJ-SOLB RER", "WAN Statistics (Metsä Board Oyj)"), deleted groups, empty groups (e.g. "HVK-HVK-RMK-LPI-LLN-KYT-PARN")
+- GDPR: verify the requester's right to grouping/architecture data before sharing; loop in Kevin for requests from outside the usual group
+- Historical incident: an SM/O bug set the wrong generic device role on a batch of devices, duplicating 100+ devices across many rings - fixed manually over several weeks before weekly change-report monitoring was tightened
+
+---
+
+SLIDE 16 — Incident Management Shadowing
+Observed Activities
+- Multi-channel communication: Noora shared mailbox (noora-support@teliacompany.com), Teams, TeliaNow tickets, email
+- Severity assessment via RCA / basic evaluation of the incident
+- Contact relevant teams for issues outside Noora's own scope
+- Stakeholder communication - weekly status meeting with Kevin/Kurt covers open items from the DHC
+- Contact Resource Manager (Kevin Kivi) as primary escalation point; create a TeliaNow ticket per severity
+- TeliaNow ticket-based incident/problem workflow (replaced the older Plaza system)
+- Contact IT Ops for server/database issues; ticket per severity
+- Real examples: broken/missing links reported by Juho Kontio (network specialist) and Rami Kivirinta (capacity planner) via the shared mailbox - typically resolved within 1-2 days once Kurt runs a port check
+- Nelli Pulse: a debug-level heartbeat Noora sends to Nelli on a schedule to confirm the SevOne–Nelli alert integration is alive; two consecutive failures trigger a mailbox alert
+
+Key Learnings
+- Incident prioritization: RCA-based severity; criticality ultimately defined by the Nelli team for anything alarm-related
+- Stakeholder communication: shared mailbox first, TeliaNow for formal tickets, weekly meeting for non-urgent items
+- Resolution workflow: automated re-provisioning first -> port check (Kurt) -> manual fix in SevOne UI / Noora Health Portal if still failing
+
+---
+
+SLIDE 17 — Problem Management & RCA Shadowing
+Observed Activities
+- Problem Ticket / RCA Preparation
+- 12-month summary of known issues:
+  - Required indicator missing for a specific device - fixed by manually creating a rule to enable it for that device
+  - DNS resolving issue for a specific device - Ticket RITMSE0024780
+  - Incident caused by an electrical power cut in Sweden
+- Larger historical case: SM/O wrote the wrong generic device role on a batch of devices, duplicating 100+ devices across many rings - surfaced by Rami Kivirinta reporting "broken monitoring"; resolved manually over several weeks; 2008-era training material was found during the investigation
+
+Key Learnings
+- RCA approach: start in Noora Health Portal's Action Required / Device Dashboard, cross-check in SevOne Object Manager, loop in Kurt for hardware/SM-O-side causes
+- Prevention: the weekly Change Report review (7-day device/object diffs) was tightened specifically to catch this class of issue earlier
+- Documentation: log anomalies as found; no formal known-error database yet - history reconstructed informally through these KT sessions
+
+---
+
+SLIDE 18 — SLA, KPI & Reporting
+Observed Reports
+- Availability Reports - ICMP/SNMP availability per device (Device Dashboard)
+- Operational KPIs - license/capacity consumption per peer; alert counts and trend (SevOne NMS ~330 normal, escalate toward ~600; Rasmus critical alerts ~98/day realistic, ~300 would be alarming)
+- Weekly change summary to Telia: new/deleted/empty device and object groups
+- Install-base / spare-part inventory reports (Device Dashboard -> Hardware tab; example device: fi-oluhir-rer2)
+
+Key Learnings
+- Reporting: native SevOne reports are mostly unused/obsolete (7+ years old); custom Rasmus reports are the actual standard
+- Data collection: SNMP polling every 180 seconds, raw data retained 240 days; Horizon transport-data retention also 240 days (only ~6 months accumulated so far)
+- Stakeholder expectations: weekly reporting cadence to Telia; escalate only meaningful deltas (100+ object changes, capacity growth beyond ~0.5-1%/day)
+
+---
+
+SLIDE 18B — NEW — Data Retention, Rollups & Capacity Planning
+Retention
+- Raw statistics retained 240 days in SevOne's DATA database
+- Horizon transport-data retention is also configured for 240 days - only ~6 months of history has accumulated so far, so the full 240-day window hasn't actually been tested yet
+- No retention issues encountered so far; capacity planners would be the ones to flag it if they couldn't get the history they needed
+
+Rollups / older data
+- For data older than ~30 days, SevOne uses "Synthetic Indicators" (Object Types -> Interface -> Edit -> Synthetic Indicator) to aggregate/calculate from underlying sources - marked in the UI with a synthetic-indicator icon
+- The exact rollup/retention value isn't easily visible in the UI itself - consult the SevOne manual if it's ever in question
+
+Capacity planning
+- Capacity is licensed per active object; watch the trend per peer, not just the snapshot (~1%/day growth is a flag, ~0.5%/day is already worth noting)
+- Must stay well under 95%; SevOne stops polling entirely if a peer hits 100% (devices stay provisioned but simply don't get polled)
+- When capacity got close to 100% previously, Kurt made rulebook changes (disabling certain objects, per the rulebook, in consultation with Telia) that brought it back under 80% within weeks
+- Longer-term planned fix is adding another poller appliance ("a 10th aura") to redistribute load - currently a frozen/on-hold plan, not actively in progress
+- No pressure or complaints so far about Noora's overall storage footprint
+
+---
+
+SLIDE 19 — IT Operations Readiness
+Observed
+- Production Support Activities: daily health check across server, SevOne NMS, Rasmus, Rasmus Admin, Noora Health Portal
+- Incident and Problem management via TeliaNow tickets and the Noora shared mailbox
+- GRC Control (reviewed by Telia's Resource Manager) - quarterly GRC/vulnerability-scan cadence, partially supported by Splunk; run as a separate KT track from the Noora application KT
+- Escalation Process: Kurt/Kevin (Noora resource owners) -> IT Ops for server/DB -> Veha team for network/firewall -> Mark Ollikainen for network/firewall-specific changes
+
+Key Learnings
+- Operational governance: no Noora config changes without Telia approval; fixes coordinated closely with Kurt/Kevin
+- Daily Health Check: structured, tool-by-tool checklist (see Slides 20-23)
+- Support model: Infosys Execute / Accenture Observe & Guide, transitioning into Reverse Shadow
+- Major incident procedure: TeliaNow ticket per severity, notify RM, escalate per Nelli-defined criticality; pending items before Reverse Shadow are Admin/Tiga user provisioning and GRC control sign-off
+
+---
+
+SLIDE 19B — NEW — Automation, Crontab & Test Environment (ferguson)
+Crontab (as the provisor user - `sudo -iu provisor` then `crontab -l`)
+- heartbeatgenerator (bash) - runs on a set schedule, sends a dummy threshold alert to Nelli; the debug catch-script confirms the SevOne–Nelli integration is alive; if it fails, the first escalation step is contacting the Nelli team directly (this email history has been useful for troubleshooting many past cases)
+- Device loader - runs every minute, looks for new provisioning work across the phases
+- Calculation Poller - supports link/traffic calculations
+- portlinkremover - handles cleanup of removed/stale link data
+- Trigger - part of the alert-policy pipeline
+- SevOne exporter - feeds data to Qlik
+- Most of these scripts are covered by the same daily "Fatal" one-liner check
+
+Codebase & environment
+- There have been internal Telia discussions/plans around the Noora codebase, but Infosys has no visibility into that roadmap - Kurt's guidance is simply "don't touch it, don't break it"
+- A Noora test environment exists: one test ferguson + one test poller; URLs for both are on the IT wiki
+- The test environment does not have full integration (notably Nelli), so behaviour there won't always match production
+
+Boot / reboot handling
+- VeHa IT handles booting ferguson; Infosys is not informed in advance of when/why a boot happens
+- 3 reboots observed so far; the most recent one had a complication - a leftover PID file wasn't deleted, which stopped a provisioning script from restarting cleanly
+- General rule: an unscheduled boot means provisioning scripts may not resume automatically - check Provisioning Control afterward and be ready to kill/restart stuck processes (a fail-safe process exists for this, but it should be verified, not assumed)
+
+---
+
+SLIDE 19C — NEW — Known Issues & Recurring Fixes (Quick Reference)
+1. Broken / duplicate links
+   - Symptom: link/device shows as missing or duplicated in Object Manager
+   - Fix: identify the "deleted_"-flagged vs. active copy in Object Manager, check history/expression in the Calculation Editor, remove the "deleted_" flag and re-provision (or delete the duplicate) depending on whether history needs preserving
+   - Reported by: Juho Kontio, Rami Kivirinta (via shared mailbox); usually resolved within 1-2 days once Kurt runs a port check
+
+2. Tomaatti CSV formatting errors
+   - Symptom: External Data tab shows red on Data Parsing; Provisioning Control backs up with climbing device count
+   - Fix: SSH to ferguson, locate the CSV under /opt/provisioning/dump/, fix the malformed line (e.g. a stray blank line) directly, confirm Data Parsing goes green again, then click Auto Update in Provisioning Control to confirm the backlog is clearing
+
+3. "No XML document" / control-character device errors
+   - Symptom: SOAP/API calls fail for a device (a known SevOne bug where a control character gets saved into the database)
+   - Fix: low-frequency issue; sometimes resolved by a full device reboot; Kurt/IBM are aware; check the Device Dashboard first for this class of error
+
+4. Missing chassis / hardware inventory data
+   - Symptom: a device shows as working but its hardware/chassis inventory is missing (affects spare-part/cost reports)
+   - Status: in active investigation with Kurt; working theory is SAP not providing the chassis inventory info; check pinning logs and the relevant PHP report
+
+5. Wrong generic device role from SM/O (large-scale)
+   - Symptom: 100+ devices duplicated across many rings after an SM/O bug tagged the wrong device role
+   - Fix: manual triage, historically took several weeks; now caught earlier via the tightened weekly Change Report review
+
+6. Stuck device at provisioning phase 2
+   - Fix: if a normal re-provision doesn't clear it, delete the device from Device Discovery and trigger a fresh discovery - this has unstuck cases where the device wasn't going through SevOne discovery correctly, without affecting the working device
+
+---
+
+SLIDE 19D — NEW — Key Contacts & Escalation Map
+- Kurt Gunnelius - IP Network Engineer / Service Assurance (ITOPS); closest to the hardware, longest history with Noora. First contact for hardware-level issues (SFP/chassis), SM/O configuration questions, and running port checks.
+- Kevin (Kivi) - Resource Manager (RM). Primary escalation point for capacity concerns, large-scale device/object changes, GRC sign-off, and integration proposals (e.g. the Helix request). Holds Fireproof access for firewall-opening requests.
+- Rami Kivirinta - Telia network specialist / capacity planner. Occasionally reports Noora-visible issues (broken links, incorrect provisioning) via the shared mailbox, roughly monthly.
+- Juho Kontio - reports broken/missing links from the SM/O side via the shared mailbox.
+- Mark Ollikainen - handles firewall/network changes; described as extremely busy - always loop in via Kurt or Kevin first rather than contacting directly.
+- Kimmo Rouhiainen - pointed to by Kurt for Helix-style integration/firewall questions.
+- Biplob - contact for GRC-specific KT (separate cadence/track from the Noora application KT).
+- Nelli team - weekly meeting; defines alarm criticality; contact directly for Nelli-side integration issues (e.g. repeated Nelli Pulse failures).
+- VeHa IT - owns hardware, database, network, and firewall infrastructure underneath Noora; handles server reboots.
+
+Suggested escalation order
+1. Noora shared mailbox (noora-support@teliacompany.com) for anything non-urgent
+2. Weekly meeting with Kevin/Kurt for status-level items
+3. TeliaNow ticket, severity-appropriate, for anything formal
+4. Kevin (RM) as the default named escalation point
+5. Kurt for anything hardware- or SM/O-specific
+6. Mark Ollikainen / Kimmo Rouhiainen (via Kurt or Kevin) for firewall/network-specific changes
+7. IT Ops directly for server/database infrastructure issues
+8. Nelli team directly for alarm-integration-specific problems
+
+---
+
+SLIDE 20 — Daily Health Check Protocol at a Glance (1/4) [FULLY REPLACED - was built from the wrong "SevOneDDC" source; this is the real Noora DHC from kt4/kt5]
+This protocol covers the daily health check across Noora's own stack: the application
+server, SevOne NMS, Rasmus, Rasmus Admin, and the Noora Health Portal. Checking the
+shared mailbox is also part of the routine.
+
+1. Server (ferguson - main Noora application server)
+- SSH in (via SuperPutty); check fatals: one-liner scans /var/log/provisor/*.log for "Fatal" entries
+- Switch to the provisor user; check the exporter script runtime - should stay well under ~5,000 seconds (a rising trend toward ~4,000+ signals it's slowing down)
+
+2. SevOne NMS - Cluster Manager
+- Login: TCAD ID + Veha LDAP password
+- Check peers (ferguson + the aura0x pooler appliances); Total License Consumption is the key figure to watch - should never reach 100% (polling stops); stay well under 95%
+- Watch the trend, not just the snapshot: growth of ~1%/day is a flag, ~0.5%/day is already worth noting
+- aura07 runs deliberately low (dedicated to a specific device type)
+
+3. SevOne NMS - Alarms / Alerts
+- Log in/out to check admin messages are still clearing normally
+- Check alerts are flowing in; compare the latest alert's timestamp to system time; confirm filters are correct
+- ~330 alerts is typical for SevOne NMS; if it jumps drastically toward ~600, contact the Resource Manager
+- 15 minutes with no alerts at all would be abnormal
+
+---
+
+SLIDE 21 — Daily Health Check Protocol at a Glance (2/4) [FULLY REPLACED]
+4. SevOne NMS - Device Manager
+- Check for the latest device updates / newly created devices
+- Typically fewer than 10-20 new devices/day; notify the Resource Manager (Kevin/Kurt) if there's a large influx (~100 at once)
+
+5. Rasmus
+- Login with Veha LDAP
+- Run Alert Report -> View by severity -> Critical -> Select -> Run report
+- ~98 critical alerts/day is realistic; ~300 would be alarming - cross-check the trend against SevOne NMS if it's climbing
+- Fine to explore the dashboard; can drill into alert details (which object caused the problem) via Alert Tree View / Device Group
+- Also run a Group Report against the Sandbox group (test/utility reports) and glance for spiky graphs
+
+6. Rasmus Admin
+- Login with Veha LDAP
+- Open the Device Group -> Sandbox button -> pick a random device -> Get Object -> pick a top object -> pick an indicator (e.g. jitter)
+- This is purely a working-check: confirms Rasmus Admin's chain (device -> object -> indicator) is functioning
+- Rasmus Admin access is bundled into the "Noora Admin" Tiga role
+
+---
+
+SLIDE 22 — Daily Health Check Protocol at a Glance (3/4) [FULLY REPLACED]
+7. Noora Health Portal - go through every tab
+- Action Required: check the 3 dashboards (SNMP failures / missing OS support / missing control grouping). If these first-3 lists change, notify the Resource Manager; if unchanged, just document
+- Provisioning Control: the most important list to follow - ~20 devices in flight is a lot; watch for a few minutes and click Auto Update to confirm phases are progressing (a stuck/non-shrinking list can mean the provisioning script isn't running, e.g. after a server boot)
+- System Tools: not a daily check - used for deeper device-data / system-anomaly investigation when something is flagged elsewhere
+- System Control -> System Statistics: another view of capacity; check enabled/disabled/deleted object counts - ferguson's enabled-object count should match SevOne NMS's; no escalation needed here on its own
+
+8. Noora Health Portal - Change Reports
+- Powerful investigating tool, not an escalation trigger by itself
+- Escalate if the amount of change is unusually large: 100+ device changes is a lot (mention to RM - Kevin/Kurt); object changes run much higher in volume normally
+- Weekly: report new groups created, modified groups, and - importantly - "red" empty groups (all members removed) to Telia
+
+---
+
+SLIDE 23 — Daily Health Check Protocol at a Glance (4/4) [FULLY REPLACED]
+9. Noora Health Portal - System Reports
+- Run "Exporter Group Report" as the daily check - it surfaces the same information as the Change Report view
+- If report generation fails, check the PHP logs as the escalation path
+
+10. Noora Health Portal - External Data
+- Confirm the validation columns are green: Data Parsing, Date Check, etc.
+- A MIT warning on its own is fine (known/expected); a "NOORA" row showing skipped is normal
+- File-exists and read-access errors are the ones that actually matter - investigate those
+
+11. Noora Health Portal - Device Dashboard
+- Pick a random device (e.g. one starting with "fi"), open its Info sub-tab
+- Check "Noora provisioning engine load" - should read "normal"; hover it to see the device counts sitting in each phase
+- Report the load status weekly
+
+12. Documentation & wrap-up
+- Any step of the DHC can turn up something worth flagging - document it and raise it to Telia
+- Communication: check the Noora shared mailbox as part of the routine
+- Keep a running weekly write-up: Change Report deltas, new/deleted/empty groups, anything escalated that week
+
+---
+
+SLIDE 23B — NEW — Open Items at Handover
+- Helix integration request: proposal to integrate Helix into Noora (firewall opening + endpoint work); discussed in Teams; Kevin evaluates the request via the Fireproof secure app, then decides who develops it; Kurt has pointed to Kimmo Rouhiainen and Mark Ollikainen for the firewall/network side
+- Admin alert mailer: an admin message ("AlertMailer failed to send N alerts") was seen and is pending investigation/resolution
+- Missing chassis inventory: at least a few devices (e.g. one starting "fi-inkkbog-csg1") show missing hardware/chassis inventory; suspected SAP-side gap; in active but non-urgent investigation with Kurt
+- SMO update timing: SM/O updates typically land the next evening and usually process cleanly, but this is a recurring item worth watching each cycle
+- Reverse Shadow prerequisites: Admin user and Tiga user provisioning, plus GRC control sign-off, are both still pending before the Reverse Shadow phase can formally begin
+
+---
+
+SLIDE 24 — Reverse Shadow Plan
+Activities to be performed
+- Application operations
+- Daily health checks
+- User provisioning
+- Incident handling
+- Problem investigation
+- Stakeholder communication
+
+Support Model
+- Infosys Team: Execute
+- Accenture Team: Observe & Guide
+- Prerequisite before starting: Admin user and Tiga user provisioning, plus GRC control sign-off - both still pending
+
+---
+
+SLIDE 25 — Shadow KT Schedule Activities Summary
+Shadow session 1 to 10 for Noora (SevOne NMS)
+Start date: 23 July, 2026 [DATE CONFLICTS WITH SLIDE 2 — confirm correct range]
+End date: 6 August, 2026
+Status: Completed
+
+---
+
+SLIDE 26 — Conclusion
+Achievements
+- Shadow KT completed successfully
+- Major operational processes understood
+- Risks and gaps identified
+- Pending: required Admin user and Tiga user provisioning, and GRC control, for Reverse Shadow
+- Team prepared for Reverse Shadow phase
+
+Next Step – Reverse Shadow Sessions
+- Readiness Validation
+- Production Support Handover
+
+---
+
+SLIDE 27 — Thank You
+(no content change)
