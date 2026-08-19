@@ -1,0 +1,33 @@
+Noora Shadow Session 6
+
+Capacity Planning:
+- Monitor system capacity and resource usage
+- Check license consumption and thresholds
+- Investigate capacity trends and anomalies
+- Document capacity issues and findings
+- Report capacity problems to Resource Manager
+- Follow capacity management procedures
+
+Performance Monitoring:
+- Monitor system performance and metrics
+- Check CPU, memory, and disk usage
+- Investigate performance anomalies and issues
+- Document performance findings and actions
+- Report performance problems to Telia
+- Follow performance management procedures
+
+Data Retention:
+- Monitor data retention and storage usage
+- Check retention policies and compliance
+- Investigate retention issues and anomalies
+- Document retention findings and actions
+- Report retention problems to Resource Manager
+- Follow data retention procedures
+
+Best Practices:
+- Follow capacity and performance management procedures
+- Monitor system metrics and resource usage
+- Investigate anomalies and issues promptly
+- Document all actions and findings
+- Communicate issues and resolutions to Telia
+- Follow escalation procedures for critical issues

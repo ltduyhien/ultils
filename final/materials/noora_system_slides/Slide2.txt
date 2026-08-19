@@ -1,0 +1,26 @@
+WHAT IS SEVONE AND WHY DO WE CALL IT NOORA
+
+SevOne NMS is a commercial all-in-one network performance monitoring product with build-in SOAP and
+REST API interfaces for small- and large-scale tailoring purposes
+
+While SevOne NMS can handle device modelling, data collection, data orchestration, alert management,
+capacity planning and SLA reporting requirements, it still phases the same problem as any system:
+
+How to manage operator scale diversity of technologies, networks, inventories and environments
+Custom components where built:
+
+* to gather and organize the input data before the SevOne NMS
+* to automate device provisioning in(to) SevOne NMS
+
+* to automate device monitoring and alert management
+
+* to automate report management and data export
+
+* to manage the created custom environment
+
+Tailored reporting Uls have been built to have more easier and direct access to statistical data
+These custom components together with the SevOne NMS form a system called Noora
+
+Internal
+
+\)

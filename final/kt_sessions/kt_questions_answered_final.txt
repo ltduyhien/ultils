@@ -1,0 +1,700 @@
+NOORA KNOWLEDGE TRANSFER - COMPREHENSIVE ANSWERS
+===================================================
+
+This document provides detailed answers to all Noora knowledge transfer questions
+based on the extracted documentation, KT session notes, and system information.
+
+=== SYSTEM OVERVIEW ===
+
+Q1. What is Noora and its relationship to SevOne?
+A1. Noora is a customized network monitoring system built on top of SevOne NMS (Network Management System).
+   - SevOne NMS is a commercial all-in-one network performance monitoring product
+   - Custom components were built to extend SevOne's capabilities
+   - These components + SevOne NMS form the system called Noora
+   - Noora includes: data gathering/organization, automated provisioning, monitoring/alert management, report management/data export
+   - Tailored reporting UIs provide easier access to statistical data
+   (Reference: noora_system.txt Slide 2, noora_system_what_is_monitored_1.png)
+
+Q2. What is the current scope of Noora monitoring?
+A2. Noora monitors a comprehensive range of network components:
+   - Fixed network monitoring (IP backbone, mobile CORE)
+   - Broadband, mobile, and telco EDGE networks
+   - Regional networks (Metro Ethernet)
+   - NFVI/SDN/Virtual monitoring (Virtual EDGE, SD-WAN, Hyperscale nodes)
+   - Special monitoring (B2C IP allocation, Hybrid Access, Cable HFC RF signals)
+   - Capacity reporting for infrastructure management
+   - Traffic monitoring (Peering, NNI, Core, Edge, Metro, Service-based traffic)
+   (Reference: noora_system.txt Slide 3)
+
+Q3. What are the main components of Noora architecture?
+A3. Noora architecture consists of:
+   - SevOne NMS (core monitoring engine)
+   - Noora engine (custom processing)
+   - Noora data handling (input/output processing)
+   - Input data feeds (SNET, SMO, SAP, etc.)
+   - Noora custom UIs (System management, Report management, Custom Statistics)
+   - External output data (Alert reporting, Capacity reporting, Realtime reporting)
+   (Reference: noora_system.txt Slide 4)
+
+=== DEVICE AND MONITORING MANAGEMENT ===
+
+Q4. What types of devices and components does Noora monitor?
+A4. Noora monitors comprehensive device components:
+   - Device performance statistics (CPU, memory, hardware status)
+   - Physical interfaces (Copper, fiber, coaxial, wireless - traffic, drops, errors)
+   - Logical interfaces (Aggregated, subinterfaces, virtual interfaces)
+   - Class of Service (CoS) monitoring
+   - Inventory information (Serial numbers, part numbers, etc.)
+   (Reference: noora_system.txt Slide 5, noora_system_what_is_monitored_1.png)
+
+Q5. How does Noora handle device polling and data collection?
+A5. Noora's data collection process:
+   - Devices are polled every 180 seconds (3 minutes)
+   - Polled data is immediately available in the system
+   - Raw data retention: 240 days
+   - Data is stored in two databases:
+     * CONFIG database: Configuration and metadata (replicated)
+     * DATA database: Raw statistics (unique per server/appliance)
+   - System stores ~2.7M values per 180-second interval
+   (Reference: noora_system.txt Slides 6, 9)
+
+Q6. What is Noora's licensing model?
+A6. Noora licensing is based on:
+   - Number of active objects (not devices)
+   - Current system: ~4k network devices, ~120k objects, ~2.7M indicators
+   - Approximate license cost: ~1.2€ per object
+   - Objects include: interfaces, CPU, memory, CoS queues, etc.
+   (Reference: noora_system.txt Slide 8)
+
+Q7. How does Noora handle device grouping and organization?
+A7. Noora uses sophisticated grouping mechanisms:
+   - Device groups: Collections of devices bound by common factors
+   - Object groups: Collections of objects (interfaces, CPU, etc.)
+   - Groups are used for:
+     * User privilege management
+     * Alert policy bindings
+     * Report generation
+     * Creating additional groups
+   - Metadata can be set as groups
+   - All groups are searchable via Noora reporting UIs
+   - Automatic grouping rules (e.g., "metro" in name → Metro group)
+   (Reference: noora_system.txt Slides 12-14)
+
+=== REPORTING AND DATA MANAGEMENT ===
+
+Q8. What reporting systems does Noora provide?
+A8. Noora offers multiple reporting systems:
+   
+   A. Noora Reporting (for Service Assurance):
+   - Designed for real-time service assurance
+   - Raw data available immediately after polling
+   - Accessible via:
+     * Rasmus Reporting System (Device/Interface dashboards, Group reporting)
+     * Horizon Reporting System (Statistics)
+     * SMO Embedded Graphs (Static dashboards)
+   - Data retention: 240 days raw data
+   
+   B. Qlik Reporting (for Planning and Business):
+   - Designed for long-term planning and business reporting
+   - Uses 24-hour average and max data
+   - Data preparation process:
+     * Device validation and enrichment (Noora Engine)
+     * Reporting structure management (Rasmus Admin)
+     * Report data selection automation
+     * Data summary calculations
+   - Available through QlikView and QlikSense dashboards
+   - Drill-down details available via Noora reporting UIs
+   (Reference: noora_system.txt Slides 6-7, multiple Qlik reporting images)
+
+Q9. How does Noora handle data flow and automation?
+A9. Noora's automated data flow includes:
+   - Input data collection from multiple sources (SNET, SMO, SAP, etc.)
+   - Automatic statistic data collection and categorization
+   - Automated data enrichment and provisioning
+   - Alert policy and report management automation
+   - Example automated processes:
+     * Device provisioning when added to OSS system
+     * Group creation and updates
+     * Alert policy binding based on device/object characteristics
+     * Report generation and scheduling
+   - Full automation from user perspective (5-15 minute processing)
+   (Reference: noora_system.txt Slides 15-16, Data_flow_Automation images)
+
+=== ALERT AND INCIDENT MANAGEMENT ===
+
+Q10. How does Noora handle alert management?
+A10. Noora's alert management system:
+   - Automated alert policy creation and binding
+   - Alert policies target specific device/object combinations
+   - Example alert policies:
+     * Target: Edge & 100G & LAG interfaces, Trigger: Utilization >90%, Action: Warning alert
+     * Target: Mobile & CPU, Trigger: CPU Load >95%, Action: Critical alert
+   - Alerts are automatically generated and sent to appropriate systems
+   - Alert documentation available in NetDoc wiki
+   (Reference: noora_system.txt Slide 15, kt2_noora_final.txt)
+
+Q11. What is the incident triage and escalation process?
+A11. Incident management process:
+   - Daily health checks to verify system operation
+   - Monitoring jobs ensure integration with external systems
+   - Criticality levels defined by Nelli team
+   - Escalation paths:
+     * Kevin (Telia resource owner) for operational issues
+     * IT Ops for server/database problems
+     * Delivery leads for process questions
+   - Communication channels: Shared mailbox, team channels, TeliaNow tickets
+   - Rule of thumb: Look up systems in CMDB for relevant contacts
+   (Reference: kt1_noora_final.txt, kt2_noora_final.txt)
+
+=== USER ACCESS AND SYSTEM MANAGEMENT ===
+
+Q12. What access is required for Noora operations?
+A12. Required access levels:
+   - Shared mailbox for external messages
+   - Noora server access (main server login)
+   - UI access (not raw monitoring)
+   - Veha LDAP credentials for authentication
+   - Access to different browsers (Firefox preferred for Noora UI)
+   - Current access: Everything under Veha control
+   (Reference: kt1_noora_final.txt, kt2_noora_final.txt)
+
+Q13. How are user roles and permissions managed?
+A13. User management in Noora:
+   - Integrated with Veha LDAP
+   - Admin access controls rules and objects
+   - Group-based permissions for device access
+   - User provisioning handled through DDC admin roles
+   - No direct user provisioning changes without approval
+   (Reference: kt2_noora_final.txt)
+
+=== CAPACITY PLANNING AND PERFORMANCE ===
+
+Q14. How does Noora handle capacity planning?
+A14. Capacity planning features:
+   - Longer history metrics (compared to standard SevOne)
+   - Capacity planning for future builds based on historical data
+   - UI for creating custom statistics
+   - Capacity reporting for infrastructure management
+   - Traffic analysis (peering, NNI, core, edge, metro traffic)
+   - Service-based traffic reporting (3G/4G/5G, CTV/IPTV/VoD, etc.)
+   (Reference: kt1_noora_final.txt, noora_system.txt Slide 3)
+
+Q15. What performance metrics does Noora monitor?
+A15. Comprehensive performance monitoring:
+   - Device metrics: CPU utilization, memory, hardware status
+   - Interface metrics: Traffic (bits in/out), drops, errors, discards
+   - Class of Service metrics: Queue performance, utilization
+   - Service metrics: Response times, availability
+   - Network metrics: Latency, packet loss, jitter
+   - All metrics available through reporting UIs and dashboards
+   (Reference: noora_system.txt Slides 5-6)
+
+=== INTEGRATION AND AUTOMATION ===
+
+Q16. What integrations does Noora support?
+A16. Noora integration capabilities:
+   - Input data feeds: SNET, SMO, SAP, and other systems
+   - External output: Alert reporting, capacity reporting, realtime reporting
+   - Automated provisioning from network orchestration systems
+   - Qlik integration for business reporting
+   - SurfManager integration for device management
+   - CMDB integration for contact information
+   - TeliaNow integration for incident management
+   (Reference: noora_system.txt Slides 4, 15, kt1_noora_final.txt)
+
+Q17. How does the automation process work from a user perspective?
+A17. User experience with automation:
+   - Network engineer configures mandatory OSS system
+   - Devices, connections, and services automatically provisioned to Noora
+   - Data polling starts automatically
+   - Groups are created and updated automatically
+   - Data is updated in OSS system and Noora reporting
+   - Network monitoring automatically enabled
+   - Data automatically exported to external systems
+   - Complete process takes 5-15 minutes
+   - No manual work required from engineers
+   - Engineers don't need to know alerting/reporting details
+   (Reference: noora_system.txt Slide 16, Automation_from_USER_PERSPECTIVE images)
+
+=== DOCUMENTATION AND SUPPORT ===
+
+Q18. Where can documentation be found?
+A18. Documentation resources:
+   - NetDoc wiki: https://netdoc.teliasonera.net/wiki/Category:Noora
+   - System descriptions and operational instructions
+   - User interface instructions
+   - Administrative documents
+   - Alert documentation
+   - Some documentation in Veha wiki (minimal)
+   - Runbooks and process documentation shared by team
+   (Reference: noora_system.txt Slide 17, kt2_noora_final.txt)
+
+Q19. What support processes are in place?
+A19. Support structure:
+   - Daily health checks and monitoring
+   - Shared mailbox for communication
+   - Regular meetings with key personnel (Kevin, Kurt, Nelli)
+   - Escalation paths to IT Ops and delivery teams
+   - Monthly reboot procedures for stability
+   - Problem management through TeliaNow
+   - Knowledge transfer sessions for new team members
+   (Reference: kt1_noora_final.txt, kt2_noora_final.txt)
+
+=== TECHNICAL DETAILS ===
+
+Q20. What is the SevOne cluster setup?
+A20. Cluster architecture:
+   - Master and collector servers/appliances can be separated
+   - Can use physical servers or virtual appliances
+   - Statistical data (DATA database) is unique per server
+   - Configuration data (CONFIG database) is replicated
+   - Allows easy scaling of the system
+   - Security zones can separate different components
+   (Reference: noora_system.txt Slide 10)
+
+Q21. How does metadata enrichment work?
+A21. Metadata processing:
+   - Metadata refers to bindable data related to devices/objects
+   - Parsed from different source inventories
+   - Bound to target devices/objects during provisioning
+   - Includes: Name, description, IP address, SNMP community, location, etc.
+   - For interfaces: Speed, connected device/port information
+   - For hardware: Serial numbers, product names, manufacturers
+   - Metadata parsing and storage are scripted and automated
+   (Reference: noora_system.txt Slide 11)
+
+Q22. What are the key differences between Noora and standard SevOne?
+A22. Noora vs. SevOne differences:
+   - Custom components for data gathering and organization
+   - Automated device provisioning workflows
+   - Enhanced alert management automation
+   - Advanced report management and data export
+   - Tailored reporting UIs for easier access
+   - Custom environment management
+   - Integration with Telia-specific systems (SNET, SMO, SAP)
+   - Extended data retention and processing capabilities
+   (Reference: noora_system.txt Slide 2)
+
+=== OPERATIONAL PROCEDURES ===
+
+Q23. What are the daily operational procedures?
+A23. Daily operations include:
+   - Health checks (longer process with Noora)
+   - Verify data flow and processing
+   - Check communication channels
+   - Monitor shared mailbox for alerts
+   - Review system dashboards
+   - Validate device provisioning status
+   - Check for missing or corrupted data
+   - Monitor script performance
+   (Reference: kt1_noora_final.txt, kt2_noora_final.txt)
+
+Q24. How are device issues handled?
+A24. Device issue resolution:
+   - Monitor devices not responding to SNMP
+   - Check non-standard naming conventions
+   - Identify newly added devices
+   - Notify resource owners (Kurt, Kevin) for failures
+   - Trigger provisioning tests
+   - Avoid bulk actions that could overload system
+   - Check for missing OS support
+   - Review device metadata for corruption
+   (Reference: kt2_noora_final.txt)
+
+=== FUTURE DEVELOPMENT ===
+
+Q25. What are the future development plans for Noora?
+A25. Future enhancements:
+   - Potential integration with TeliaNow for incident management
+   - Expanded Qlik reporting capabilities
+   - Enhanced automation for new device types
+   - Improved UI/UX for reporting interfaces
+   - Additional capacity planning features
+   - Extended API integrations
+   - Enhanced security monitoring capabilities
+   (Reference: Various KT session notes)
+
+=== IMAGE REFERENCES ===
+
+Key visual references:
+- noora_system_what_is_monitored_1.png: Monitoring scope overview
+- noora_system_noora_reporting_*.png: Reporting system interfaces
+- noora_system_qlik_reporting_*.png: Qlik reporting dashboards
+- noora_system_data_flow_automation_*.png: Data flow diagrams
+- noora_system_automation_from_user_perspective_*.png: Automation workflows
+- noora_kt*.png: Knowledge transfer session visuals
+
+=== SUMMARY ===
+
+Noora is a comprehensive network monitoring and reporting system built on SevOne NMS with extensive customizations for Telia's specific requirements. It provides automated device provisioning, advanced alert management, sophisticated reporting capabilities, and seamless integration with various network management systems. The system is designed for both real-time service assurance and long-term capacity planning, with extensive automation to reduce manual workload.
+
+For detailed visual references, see the images in the noora_system_images/ subfolder and the original KT session PNG files.NOORA IT OPERATIONS KNOWLEDGE TRANSFER - COMPREHENSIVE ANSWERS
+================================================================
+
+This document provides detailed answers to all Noora IT Operations knowledge transfer questions
+based on the extracted documentation, KT session notes, and system information.
+
+=== SYSTEM OVERVIEW ===
+
+Q1. What is SevOneDDC and its relationship to Noora?
+A1. SevOneDDC is a comprehensive network monitoring platform specifically designed for Telia's Finland and Sweden operations. It is built on SevOne NMS (Network Management System) and integrated with Noora's custom components. SevOneDDC provides real-time monitoring of network devices, advanced cluster management capabilities, and sophisticated alert notification systems. The platform ensures high availability, network reliability, and comprehensive performance monitoring across Telia's critical infrastructure.
+
+Q2. What are the main components of SevOneDDC architecture?
+A2. SevOneDDC architecture consists of:
+   - Distributed monitoring nodes for data collection
+   - Centralized management interfaces for administration
+   - Policy-based alert configuration systems
+   - Cluster management functionality for load balancing
+   - Database architecture for storing performance data
+   - Integration capabilities with external systems
+
+Q3. What is the objective of SevOneDDC?
+A3. The primary objective of SevOneDDC is to pool devices by SNMP (Simple Network Management Protocol). It provides real-time monitoring, performance data collection, and alert management to ensure network reliability and performance across Telia's infrastructure.
+
+=== DEVICE AND MONITORING MANAGEMENT ===
+
+Q4. How does SevOneDDC collect performance data?
+A4. SevOneDDC collects performance data through:
+   - SNMP pooling of network devices
+   - Performance evaluation by end users
+   - CPU and memory monitoring handled by end users
+   - Data collection frequency visible in device lists
+
+Q5. What is a device in SevOneDDC and how is device discovery handled?
+A5. In SevOneDDC:
+   - Devices are typically added manually by end users
+   - Operations team checks the status of SevOneDDC
+   - User Manager tool is used for adding/removing devices
+   - Device discovery is not automated; devices are added manually
+   - Operations may assist end users with feedback and support
+
+Q6. What is flow monitoring in SevOneDDC?
+A6. Flow monitoring in SevOneDDC involves:
+   - Tracking events and alerts from network devices
+   - No direct action required on alerts (handled by end users)
+   - Verification that alert timestamps match device activities
+   - Ensuring the alerting system functions correctly
+
+=== ALERT AND INCIDENT MANAGEMENT ===
+
+Q7. What are the monitoring jobs in SevOneDDC and their criticality?
+A7. Monitoring jobs in SevOneDDC:
+   - No scheduled jobs or cron jobs
+   - Monitoring involves observing alerts from the dashboard
+   - Some alerts configured to send emails by users
+   - Care must be taken not to delete any configurations
+   - Criticality depends on the nature of the alert and its impact
+
+Q8. What access is required for monitoring in SevOneDDC?
+A8. Required access for monitoring includes:
+   - Admin access for system administration
+   - User Provisioning: Creating and deactivating user accounts
+   - Role Definition: Establishing user types with granular permissions
+   - Access Control: Managing user access to clusters and views
+   - Self-Service Capabilities: Enabling custom reports and dashboards
+   - Administrative Functions: Handling system-wide configurations
+
+Q9. What are alerts and thresholds in SevOneDDC?
+A9. Alerts and thresholds in SevOneDDC:
+   - Configured by end users
+   - Alert Collection: Gathering device alerts from monitored elements
+   - Timestamp Validation: Verifying accurate timestamping
+   - Policy Application: Processing alerts according to policies
+   - Destination Routing: Sending alerts to configured destinations
+   - Delivery Verification: Ensuring proper alert delivery
+   - Operations must be cautious with configuration management
+
+=== USER ACCESS AND SYSTEM MANAGEMENT ===
+
+Q10. What is the Data Insight / reporting portal in SevOneDDC?
+A10. The Data Insight / reporting portal:
+   - Utilized by end users for reporting
+   - Operations provide support related to access rights
+   - Assistance with configuration provided when needed
+   - Operations do not act on reports directly
+
+Q11. How are user roles and permissions managed in SevOneDDC?
+A11. User management in SevOneDDC:
+   - Handled through the User Manager tool
+   - Includes provisioning the Tiga role
+   - User Provisioning: Creating and deactivating accounts
+   - Role Definition: Establishing user types with permissions
+   - Access Control: Managing access to clusters and views
+   - Self-Service Capabilities: Enabling custom reports
+   - Administrative Functions: Handling system-wide configurations
+
+=== CAPACITY PLANNING AND PERFORMANCE ===
+
+Q12. What are common issues and troubleshooting methods in SevOneDDC?
+A12. Common issues and troubleshooting:
+   - Covered in subsequent sessions
+   - Some historical cases may provide insights
+   - No significant issues noted recently
+   - Troubleshooting involves checking configurations and logs
+
+Q13. What is capacity planning in SevOneDDC?
+A13. Capacity planning in SevOneDDC:
+   - Involves monitoring licensing and thresholds
+   - End users take action based on alerts
+   - Operations inform Telia's resource manager regarding capacity
+   - Kevin Kivi is notified of capacity issues
+
+Q14. What is streaming telemetry in SevOneDDC?
+A14. Streaming telemetry in SevOneDDC:
+   - Covers capacity, topology, dashboard, and services
+   - Provides real-time data streaming and monitoring
+   - Enhances visibility into network performance
+
+=== INTEGRATION AND AUTOMATION ===
+
+Q15. What database architecture does SevOneDDC use?
+A15. Database architecture in SevOneDDC:
+   - Cluster Manager checks database connections
+   - Manages system logs and settings
+   - Further details on database type and maintenance needed
+   - Ensures data integrity and availability
+
+Q16. What are the common integrations in SevOneDDC?
+A16. Common integrations in SevOneDDC:
+   - Alerts forwarded to destinations defined in SevOneDDC
+   - End users responsible for integrations
+   - Nerve Center requires detailed information
+   - No daily integration checks
+   - Focus on maintaining the SevOneDDC platform
+   - Supporting end users with integration issues
+
+=== OPERATIONAL PROCEDURES ===
+
+Q17. What are the common support activities in SevOneDDC?
+A17. Common support activities include:
+   - Daily operational checks
+   - System Health Monitoring: Platform availability and status
+   - Cluster Performance Analysis: Node health and resource utilization
+   - Alert Flow Verification: Proper alert generation and delivery
+   - Capacity Monitoring: Resource usage and planning
+   - Log Review: Examining logs for anomalies
+   - Proactive monitoring with minimal end-user contact
+
+Q18. What is the release management and branching strategy in SevOneDDC?
+A18. Release management and branching strategy:
+   - Information not available
+   - Further details needed from documentation or team
+
+Q19. What are the post-deployment checks or sanity checks in SevOneDDC?
+A19. Post-deployment checks:
+   - Information not available
+   - Further details needed from documentation or team
+
+=== DOCUMENTATION AND SUPPORT ===
+
+Q20. What is the Telia Confluence access for SevOneDDC?
+A20. Telia Confluence access:
+   - User management functions include provisioning and access control
+   - Documentation available in Telia's internal wiki
+   - Further details needed from the provided link
+
+Q21. What are the upgrade and patch implementation procedures in SevOneDDC?
+A21. Upgrade and patch implementation:
+   - Information not available
+   - Further details needed from documentation or team
+
+=== SUMMARY ===
+
+SevOneDDC is a comprehensive network monitoring platform integrated with Noora's custom components. It provides real-time monitoring, performance data collection, and alert management for Telia's critical infrastructure. The system includes advanced cluster management, user access control, and integration capabilities with external systems. Daily operational checks and support activities ensure the platform's reliability and performance.
+
+For detailed visual references and additional information, refer to the original documentation and KT session notes.
+NOORA KNOWLEDGE TRANSFER - SESSION 8 CONTINUATION
+===================================================
+
+This document provides detailed answers to questions and notes from Noora Knowledge Transfer Session 8, focusing on alerts, troubleshooting, and operational procedures.
+
+=== ALERTS AND THEIR BUSINESS IMPACTS ===
+
+Q1. What are the most important alerts and their business impacts?
+A1. The most important alerts include:
+   - Monitoring emails
+   - Ferguson server alerts
+   - Nelli Pulse notifications
+   - Email notifications from scripts
+   - Fatal errors identified during Daily Health Checks (DHC)
+   
+   Business impacts:
+   - Monitoring emails ensure timely communication of issues.
+   - Ferguson server alerts indicate potential provisioning failures.
+   - Nelli Pulse notifications provide real-time incident updates.
+   - Script notifications highlight automation or integration issues.
+   - Fatal errors in DHC indicate critical system failures requiring immediate attention.
+
+Q2. How do you determine whether an alert is actionable or informational?
+A2. Alerts are evaluated based on:
+   - Root Cause Analysis (RCA)
+   - Basic evaluation of the incident or situation
+   - Impact on system performance and user experience
+   - Urgency and severity of the issue
+
+Q3. What are the common issues encountered?
+A3. Common issues include:
+   - Integration challenges
+   - Data collection and provisioning errors
+   - Alert configuration and delivery problems
+   - System performance and capacity concerns
+
+=== DAILY HEALTH CHECK PROCEDURES ===
+
+Q4. Which dashboard is reviewed first during the Daily Health Check (DHC)?
+A4. The order of dashboard reviews during DHC can be adjusted based on priorities. Key dashboards include:
+   - Noora Health Portal
+   - Ferguson server status
+   - Alert and notification logs
+   - System performance metrics
+
+Q5. What troubleshooting steps are typically performed for data collection issues?
+A5. Troubleshooting steps for data collection issues:
+   - Check external data sources (e.g., SMO data)
+   - Verify SevOne polling status
+   - Ensure XML configurations are correct
+   - Enable object monitoring if disabled
+   - Loop in relevant personnel (e.g., Kurt) for further investigation
+
+=== PLATFORM HEALTH AND KPIs ===
+
+Q6. What KPIs are considered most critical for platform health?
+A6. Critical KPIs for platform health include:
+   - License numbers and capacity usage
+   - System performance metrics (CPU, memory, disk utilization)
+   - Data collection and polling status
+   - Alert and notification delivery success rates
+   - Integration and external data flow status
+
+Platform Health Checklist:
+   1. Platform Health:
+      - Verify all NMS and data insight components are operational.
+      - Follow DHC protocols for comprehensive checks.
+   
+   2. Active or Critical Alerts:
+      - Monitor device alerts sent to Nelli.
+      - Address critical alerts promptly.
+   
+   3. Polling Functionality:
+      - Check device configuration for polling status.
+      - Identify unsupported devices without XML documents.
+      - Use System Tools => Device Deviation for troubleshooting.
+      - Note: Polling can be manually disabled for devices with high object counts (e.g., 8000 objects).
+   
+   4. Packet Loss or Collection Delay:
+      - Check for packet loss using SevOne tools.
+      - Use Rasmus and Horizon for detailed analysis.
+      - Monitor Noora Health => Device Dashboard => Package Loss.
+   
+   5. Cluster Instance Synchronization:
+      - Verify cluster manager status (not typically checked in DHC).
+      - Ensure poller server is operational (green status).
+      - Confirm Ferguson server status.
+
+=== MONITORING COVERAGE ===
+
+Monitoring Coverage Checklist:
+   1. Unmanaged or Unreachable Devices:
+      - Use Noora Health to identify unreachable devices.
+      - Unmanaged devices are not provisioned in SMO.
+   
+   2. Device Additions or Removals:
+      - Track devices added or removed in the last 24 months.
+      - Review during DHC.
+   
+   3. Monitoring Gaps or Missing Metrics:
+      - Investigate and address any identified gaps.
+      - Ensure comprehensive metric coverage.
+   
+   4. Device Discovery:
+      - Monitor device discovery status.
+      - Noora Health Portal will indicate issues if discovery fails.
+
+=== PERFORMANCE AND CAPACITY ===
+
+Performance and Capacity Checklist:
+   1. Database/Storage Utilization Trending:
+      - Monitor storage capacity limits.
+      - Consult manuals and configurations for thresholds.
+   
+   2. Capacity Concerns:
+      - Address capacity issues when approaching 100%.
+      - Kurt can make configuration changes to improve capacity.
+      - Current capacity is under 80% after recent adjustments.
+      - DHC includes capacity checks and trend analysis.
+      - Report capacity concerns in weekly meetings.
+      - SevOne manual provides guidance for handling 100% capacity (polling stops).
+      - Planned solution: Add another poller server (complex operation).
+      - Temporary solution: Disable objects (consult with Kurt and Telia, follow rulebook).
+   
+   3. CPU, Memory, and Disk Utilization:
+      - Monitor graphs on Ferguson server.
+      - Check for spikes during automatic checks.
+      - No significant issues reported in the past 12 months.
+   
+   4. Retention Policies:
+      - Verify transport data retention on Horizon (240 days).
+      - Horizon has been polling for approximately 6 months (not yet reached 240 days).
+      - No issues with retention policies reported so far.
+      - Capacity planners will report if data is missing.
+      - Insights may suffer if retention is insufficient (no current issues).
+
+=== ALERTS AND INCIDENTS ===
+
+Alerts and Incidents Checklist:
+   1. Critical Incidents:
+      - No critical incidents reported since the previous health check.
+   
+   2. Escalated Alerts:
+      - Admin messages on SevOne about alerts not working have been escalated.
+      - Resolution is pending.
+   
+   3. Recurring Alerts:
+      - Perform RCA for admin messages.
+      - Nelli heartbeat and application scripts send alerts to the shared mailbox.
+   
+   4. Unresolved Tickets:
+      - No open tickets, but some cases remain open:
+        * Admin alert mailer requires investigation.
+        * SMO updates scheduled for the next day (evening).
+        * Continue handling the list of open tickets.
+
+=== DATA COLLECTION AND REPORTING ===
+
+Data Collection and Reporting Checklist:
+   1. Data Ingestion:
+      - No reported issues with data ingestion delays.
+      - DHC checks external data flow integration.
+      - Common issues are discussed and resolved as they arise.
+      - Example: SMO info not arriving in Noora (pending resolution).
+      - Noora logs device provisioning issues.
+      - Export to Qlik has logs for monitoring.
+      - Check for fatal errors indicating significant issues.
+   
+   2. Report and Dashboard Generation:
+      - Follow DHC protocols for report and dashboard checks.
+      - Ensure all reports and dashboards are generated successfully.
+   
+   3. User-Reported Missing Data:
+      - Address missing data related to exporters (e.g., Qlik).
+      - Investigate missing polling data or links.
+      - Refer to shadow sessions for historical cases.
+   
+   4. Scheduled Reports:
+      - Verify scheduled reports are delivered successfully.
+      - DHC checks PHP reports and other report sources.
+      - Refer to previous KT and shadow sessions for details.
+
+=== RESPONSIBILITIES ===
+
+Q7. Who is responsible for hardware and database-related issues?
+A7. VeHa IT personnel are responsible for:
+   - Hardware maintenance and troubleshooting
+   - Database management and optimization
+   - Server and infrastructure support
+
+=== SUMMARY ===
+
+Session 8 of the Noora Knowledge Transfer focuses on critical alerts, Daily Health Check procedures, platform health monitoring, and troubleshooting steps. Key takeaways include the importance of monitoring alerts, addressing capacity concerns, and ensuring data collection and reporting integrity. The session also highlights the roles and responsibilities of VeHa IT personnel in managing hardware and database-related issues.
+
+For further details, refer to the Noora operational documentation and previous KT session notes.

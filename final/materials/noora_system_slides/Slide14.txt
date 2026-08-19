@@ -1,0 +1,68 @@
+HIERARCHICAL GROUPING
+
+Object type for
+Indicator type control
+
+Device type for
+Object type control
+
+Device Groups for alert, report and
+authentication control
+
+Object Groups for alert policy and
+report control
+
+(Bi allpetisictypes  AllobjectTypes _|
+
+B All Device Groups
+
+B All Object Groups
+
+Basic Dasiie Types | Card J Fixed IP Platform Device Statistics
+}
+(ef mlcaiaktios) GL logidlemeltmos | | Hae devices ids _Tamesarntabsity |
+
+Cisco IOS
+
+MDA
+
+Card
+
+ed
+
+Power Supply
+
+LY Huawei VRP }
+
+f Juniper Junos
+
+‘Aggregation }
+
+}
+J
+J
+J
+
+Processor
+
+‘Advanced
+
+al Alcatel TIMOS
+
+FPC
+
+E
+
+Logical Interface
+Alcatel TIMOS.
+
+Traffic Statistics
+
+‘Asbr to Core
+
+Internal
+
+Ly Juniper Junos SAP } LY Device Info }
++ Cisco 10S ] Device Model |
+UE ceeo-76098
+

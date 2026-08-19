@@ -1,0 +1,27 @@
+Qlik reporting is activated to 1800
+
+DATA OUTPUT init QLIK VIEW it SENSE groups which contain 18 000 objects
+
+00st IPNETWORK TRAFFIC GRAPHS, Qo og.
+
+* Qlik system is an external reporting
+system which utilizes two different
+
+kinds of Noora data: ze. :
++ Data grouping 4
++ Group statistics == z 7 a
+« Data grouping and export activation is = oes =!
+controlled via custom user interface =
+called Rasmus Admin —
+=
+* 99% of all data grouping is automated —
+
+(members are auto-updated)
+
+« Noora generates 1-day average
+statistics to Qlik once per day from all
+Qlik targeted groups
+
+Internal
+
+\)

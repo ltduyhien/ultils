@@ -1,0 +1,41 @@
+Assingle link change will automatically
+update hundreds of groups in Noora
+
+END-TO-END AUTOMATION - QLIK o
+
+« Following example will help to understand the automated chain of events which will take place
+in case of change in the network topology (e.g. an existing trunk link is replaced by a new link)
+
+After Noora system has walked through the changes and
+started gathering statistics from the new link, the old link
+
+User modifies or
+
+creates a new link Scheduled scripts will
+
+inSM/O will be automatically removed and the new will be collect the statistics from
+automatically added to all necessary groups all Qlik tagged groups
+MANUAL
+(I Noora System 1006 Tampere Core-Edge
+— Cc
+std = = LAG MD (core ac interfaces =» =
+ae AUTO AUTO AUTO AUTO AUTO
+Edge Tampere 100G [our]
+crangeinithe a 9 Core Automatic grouping can consists ;
+sgutomatically of several levels: Qlik data is automatically
+triggers an update imapers updated without a single
+
+process to Noora
+
+updates on the first level will
+
+eventually automatically update
+the next level(s)
+
+++ FULLY AUTOMATED =: ones
+
+Internal
+
+user interaction in the
+middle of the chain
+

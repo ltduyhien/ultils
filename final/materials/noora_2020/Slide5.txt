@@ -1,0 +1,22 @@
+over 1 000 000 lines of CSV formated
+ri] inventory data is sent to Noora nightly
+
+CONNECTED SYSTEMS - INPUT
+
+SurfManager/Operator ) Tomaatti
+
+* Device information é + Subscription information
+
++ Port and link information \ ) + Product and SLA information
+Satellite Systems / SNET ( ) MIT
+
++ Location information MIT | + Subscription information
+
+\ ) + Product and SLA information
+
+SMO L2 Manager ( ) SAP ERP
+* Subinterface information 7 | + Spare part material information
++ Service information + Stock volume information
+
+Internal
+

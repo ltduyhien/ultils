@@ -1,0 +1,26 @@
+QLIK REPORTING
+
+¢ Designed for Planning and Business
+
+¢ Data is prepared in Noora System
+
++ Device validation and data enrichment (Noora Engine)
++ Reporting structure management (Rasmus Admin)
+
++ Report data selection automation (Rasmus Admin)
+
++ Data summary calculations (Rasmus Admin)
+
+« Exported statistics are 24h average and max data
+
++ Amount of transferred data volume is manageable
+
++ Precision is sufficient for long term and trend reporting
+
++ Trill down details are available via Noora reporting Uls
+(For example, to inspect what has happened inside 24h)
+
+* Data is available through vast amount of different
+QlikView and QlikSense dashboards
+
+Internal

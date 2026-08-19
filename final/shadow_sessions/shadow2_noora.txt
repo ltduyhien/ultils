@@ -1,0 +1,37 @@
+Noora Shadow Session 2
+
+Daily Health Check Procedures:
+- Login to SevOne using Veha TCAD credentials
+- Check capacity and license usage in Cluster Manager
+- Review alerts and verify timestamps
+- Check Device Manager for new devices and link relationships
+- Login to ferguson server and run health check one-liners
+- Switch to provisor user and run provisioning status checks
+
+Rasmus Portal Activities:
+- Run alert reports by severity (critical)
+- Track alert counts and trends
+- Use Alert Tree View to analyze device groups
+- Check Sandbox for object groups and test reports
+- Monitor CPU utilization and data loading status
+
+Health Portal Procedures:
+- Review PHP logs for device provisioning issues
+- Check System Control for capacity and other metrics
+- Generate Change Reports for devices and objects (1 week)
+- Report empty groups to Telia
+- Run System Reports (Exporter Group Report)
+- Check External Data for date validation and parsing status
+- Review Device Dashboard for provisioning status
+
+Incident Handling:
+- Investigate date check warnings (1 day missing is acceptable)
+- Check for CSV files stuck on proxy servers
+- Monitor parsing status and provisioning engine load
+- Document any anomalies in daily health check reports
+
+Communication:
+- Use shared mailbox for team communication
+- Report findings in weekly meetings with Telia
+- Escalate critical issues to Resource Manager (Kevin Kivi)
+- Document all actions and observations for audit purposes

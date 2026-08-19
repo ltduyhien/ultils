@@ -1,0 +1,357 @@
+Generic Topics and Content Layout
+==================================================
+
+Slide 1
+--------------------------------------------------
+Title: SevOneDDC Shadow KT Playback
+
+Content Layout:
+- Application Shadow KT Playback
+
+Slide 2
+--------------------------------------------------
+Title: SevOneDDC Shadow KT Progress Review
+
+Content Layout:
+- Application Shadow KT Progress Review
+- Application: Application Knowledge Transfer Phase: ShadowPresented by: Biplob Kumer DasDate : 14 August, 2026
+
+Slide 3
+--------------------------------------------------
+Title: Application Summary
+
+Content Layout:
+- Application Summary
+- Application Name  : Application 
+- Functionality
+- Application serves as the polling tool used for monitoring internal network data and firewall data.
+- Use some inbuilt reporting
+- Forward threshold alert to event handling system
+- Application is Performance Monitoring system which offers all-in-one monitoring and reporting solutions for carrier and backhaul networks, SD-WAN, SDN, cloud and datacenter environments. Application is the system name for the platform built on top of Application product to monitor firewalls and internal network device.
+- Key technologies:  It is an Appliance and vendor Vendor
+- Database: Database
+- Infrastructure view
+- Physical location: Location
+- Deployment type: on-prem, Linux 7,8,9
+- Appliance OS- Linux
+- Appliance types: Production.
+
+Slide 4
+--------------------------------------------------
+Title: 4
+
+Content Layout:
+- 4
+- Application - High Level
+- Provisioning Data Flow
+- - NE is populated to Application from comoront portal.
+- Polling
+- Application has pollers around countries for monitoring internal network data and firewall data.
+- Cormoront Portal
+- -  A Dashboard monitoring by Data Center team. Whenever network device onboarded to Comorant portal it is triggered to Application.
+- Data Pipeline
+- Cormoront Portal
+- Application Portal
+- Application Pollers
+- Alert System
+- Ticket System
+- ---------    Monitoring Protocol Metric pooling
+- Provisioning
+- Monitoring Protocol Trap
+
+Slide 5
+--------------------------------------------------
+Title: SevOneDDC Shadow KT Overview
+
+Content Layout:
+- Application Shadow KT Overview
+- Objective
+- Observe support activities performed by the incumbent team.
+- Understand operational workflows and business process.
+- Gain hands-on exposure to Application  support activities
+- Prepare for Reverse Shadow and Knowledge validation
+- Scope Covered
+- User access and provisioning ( User Management System role approval and Application  user manager)
+- Technical Support.
+- Incident & Problem management
+- Application Operations
+- Data Management
+- Service Level Agreements/Performance Indicators Reporting
+- IT Operations
+
+Slide 6
+--------------------------------------------------
+Title: Technical Environment Understanding
+
+Content Layout:
+- Technical Environment Understanding
+- Observed
+- Application  architecture components.
+- Device management (eg: Device manager, Object Manager, Device and Object group, Monitoring Protocol Walk)
+- Device pooling mechanisms
+- Cluster management and monitoring configuration
+- Event management(Alert, Alerts summary, configuration, Instance status.
+- Report management( Create Report, Report manager, Instant Graphs, TopN Reports)
+- Key Learnings
+- Application functionalities
+- Monitoring architecture
+- Support responsibilities
+- Critical system components
+
+Slide 7
+--------------------------------------------------
+Title: System Architecture & Design
+
+Content Layout:
+- System Architecture & Design
+- Dual data center architecture (Location & Location)
+- Monitoring Protocol-based network metrics collection
+- Support for routers, switches, load balancers, firewalls
+- Device types: routers, switches, load balancers, firewalls, proxies, SAN switches etc.
+- VMware virtual appliances
+
+Slide 8
+--------------------------------------------------
+Title: Application Operations Shadowing
+
+Content Layout:
+- Application Operations Shadowing
+- Observed Daily Activities
+- Ensure the availability of Application  to devices and end users.
+- Provisioning the user(adding/removing) using User Management System and Application user manager.
+- Application login using Authentication System account.
+- Check the amount of devices and license status for the systems and per controller.
+- Check if there are new devices created in Application .
+- Monitor the cluster status
+- Check the status of the alerts coming to Application as per the current timestampd.
+- Check the rendering graph from the report manager for Application system.
+- CPU, memory, disk storage capacity,disk I/O  from the cluster nodes.
+- Dashboard rendering and alert processing monitoring
+- System log analysis for errors and warnings
+- Structured troubleshooting methodology with Root Cause Analysis.
+- Understanding Gained
+- Daily operational checklist
+- Common operational issues
+
+Slide 9
+--------------------------------------------------
+Title: Application Code Walkthrough of SevOne DDC appliance
+
+Content Layout:
+- Application Code Walkthrough of Application  appliance
+- Observed
+- Application modules
+- Configurations
+- Key support-related areas
+- Learning outcome
+- Application flow understanding
+- Troubleshooting touchpoints
+
+Slide 10
+--------------------------------------------------
+Title: Data Management shadowing
+
+Content Layout:
+- Data Management shadowing
+- Observed
+- Data flow process
+- Database interactions
+
+Slide 11
+--------------------------------------------------
+Title: Incident Management Shadowing
+
+Content Layout:
+- Incident Management Shadowing
+- Observed Activities
+- Multi-channel communication (Tickets, Teams, Email)
+- Severity assessment.
+- Contact relevant teams for addressing/analysing the issues.
+- Stakeholder communication and documentation requirements
+- Contact Resource Manager as primary escalation point and create ticket as per the severity of the issue
+- OrganizationNow ticket-based incident and problem management workflow
+- Contact IT Ops for server/database issues and create ticket as per the severity
+- Step-by-step investigation and resolution process
+- Key Learnings
+- Incident prioritization criteria
+- Stakeholder communication process
+- Resolution workflow
+
+Slide 12
+--------------------------------------------------
+Title: Problem Management & RCA Shadowing
+
+Content Layout:
+- Problem Management & Root Cause Analysis Shadowing
+- Observed Activities
+- Problem Ticket
+- Root Cause Analysis Preparation
+- 12 months summary of known issues
+- - Required indicator missing for specific device. (Fixed by manually creating rule to enable the indicator for selected device)
+- - DNS resolving issue for specific device: Ticket number RITMSE0024780
+- - Incident happened due to electrical power cut in Location for a while.
+- Key Learnings
+- Root cause identification approach
+- Prevention action planning
+- Documentation standards
+
+Slide 13
+--------------------------------------------------
+Title: SLA, KPI & Reporting
+
+Content Layout:
+- Service Level Agreements, Performance Indicators & Reporting
+- Observed Reports
+- Availability Reports
+- Operational Performance Indicatorss
+- Key Learnings
+- Reporting in Application 
+- Data collection methods
+- Stakeholder expectations
+
+Slide 14
+--------------------------------------------------
+Title: IT Operations Readiness
+
+Content Layout:
+- IT Operations Readiness
+- Observed
+- Production Support Activities
+- Incident and Problem management
+- Governance Control. ( Gone through by Organization Resource Manager)
+- Escalation Process
+- Key Learnings
+- Operational governance
+- Daily Health Check
+- Support model
+- Major incident procedures
+
+Slide 15
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance
+
+Content Layout:
+- Daily Health Check Protocol at A Glance
+- Observed
+- This protocol outlines the steps for performing a daily health check on the Application  application, an instance of Vendor Application. The goal is to ensure the system is operational, alerts are functioning, capacity is stable, and server resources are monitored.
+- Steps:
+- 1. Login
+- Log in to Application using Authentication System (Organization Central Authentication Directory).
+- 2. Cluster Manager
+- Navigate to the Cluster Manager.
+- Verify the number of devices. Look for drastic changes that could affect capacity.
+- Check the overall capacity. Ensure it has not changed significantly since the last check.
+- Monitor specific clusters: c1, c2, p3, p4 (update)
+- Note: Device mover processes are handled separately if capacity is exceeded.
+- 3. Alerts
+- Verify that alerts are flowing in.
+- Check the timestamp of the topmost/latest alert to ensure it is recent.
+- If no alerts are present, manually check the Policy Browser to confirm that alert rules are still active.
+
+Slide 16
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance cont..
+
+Content Layout:
+- Daily Health Check Protocol at A Glance cont..
+- Observed
+- 4. Device Managers
+- Open the Device Manager.
+- Check for any changes in devices or configurations.
+- Add a column for "Date Added" and sort it to identify recent additions.
+- If there is a large influx of new devices (e.g., 100 devices), notify the Resource Manager (RM) about the increased activity.
+- 5. Reports
+- Navigate to the Report Manager.
+- Verify that favourite reports are accessible and their graphs are functioning correctly.
+- 6. User Provisioning
+- Check emails for user provisioning requests.
+- Check User Management System for any new user provisioning requests. (User Management System could be automated with the requests, the requests could be fulfilled before getting resolved)
+- Go to User Manager in Application , verify status of user account before doing any action
+- Verify that user creation requests are legitimate (e.g., valid Organization email).
+- Low number of user provisioning requests is typical, but large teams joining may require additional provisioning.
+
+Slide 17
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance cont..
+
+Content Layout:
+- Daily Health Check Protocol at A Glance cont..
+- Observed
+- 7. Check, Verify and Investigate
+- Search for specific devices by name.
+- Click on the device summary.
+- Test device settings by performing an Monitoring Protocol walk function.
+- Use the Monitoring Protocol OID Manager to verify device activity and Monitoring Protocol polling.
+- Regularly check for admin error messages and investigate new alerts as needed.
+- Use SSH to access the Application  servers with users created specifically.
+- Check disk space for critical partitions: /dev/sda2, /dev/sda3, and /dev/mapper/database.
+- Verify server OS details using commands like `cat /etc/os-release`.
+- 8. Escalation Procedures
+- If issues are identified (e.g. missing data, alert failures, disk space issues), escalate to the Resource Manager(RM).
+- For cluster issues, take screenshots (be careful with the confidentiality of the information, only use screenshot if really necessary, provide minimal data) and inform the RM.
+- Focus on critical issues and escalate as needed.
+- Follow the OrganizationNow process for creating any problem and incident ticket.
+
+Slide 18
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance cont..
+
+Content Layout:
+- Daily Health Check Protocol at A Glance cont..
+- Observed
+- 9. Documentation
+- Document any anomalies or issues encountered during the health check.
+- Ensure all steps are logged for future reference.
+- Check the security/access of the sharing storage location
+- Document any issues and research potential resolutions.
+- Keep documentation up-to-date for troubleshooting and auditing purposes.
+
+Slide 19
+--------------------------------------------------
+Title: Reverse Shadow Plan
+
+Content Layout:
+- Reverse Shadow Plan
+- Activities to be performed
+- Application operations
+- Daily health checks
+- User provisioning
+- Incident handling
+- Problem investigation
+- Stakeholder communication
+- Support Model
+- Team A Team: Execute
+- Team B Team: Observe & Guide
+
+Slide 20
+--------------------------------------------------
+Title: Shadow KT schedule activities summary
+
+Content Layout:
+- Shadow KT schedule activities summary
+- Shadow session-1 to 10 for ApplicationStart date: 23 July,2026End date: 6 August, 2026Status: Completed
+
+Slide 21
+--------------------------------------------------
+Title: Conclusion
+
+Content Layout:
+- Conclusion
+- Achievements
+- Shadow KT completed successfully
+- Major Operational process understood
+- Risks and gaps identified
+- Pending for required Admin user and User Management System user provisioning and Governance control for Reverse Shadow
+- Team prepared for Reverse Shadow phase
+- Next Step – Reverse Shadow Sessions
+- Readiness Validation
+- Production Support Handover
+
+Slide 22
+--------------------------------------------------
+Title: 22
+
+Content Layout:
+- 22
+- Thank You
+

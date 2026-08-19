@@ -1,0 +1,22 @@
+DATA OUTPUT - NELLI
+
+¢ All alerts generated in Noora (SevOne) are sent to Nelli
+
+* Generated alerts are classified to following categories:
++ STATUS =a
++ PERFORMANCE : : ee S
+
+* Only alerts which are classified as —
+
+STATUS are shown in Nelli incident
+views (targeted for CC Karlstad)
+
+* Target is to have 0% of unwanted
+alarms from the Noora system j |
+
+*« Common documentation for device and network related alerts is created to NetDoc wiki
+https://netdoc.teliasonera.net/wiki/Alert_matrix_for control center
+
+Internal
+
+\)

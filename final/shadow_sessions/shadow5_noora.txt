@@ -1,0 +1,33 @@
+Noora Shadow Session 5
+
+Data Management:
+- Monitor data flow and integration processes
+- Check external data sources and validation
+- Investigate data parsing and processing issues
+- Verify data consistency and accuracy
+- Document data issues and resolutions
+- Report data problems to Resource Manager
+
+Incident Management:
+- Monitor alerts and incident reports
+- Investigate incident causes and impacts
+- Follow incident prioritization criteria
+- Document incident details and actions
+- Communicate with stakeholders and teams
+- Escalate incidents as necessary
+
+Problem Management:
+- Conduct root cause analysis for issues
+- Develop prevention and mitigation strategies
+- Document problem investigations and findings
+- Implement corrective actions and fixes
+- Monitor problem resolution and effectiveness
+- Report problem status and outcomes
+
+Best Practices:
+- Follow incident and problem management procedures
+- Document all investigations and actions
+- Communicate with stakeholders and teams
+- Escalate issues as necessary
+- Monitor resolution effectiveness
+- Report status and outcomes to Telia

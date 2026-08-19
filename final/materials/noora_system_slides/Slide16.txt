@@ -1,0 +1,28 @@
+AUTOMATION FROM USER PERSPECTIVE
+
+Data is updated and present in the
+OSS system and in Noora reporting
+
+Network engineer configures NO MANUAL WORK
+the mandatory OSS system
+
+>
+en] Engineer does not (need to) © 5-15 minutes
+
+know anything from the fe serer
+“=.alerting or reporting side ==
+
+Devices, connections and Network monitoring is
+
+services are automatically automatically enabled
+provisioned to Noora
+
+¥
+
+. = Data is automatically added and
+—_=<=_== » exported to external systems
+~ Data polling is started, and =a sSsS=
+groups are created and
+updated automatically
+
+Internal

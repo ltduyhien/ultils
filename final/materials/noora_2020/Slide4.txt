@@ -1,0 +1,39 @@
+NOORA AS A COLLECTOR
+
+ri) over 2 500 000 indicator statistics are
+updated every 180s in the SevOne db
+
+Telia OSS and BSS
+Inventories
+
+Products and
+
+Services
+
+Noora collects vast amount
+data from network elements,
+from products and services
+and from network inventories
+
+Network A hardware
+
+This information is used to
+enrich and combine data as
+well as to enable automation
+for monitoring and reporting
+
+Monitoring
+
+Network B
+hardware
+
+Vendor Vendor
+Y
+
+Vendor
+w
+
+Network C
+hardware
+
+Internal

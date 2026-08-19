@@ -1,0 +1,53 @@
+OBJECT GROUPING
+
+OBJECTS IN NOORA PROVISIONING
+
+Device Name Object Name
+
+Object Description
+
+CPU
+
+fi-hki-asbr1 CPU
+
+Processor Unit 1
+
+fi-hki-asbr1 Power Supply Power Unit 1
+
+fi-hki-asbr1 Interface 1/1
+fi-hki-asbr1 Interface LAG-1
+
+metro-hki-s01 cPU
+
+metro-hki-s01 Interface LAG-1
+metro-hki-s01 Interface 1/1/1
+metro-hki-s01 Interface 3/1/1
+metro-tre-sO1 cPU
+
+metro-tre-sO1 Interface 2/1/2
+metro-tre-sO1 Interface 2/1/2
+
+Internal
+
+fi-hki-core1 Interface 3/1 100G
+metro-hki-sO1 Interface LAG-1 30G
+
+Processor Unit 1
+
+fi-hki-asbr1 Interface 2/1 30G
+ftth-hki-sO1 Interface 1/1 106
+edge-mobile-r01 Interface 4/1 106
+Processor Unit 1
+
+fttb-tre-sO1 Interface 1/1 16
+fttb-tre-s02 Interface 1/1 16
+
+POWER SUPPLY
+
+100G
+
+ASBR TO METRO
+
+METRO TO FTTB
+
+\)

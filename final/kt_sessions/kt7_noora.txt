@@ -1,0 +1,93 @@
+SSH to server
+run one liner
+change to provisor user
+run one liner
+
+Go to SevOne, login
+Cluster Manager, check capacity, liscence number
+Check the alerts
+Device manager, 1 new device that we added yesterday
+
+FireFox, Rasmus
+CHeck for alerts
+
+Grou reports
+Sandbox
+Noora memory Ultilization
+CHeck
+
+Device Group Manager
+Check for the topmost items
+
+Noora Health Check
+
+Action required, checked for 3 dashboarded
+Provision Control
+System COntrol statistics
+
+Change Report
+Check for 1 day
+
+System Report
+Cehck Exporter gruop report
+
+External Data check
+Data rows, and other
+
+Device Dashboard
+Check most recent provisioning, then from SevOne check for the fetching error
+
+Check edit this device SFP
+SevONe bug with the weird character
+SevOne save it to the database with the wrong character
+It cause the API call failt => no XML data for Noora Health
+Go to device, 
+Kurt has info on this.
+Low amount of this problem exsists
+This is most common reasons for XML problem
+Rami has reachede to us, 1 uyear ago,
+Action: llik at the list in Noora Health Portal with problems liek this. 
+
+IBM has been contacted by the issued. It is IBM problem. 
+
+Back to Noora Health Portal
+
+If there is a problem, best plac eto check is the Device Bashboard in Npora Health
+
+The XML is actually the problewm with some Noora part
+
+Rami is the person who has problem witht he weird character, he discussed with Kurt about that.
+
+He disabled 1 device and ticket to replace the SFP
+
+The problem is with SFP
+Ari made a report for Rami, that ask for SFP information
+THe proiblem was 1 number in Hex encoding
+=> SOAP call are failed adn custom script and report use SOAP also failed
+
+Check for the location of the report
+
+SSH to ferguson,
+change to user provisor
+cd var/www/custom/health/reports/
+
+/var/www/custom/health/reports
+Location of Noora Health Portal reports
+
+PHP scripts nad info files
+
+
+1. Gather DHC to XLS, we can use our own method, weekly we biereflyt to throguh items and focus on thigns that have important things going on. Rreview on meeting with Telia. Solve things in the meeting
+2. Quarterly, GRC protolcol are used for vulnerability. Most of the stuffs, GRC is a separate KT form Telia. Splunk is a tool for monitoring vulnerability. Noora partially use that tool.
+Ask Biplob about GRC KT, it is diferent freqwuncy on reporting
+3. Aleksi and Joonas has not been discussing with Telia about this
+4. We dont provide weekly report. Asok if has knowledge we can askj as well
+5. When we have Veha we can get access, will ask Kevin
+6. Limit of documentsation, we will sahre when we get share solution.
+
+
+Evaluate knwoledge, identify gap in information, check notes.
+from 7 will start next week.
+
+
+System Reports

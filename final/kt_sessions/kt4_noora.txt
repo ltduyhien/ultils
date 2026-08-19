@@ -1,0 +1,208 @@
+KT Noora 4
+
+Questions
+1. General list:
+Later today
+15 Operations
+
+2. We do mannuyal work, there are atomation but not many automated script. Server status and mainly interration. Monit scripts for server status and Nelli integration. Monit is ultility server that we are not monitoring. Send email to sahred mailbox if Nelli integration breaks. Nelli integration time mainly Kurt. Script: Noora sending , mock Nelli allarm every 5mn, duymmy alarms, to make sure integration is ok.
+
+3. Innitiated automatically device onboard, user provisioning.
+We do not do user provisioning, it is Veha team. data colelction none, auto. We do not usually receive request for these things, thye are usally automated. 
+
+Device onbaording, SMO not working, we do not get the request, it need to be initiated at SMO level. Then follow with automatation. if we add device hot fix , it will not work.
+
+Integration, it requruies manual work. we have not seen network issue, but so far not yet with integration. In those case reach the repsonsible team. We always try to fix automation first.Most stuffs, we can do hot fix but not as 1st solution.
+
+4. NO document procedure for booting the application, we have no done that. There was a recent boot for server ferguson in spring time, we learn that if boot occur, Noora provisioning should be stopped first. When server is booted, new process cannot started because of previous processed unfinished. Noora Provision script shoudl be stopped beforehand, 4 steps provisioning script.
+
+There are start stop command for SevOne, we have never done but there are commands. Network guys repsonsible for that. Mark Ollikainen, busiest guy in Telia. Discuss with Kurt and Kevin first before reaching Mark Ollikainen. 
+
+5. Not documented, it is maintained by one guy who left. He took many process with him.
+There is test env, so reboot operation could be more safe.
+the system has been very reliable but the procedure was not dcumented, we hesitated to try prod env because we do not know how it affect the system itself.
+
+Test env doe snot have full integration, we do not know. We might not beable to do the same stuffs. Nelli integration is important.  
+
+7. Check Cron on thwe server. Cron job running, it is automated. Provisioning, login, data integration transfer, data manipulation.
+
+8. No docuemntaiton for integraiton
+
+9. Veha team is reosnposlbe for network
+
+10. Veha team is responsible for firewall
+
+11. We were was asked to update CMDB but we do not have the role. CMDB:
+- search for Noora
+- 3 results
+- goto relationship tab, show parentw
+- systrm are chile
+- go to server
+- check if config is avialable
+- We cannot immediately see configuraiton here
+- Should be under Veha, CMDB is not
+
+12. Show in health check for trigger condition
+
+
+To do list
+- get access to sjhraed mail box is most important
+
+Daily Health Check
+
+- At server: a) Check fatals b) Check exporter script runtime
+- At SevOne NMS: a) Cluster b) Alarms c) New devices
+- At Rasmus: a) Alarms b) Report
+- At Rasmus Admin: a) Jitter from random device
+- At Health Portal:
+    a) Action Required
+    b) Provisioning control
+    c) System control
+    d) Change report
+    e) System report
+    f) External data
+    g) Device dashboard
+
+Server: SuperPutty, recokmended by colleges, Tealia
+This is avialable in Portal.
+
+ferguson is the main server
+check the fatals, 1 liner command, not sure about origin, passed in accenture KT
+check user, 1 liner  command, not sure about origin, passed in accenture KT. It has been slower recently.
+4000 is threashold of being too slow
+
+the script had some problem before, in the future we might discuss new checkup for daily health check
+
+fatals: we investigate
+
+SevOne NMS: VeHa LDAP credentials for Noora
+TCAD id, Veha password
+Cluster Manager first
+- check peers, they are pooler, aura is the blow of a trucker. Total License Consumption is mot important. This is not real because of VM. shoudl not reach 100%. Trigger consition: if grows rapidly, 1% per day, depends on the devices, and types of devices, (0.5% is already crucial). Follow the trends of capacity. It should not exceed 95%. ot allowed to reach 100%. Aura 7 is low because it is for certain type of devices.
+
+In theory, pooler coudl be installed, capacity could be distributed again, and get lower. Planf or 10th aura, frozen at the moment. Noora has much more cusotm features that some works would nbe requried outside SevOne, we do not have documentation on how this coudk be added.
+
+Alarms: admin messages, goes away. Log in log out to check if the admin messages still there. 
+
+Alerts, check if they are flwon in, check timestamps, compare to system time. Make sure filters are correct. 15 mn of no alerts would be not normal.
+
+DDC: 4000 alerts, not managed. No one is managing
+SevOne NMS: 330 alaerts, if drastically 600 should contact RM. Philosophy: Onyl create relevant alert, and we react to all alert.
+
+Device Managers: 
+see latest updates
+
+Rasmus: Veha LDAP
+Run alert report
+View by severity
+critical alert
+click select
+Run report
+Data is flown to rasmus
+98 alerts is considered to be realistic. 300 woudl be alarming. Coudl be followed together with SevOne to see the trend. If Noora grows, hgher alerts would be normal.
+It is fine to ppke aroudn and play with the dashboard
+We can check alert details, what object created the problem
+
+Alert tree view
+Device group
+
+Sandbox: populated with test and ultility report
+CHeck report
+Pay attention to spiper spiky graph
+
+Rasmus Admin: LDAP Veha
+Device group, sandbox button
+ press device button, open list of devices
+Show numebr of eentries
+Pick a random device, click get object
+list of objects
+chose top object
+choose jitter
+
+Can chose top most items
+
+This is for cehcking Rasmus Admin working correctly
+Included in Tiga role Noora Admin
+=================
+
+- At Health Portal: LDAP Veha
+    a) Action Required
+    b) Provisioning control
+    c) System control
+    d) Change report
+    e) System report
+    f) External data
+    g) Device dashboard
+
+
+We go through every tab
+Device snot repsoinding tyo provisioning
+If the first 3 lsits change, we need to notify RM
+If the list doe snot change, we can document and see if it is ever chagne
+
+Provision control
+First provision control lsit is most important, should be followed. 20 is a lot. Follow a few minutes, check for phase change by clicking update.
+
+COudl be provisioning script not running, server boot coudl cause provisioning engigne does not work.
+
+Check external data tab, cehck provisioning tab
+
+Errors: investigate why end up here, by checkign description. No daily escalation here
+
+Discuss not provisioned errors here another session
+
+User might reach us about devices not going through
+
+System Tools (not daily)
+Check device data of error device
+System anomalies for more stats
+
+System COntrol
+System statistics: Another way of viewing capacity, cehck the amount of enabled obecjcts, disable, deleted ..etc
+Why ferguson has enabled obejcts
+shoudl be same numebr as SevOne
+No escalation
+
+Change reports
+Powerful tool, deep diving in another session
+Investigating tool, not escalate
+1 imporant escalate threshold: huge amoutn of changes: 100 changes is a lot. mention that to RM kevin, kurt. Object change is much more.
+
+
+Grou name: network ring
+Take weekly report once a week. Weekly we list to telia what new groups have been created.
+
+modififed group, group has been present
+physical change; disabling of the devices.
+if multiple of normal amount: notify RM
+device remove, config issues disable trhe card, if they do not have ram, the problems contains.
+This is normal amount
+
+Red: groups that has all members remove
+weekly we list the red empty groups
+
+Ssytem reports
+Run "exporter group report" => get the same reports from change report
+
+Daily health check => check if the gerateion works
+escalation path: check the PHP logs
+
+External data:
+amoutn fo grresn in external data validation:
+- data parsing
+- date check
+- MIT, warngn is fine
+- NOORA skipped is normal
+- never file exist amnd read access error
+
+Device Dashboard
+take random device, start with "fi"
+press Info sub tab
+Noora provisioning engine load: normal => report weekly 
+Hover the word "normal" see how many devices are in differnt phases here
+
+EVery steps of the DHC, will reveal an issue. Report to Telia. soiler: years talk of modernizing the syttem for Noora. Obsolete API call network, architecture is really well built.
+
+Next:
+deep diving in to some issue,
+integration to Nelli

@@ -1,0 +1,28 @@
+CURRENT NOORA SCOPE
+
+« Fixed network monitoring * Capacity reporting for infra management
++ IP backbone and mobile CORE + Peering and NNI traffic
++ Broadband, mobile and telco EDGE * Core traffic
++ Regional networks (Metro Ethernet) + Edge traffic
++ NFVI/SDN/Virtual monitoring * Metro traffic
+. + Metro Ring traffic
+* Virtual EDGE ; .
++ SD-WAN nodes * Service based traffic reporting
++ Hyperscale nodes + IP Transit service traffic
+
++ B2C and B2B service traffic
+
+* 3G, 4G, 5G service traffic
+
+* CTV, IPTV and VoD service traffic
++ Cable Internet service traffic
+
+* Special monitoring
+
++ B2C IP address allocation and utilization
++ Hybrid Access virtual platform monitoring
+
+* Cable HFC RF signal monitoring ® DNS Service trafric
+
+Internal
+

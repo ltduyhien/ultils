@@ -1,0 +1,25 @@
+WHAT IS MONITORED
+
+Device component monitoring
+
++ Device performance statistics
+
++ Hardware status, inventory, serial numbers,
+part numbers, etc
+
+Physical interface monitoring
+
+—
+* Copper, fiber, coaxial, wireless, etc [sees || Sesee)| [cosse) [seeee||(sosse] [scsse)
++ Traffic, drops, errors, etc (a onl ee (itesieaton
+3 pe a era = ‘CoS Queue 2 (Business Class) = ||= [Interface Cos
+« Logical interface monitoring == “CGS Queue 4 Real Tine ; f Se —
+«Aggregated interfaces rs) —s ‘CoS Queue 6 (Network Control) eas @
+
++ Subinterfaces
++ Virtual interfaces
+
+Class of service (CoS) monitoring
+
+Internal
+

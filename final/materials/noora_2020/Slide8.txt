@@ -1,0 +1,30 @@
+Noora SevOne consists of a master
+
+SEVONE KEY ELEM ENTS server and two vPAS100K collectors
+
+* SevOne is based on three elements: Devices, Objects Indicators
++ Devices
++ Objects Coneiestt J _j-—~sy —)
++ Indicators a |} Memory} + ——L_temory Total _]
+a . t——+[ Tetlt }_—_—_{ Bits In )
+* SevOne has no limitations how many (Ceooosas21 |__(-csaueuert } =
+devices, objects or indicators can exist
+in a single SevOne instance
+ae easton wenssoe wwastox =~ « ~SevOne instance consists of
+
+master server and collectors
+“iSevOne Sai0re || sSa0re || #5ev0re
+itaster Cotector_ |] Cotector_ | cotector .
+
+=e * Each collector can handle certain
+
+BE) ; ;
+za amount of devices, objects and
+indicators
+
+goa | « When one collector is full, next one
+
+can be added to the system easily
+
+Internal
+

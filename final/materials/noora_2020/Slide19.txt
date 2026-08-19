@@ -1,0 +1,21 @@
+INFORMATION
+
+Noora : https://netdoc.teliasonera.net/wiki/Category:Noora
+
+Alerts : https://netdoc.teliasonera.net/wiki/Alert_matrix_for_control_center
+Rasmus : https://massey.express.sonera.net/custom/rasmus
+
+Veha LDAP : https://genus.express.sonera.net/ (password renewal)
+
+Dashboards : Qlik Sense, SM/O Device and Link pages
+
+Monitored by: SurfWatch
+
+Veera (Zabbix), Orion
+Noora (Graph)
+
+ay
+
+Internal
+
+\)

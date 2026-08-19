@@ -1,0 +1,247 @@
+Noora Shadow Sessions - Technical Analysis of Incidents
+
+This document provides a deep technical analysis of the incidents mentioned in the shadow sessions, focusing on how data is technically presented and processed during each issue. The analysis is based on the Noora device provisioning process documented in `materials/noora_provisioning_docs.txt`.
+
+=== Technical Integration Overview ===
+
+Noora's device provisioning automation involves a complex integration between SurfManager&Operator (SM/O) and Noora's provisioning machine, which controls the underlying SevOne machine via an API. The process includes four phases in SM/O and four phases in Noora, followed by alarm configuration in SevOne. Understanding this integration is crucial for diagnosing and resolving incidents effectively.
+
+=== Detailed Technical Analysis of Incidents ===
+
+1. Missing or Corrupted Data from External Sources
+   - Technical Context:
+     - SM/O generates two CSV files during the Port Check phase: a data file and an instruction file.
+     - The data file contains device-specific metadata, while the instruction file contains details about the ports selected during the SM/O port provisioning phase.
+     - These files are sent to Noora's provisioning machine, where they are parsed and processed during Phase 1 (Loader).
+   - Incident Details:
+     - CSV files with extra lines or wrong formats can cause parsing errors.
+     - Missing or corrupted data in the CSV files can lead to failures in Noora's provisioning phases.
+     - Date validation failures indicate that the data is either missing or outdated.
+   - Data Flow and Processing:
+     - The CSV files are parsed by Noora's provisioning machine during Phase 1 (Loader).
+     - If the files are corrupted or missing data, the parsing process fails, and an error is reported to Noora's management.
+     - The provisioning engine status is monitored to ensure that the data is correctly processed and integrated into the Noora system.
+   - Resolution Steps:
+     - Identify the specific CSV file causing the issue using the External Data tab in Noora's Health Portal.
+     - SSH into the ferguson server and navigate to the CSV file location (`/opt/provisioning/dump/`).
+     - Apply hot fixes to the CSV file to correct formatting issues, ensuring that the data is in the correct format and contains all necessary fields.
+     - Monitor the provisioning engine status to ensure that the fix is applied correctly and that the data is parsed without errors.
+     - Verify that the data parsing status changes to "OK" after the fix, indicating that the data is correctly integrated into the Noora system.
+   - Reference: shadow3_noora.txt, kt3_noora.txt, materials/noora_provisioning_docs.txt
+
+2. Broken Links Reported by Users
+   - Technical Context:
+     - Links are configured in SM/O during the Port Provisioning phase and sent to Noora as part of the instruction file.
+     - Noora's Phase 4 (Link) builds link objects in the SevOne system based on the SM/O links.
+     - Link objects are used in reporting to prevent the interruption of historical data during port migrations.
+   - Incident Details:
+     - Links reported as broken by users like Juho Kontio indicate that the link objects are not functioning correctly.
+     - Links flagged as deleted in the Object Manager suggest that the link objects are incorrectly marked as deleted.
+     - Duplicate links causing confusion and errors indicate that the link objects are not uniquely identified.
+   - Data Flow and Processing:
+     - The SM/O link between two devices is entered into the SevOne database as a calculated object (COC).
+     - The statistics for this object are copied from the SM/O link's end ports.
+     - If the end port of this link changes, the copied statistics are changed to point to the new port.
+   - Resolution Steps:
+     - Use the Object Manager in SevOne to search for the specific device and link, verifying that the link object is correctly configured.
+     - Check the Calculation Editor for link expressions and verify their correctness, ensuring that the expressions are correctly defined and point to the correct ports.
+     - Preserve link history by keeping the link with the correct expression, ensuring that historical data is not interrupted.
+     - Delete duplicate or incorrect links to resolve conflicts, ensuring that the link objects are uniquely identified.
+     - Verify link functionality by checking the graph and data flow after fixes, ensuring that the link objects are functioning correctly and providing data.
+   - Reference: shadow3_noora.txt, kt5_noora.txt, materials/noora_provisioning_docs.txt
+
+3. Device Provisioning Issues
+   - Technical Context:
+     - Devices are provisioned in Noora through a four-phase process: Loader, Pinning, Discovery, and Link.
+     - During Phase 1 (Loader), the device's reachability is checked, and a SevOne discovery is triggered.
+     - During Phase 2 (Pinning), the device's type is determined, and it is checked whether the device is already registered in SevOne.
+   - Incident Details:
+     - Devices not being reachable during Noora's Phase 1 (Loader) can interrupt the provisioning process.
+     - Devices not being registered in SevOne during Noora's Phase 2 (Pinning) can lead to missing monitoring data.
+     - Incorrect SNMP object types being set for the device can result in incomplete data collection.
+   - Data Flow and Processing:
+     - The device's reachability is checked using SNMP, and if the device is unreachable, the provisioning process is interrupted.
+     - The device's type is determined based on the SNMP object types it supports, and these are set in the device.
+     - SevOne is updated to enable all SNMP objects that the device supports, ensuring that the device is correctly configured for monitoring.
+   - Resolution Steps:
+     - Use the Device Dashboard in Noora's Health Portal to check the status of the device, verifying that the device is reachable and registered.
+     - Verify SNMP responsiveness and pooling status for the device, ensuring that the device is correctly configured for SNMP monitoring.
+     - Check the Device Summary for alerts and hardware status, investigating any alerts or hardware issues that may be affecting the device.
+     - Investigate missing data and corrupted metadata using system logs, ensuring that the device's data is accurate and up-to-date.
+     - Contact Kurt or Kevin for hardware-related issues that require further investigation, ensuring that any hardware issues are resolved.
+   - Reference: shadow3_noora.txt, kt3_noora.txt, materials/noora_provisioning_docs.txt
+
+4. Nelli Integration Issues
+   - Technical Context:
+     - Alarms are configured in SevOne after Noora's Phase 3 (Discovery), and if SNMPTRAP forwarding to Neli is enabled, the alert is automatically sent to Neli's trap receiver.
+     - The integration between SevOne and Neli is monitored using Nelli Pulse debug level messages.
+   - Incident Details:
+     - Incorrect alarm policy configuration in SevOne can lead to missing or incorrect alerts.
+     - Issues in the SNMPTRAP forwarding to Neli can result in alerts not being received by Neli.
+     - Errors in the debug level messages sent to Neli can disrupt the integration between SevOne and Neli.
+   - Data Flow and Processing:
+     - The alarm policy configuration in SevOne determines which alerts are generated and forwarded to Neli.
+     - The SNMPTRAP forwarding to Neli ensures that the alerts are received by Neli's trap receiver.
+     - The debug level messages sent to Neli provide real-time updates on the integration status.
+   - Resolution Steps:
+     - Check the integration between SevOne and Neli using the Nelli Pulse debug messages, verifying that the messages are being sent and received correctly.
+     - Verify that the debug messages are being sent and received correctly, ensuring that the integration is functioning as expected.
+     - Contact the Nelli team for escalation if the integration issue persists, ensuring that the issue is resolved in a timely manner.
+     - Improve communication with Nelli to ensure timely updates and resolutions, ensuring that any future issues are quickly addressed.
+   - Reference: shadow9_noora.txt, kt8_noora.txt, materials/noora_provisioning_docs.txt
+
+5. Stuck Phase 2 Devices
+   - Technical Context:
+     - During Noora's Phase 2 (Pinning), the device's type is determined, and it is checked whether the device is already registered in SevOne.
+     - If the device is not registered, the process is interrupted, and an error is reported to Noora's management.
+   - Incident Details:
+     - Devices not being registered in SevOne during Noora's Phase 2 (Pinning) can lead to missing monitoring data.
+     - Incorrect SNMP object types being set for the device can result in incomplete data collection.
+     - Issues in the SevOne discovery process can disrupt the provisioning flow.
+   - Data Flow and Processing:
+     - The device's type is determined based on the SNMP object types it supports, and these are set in the device.
+     - SevOne is updated to enable all SNMP objects that the device supports, ensuring that the device is correctly configured for monitoring.
+     - If the device is not registered, the process is interrupted, and an error is reported to Noora's management.
+   - Resolution Steps:
+     - Kurt checks the SMO and provisioning status for the device, verifying that the device is correctly configured and registered.
+     - Delete the device from the Device Discovery to reset the provisioning process, ensuring that the device is correctly provisioned.
+     - Trigger a new provisioning process for the device, ensuring that the device moves through the provisioning phases correctly.
+     - Monitor the provisioning engine to ensure that the device moves through the phases correctly, verifying that the device is correctly provisioned and functioning.
+   - Reference: shadow8_noora.txt, kt6_noora.txt, materials/noora_provisioning_docs.txt
+
+6. Missing Chassis Inventory Info
+   - Technical Context:
+     - During Noora's Phase 3 (Discovery), all objects found during the SevOne discovery are registered.
+     - The device's SM/O instruction file is processed, and the ports selected by the SM/O port provisioning are enabled.
+   - Incident Details:
+     - Missing chassis inventory information for specific devices can lead to incomplete device monitoring.
+     - Incorrect device configuration in SM/O can result in missing or incorrect data.
+     - Issues in Noora's Phase 3 (Discovery) can disrupt the provisioning process.
+   - Data Flow and Processing:
+     - The device's SM/O instruction file is processed, and the ports selected by the SM/O port provisioning are enabled.
+     - Additional settings are made, such as filling in the port description fields according to the data coming from the SM/O database.
+     - Other objects such as COS queues and service monitoring interfaces are enabled.
+   - Resolution Steps:
+     - Investigate the issue by checking the device logs and configuration, verifying that the device is correctly configured and that the logs are accurate.
+     - Check the pinning logs for any errors or anomalies, ensuring that the device's type is correctly determined and that the SNMP object types are correctly set.
+     - Consult with Kurt for further analysis and troubleshooting, ensuring that any hardware or configuration issues are resolved.
+     - Verify that the device configuration is correct and up-to-date, ensuring that the device is correctly provisioned and functioning.
+   - Reference: shadow8_noora.txt, kt8_noora.txt, materials/noora_provisioning_docs.txt
+
+7. Server Boot Issues
+   - Technical Context:
+     - The provisioning scripts are run by the provisioning engine on the ferguson server.
+     - The scripts are triggered by cron jobs and are responsible for processing the CSV files and updating the SevOne database.
+   - Incident Details:
+     - Unscheduled boot of Noora causing provisioning scripts to fail can disrupt the provisioning process.
+     - Previous processes not being killed can cause conflicts and lead to missing or incorrect data.
+     - Issues in the fail-safe processes for running scripts after a boot can result in incomplete provisioning.
+   - Data Flow and Processing:
+     - The provisioning scripts are run by the provisioning engine on the ferguson server.
+     - The scripts are triggered by cron jobs and are responsible for processing the CSV files and updating the SevOne database.
+     - If the scripts fail, the provisioning process is disrupted, and the data is not correctly integrated into the Noora system.
+   - Resolution Steps:
+     - Ensure that the provisioning scripts run after the boot, verifying that the scripts are correctly triggered and that the data is correctly processed.
+     - Kill previous processes to resolve conflicts, ensuring that the scripts are correctly executed and that the data is correctly integrated into the Noora system.
+     - Start new processes to ensure the provisioning engine functions correctly, verifying that the provisioning process is completed without errors.
+     - Follow fail-safe processes for running scripts after a boot, ensuring that the scripts are correctly executed and that the data is correctly integrated into the Noora system.
+   - Reference: shadow9_noora.txt, kt4_noora.txt, materials/noora_provisioning_docs.txt
+
+8. Admin Alert Mailer Issues
+   - Technical Context:
+     - Alarms are configured in SevOne after Noora's Phase 3 (Discovery), and if SNMPTRAP forwarding to Neli is enabled, the alert is automatically sent to Neli's trap receiver.
+     - The admin alert mailer is responsible for sending the alerts to the intended recipients.
+   - Incident Details:
+     - Incorrect alarm policy configuration in SevOne can lead to missing or incorrect alerts.
+     - Issues in the SNMPTRAP forwarding to Neli can result in alerts not being received by Neli.
+     - Errors in the system logs related to the alert mailer can disrupt the alerting process.
+   - Data Flow and Processing:
+     - The alarm policy configuration in SevOne determines which alerts are generated and forwarded to Neli.
+     - The SNMPTRAP forwarding to Neli ensures that the alerts are received by Neli's trap receiver.
+     - The admin alert mailer is responsible for sending the alerts to the intended recipients.
+   - Resolution Steps:
+     - Check the system logs for errors related to the alert mailer, verifying that the logs are accurate and that the errors are correctly identified.
+     - Clear the cache to resolve any temporary issues, ensuring that the alert mailer is functioning correctly.
+     - Investigate the issue further to identify the root cause, ensuring that the issue is resolved and that the alert mailer is functioning correctly.
+     - Verify that the alert mailer is functioning correctly after the fix, ensuring that the alerts are being sent to the intended recipients.
+   - Reference: shadow8_noora.txt, kt8_noora.txt, materials/noora_provisioning_docs.txt
+
+9. XML Issues
+   - Technical Context:
+     - During Noora's Phase 3 (Discovery), all objects found during the SevOne discovery are registered.
+     - The device's SM/O instruction file is processed, and the ports selected by the SM/O port provisioning are enabled.
+   - Incident Details:
+     - XML issues causing problems in the Noora Health portal can disrupt the provisioning process.
+     - Incorrect device configuration in SM/O can result in missing or incorrect data.
+     - Issues in Noora's Phase 3 (Discovery) can disrupt the provisioning process.
+   - Data Flow and Processing:
+     - The device's SM/O instruction file is processed, and the ports selected by the SM/O port provisioning are enabled.
+     - Additional settings are made, such as filling in the port description fields according to the data coming from the SM/O database.
+     - Other objects such as COS queues and service monitoring interfaces are enabled.
+   - Resolution Steps:
+     - Check the Device Dashboard for XML issues related to specific devices, verifying that the devices are correctly configured and that the XML data is accurate.
+     - Investigate the root cause of the XML problems using system logs, ensuring that the logs are accurate and that the errors are correctly identified.
+     - Contact IBM for support if the issue is related to their software, ensuring that the issue is resolved and that the XML data is correctly integrated into the Noora system.
+     - Verify that the XML data is correctly integrated into the Noora system, ensuring that the devices are correctly provisioned and functioning.
+   - Reference: shadow7_noora.txt, kt7_noora.txt, materials/noora_provisioning_docs.txt
+
+10. Capacity Issues
+    - Technical Context:
+      - The Cluster Manager in SevOne is responsible for monitoring system capacity and resource usage.
+      - The license consumption and thresholds are checked to ensure that the system is within acceptable limits.
+    - Incident Details:
+      - Incorrect license consumption and thresholds can lead to performance degradation.
+      - Issues in the capacity management processes can result in missing or incorrect data.
+      - Overutilization of system resources can disrupt the provisioning process.
+    - Data Flow and Processing:
+      - The Cluster Manager monitors system capacity and resource usage, ensuring that the system is within acceptable limits.
+      - The license consumption and thresholds are checked to ensure that the system is within acceptable limits.
+      - The capacity management processes ensure that the system resources are correctly utilized.
+    - Resolution Steps:
+      - Monitor system capacity and resource usage using the Cluster Manager, verifying that the system is within acceptable limits.
+      - Check license consumption and thresholds to identify potential issues, ensuring that the system is within acceptable limits.
+      - Investigate capacity trends and anomalies to understand the root cause, ensuring that the system resources are correctly utilized.
+      - Contact Kurt or Kevin to discuss capacity management strategies, ensuring that the system is correctly configured and functioning.
+    - Reference: shadow6_noora.txt, kt6_noora.txt, materials/noora_provisioning_docs.txt
+
+11. Performance Issues
+    - Technical Context:
+      - The Cluster Manager in SevOne is responsible for monitoring system performance and metrics.
+      - The CPU, memory, and disk usage are checked to ensure that the system is within acceptable limits.
+    - Incident Details:
+      - Incorrect system performance and metrics can lead to system slowdowns.
+      - Issues in the CPU, memory, and disk usage can result in missing or incorrect data.
+      - Performance anomalies and issues can disrupt the provisioning process.
+    - Data Flow and Processing:
+      - The Cluster Manager monitors system performance and metrics, ensuring that the system is within acceptable limits.
+      - The CPU, memory, and disk usage are checked to ensure that the system is within acceptable limits.
+      - The performance management processes ensure that the system resources are correctly utilized.
+    - Resolution Steps:
+      - Monitor system performance and metrics using the Cluster Manager, verifying that the system is within acceptable limits.
+      - Check CPU, memory, and disk usage to identify potential issues, ensuring that the system is within acceptable limits.
+      - Investigate performance anomalies and issues to understand the root cause, ensuring that the system resources are correctly utilized.
+      - Contact Kurt or Kevin to discuss performance management strategies, ensuring that the system is correctly configured and functioning.
+    - Reference: shadow6_noora.txt, kt6_noora.txt, materials/noora_provisioning_docs.txt
+
+12. Data Retention Issues
+    - Technical Context:
+      - The Cluster Manager in SevOne is responsible for monitoring data retention and storage usage.
+      - The retention policies and compliance are checked to ensure that the system is within acceptable limits.
+    - Incident Details:
+      - Incorrect data retention and storage usage can lead to storage problems.
+      - Issues in the retention policies and compliance can result in missing or incorrect data.
+      - Overutilization of storage can disrupt the provisioning process.
+    - Data Flow and Processing:
+      - The Cluster Manager monitors data retention and storage usage, ensuring that the system is within acceptable limits.
+      - The retention policies and compliance are checked to ensure that the system is within acceptable limits.
+      - The data retention processes ensure that the system resources are correctly utilized.
+    - Resolution Steps:
+      - Monitor data retention and storage usage using the Cluster Manager, verifying that the system is within acceptable limits.
+      - Check retention policies and compliance to identify potential issues, ensuring that the system is within acceptable limits.
+      - Investigate retention issues and anomalies to understand the root cause, ensuring that the system resources are correctly utilized.
+      - Contact Kurt or Kevin to discuss data retention strategies, ensuring that the system is correctly configured and functioning.
+    - Reference: shadow6_noora.txt, kt6_noora.txt, materials/noora_provisioning_docs.txt
+
+=== Summary ===
+
+This document provides a deep technical analysis of the incidents mentioned in the shadow sessions, focusing on how data is technically presented and processed during each issue. The analysis is based on the Noora device provisioning process documented in `materials/noora_provisioning_docs.txt`, ensuring a comprehensive understanding of how to handle incidents and communicate effectively within the Noora system.

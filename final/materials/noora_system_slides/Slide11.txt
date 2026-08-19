@@ -1,0 +1,54 @@
+METADATA AND DATA ENRICHMENT
+
+Metadata in this context refers to a
+bindable data which is related to a
+given item
+
+Metadata is parsed from different
+source inventories and bound to
+the target devices and objects
+during device provisioning in
+Noora System
+
+Metadata parsing and storage are
+scripted and automated
+
+Internal
+
+Devices
+
+ME-JDA-SO1
+
+Name
+
+Description
+
+IP Address
+
+SNMP Community
+Postal Code
+SNET Cabinet
+Manufacturer
+Device Type
+Coordinates
+
+Objects Indicators
+( TET ) ( BITSIN
++ Name + Description
++ Description
+
+(which can contain)
+For interfaces
+
+Speed information
+Connected device
+
+Connected port
+
+For hardware
+
+Serial number
+Product name
+Manufacturer
+
+\)

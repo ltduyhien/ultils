@@ -1,0 +1,27 @@
+GROUPS
+
+* Group in this context is a group of devices or =, DEVIESININCORA PROVISIONING
+objects bound together by a common factor. The Device Name Device Description
+group itself is an item stored in the SevOne fi-hki-asbr1 Core Asbr Router
+CONFIG database metro-hki-s01 Helsinki Area Metro Switch
+
+metro-tre-sO1 Tampere Area Metro Switch
+
+* SevOne has device and objects groups. These ae
+groups can be used RULES . :
+
+* If device name match metro” pin to Metro
++ to set user privileges per device group * If device desc match Core” pin to Core
+* to automate alert policy bindings to device components © Widevice desc match “Switch” pinto Switch
+
+| If device desc match “Tampere” pin to Tampere
+* as reports directly
+
++ as an input for creating additional groups A>
+
+* Metadata itself can be set as a group CORE METRO
+
+« All groups are searchable via Noora reporting Uls SWITCH TAMPERE
+
+Internal
+

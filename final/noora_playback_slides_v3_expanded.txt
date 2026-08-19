@@ -1,0 +1,2568 @@
+# NOORA SYSTEM COMPREHENSIVE PLAYBACK PRESENTATION - EXPANDED VERSION
+
+## SECTION 1: SYSTEM INTRODUCTION AND OVERVIEW
+
+### SLIDE 1: TITLE SLIDE
+- Noora (SevOne) Network Monitoring System
+- Telia Company's Unified Monitoring and Reporting Platform
+- Comprehensive Technical Overview Based on Actual System Documentation
+- Presented by: Noora Operations Team
+- Date: August 2026
+- Version: 3.0 Expanded
+
+### SLIDE 2: SYSTEM OVERVIEW - COMPREHENSIVE
+- Network-transparent and vendor-neutral monitoring system designed for operator-scale infrastructure
+- Combines network monitoring and reporting under one unified environment
+- Serves both network planning units and network monitoring/operations teams
+- Key statistics:
+  - Over 2,500,000 indicator statistics updated every 180 seconds
+  - Over 1,000,000 lines of CSV-formatted inventory data processed nightly
+  - Approximately 5,000 devices monitored with over 4,200 active monitoring points
+  - 140,000 enabled objects and 1,400,000 disabled objects in SevOne database
+  - 171,000 object licenses with 1.50 USD per license cost (before discounts)
+  - Over 100,000 lines of custom code developed by Telia and Tietoevry over 3+ years
+  - 1,800 Qlik reporting groups containing 18,000 monitored objects
+  - 200,000+ objects distributed across 4 collector peers
+- System characteristics:
+  - Fully automated end-to-end workflow from input to output
+  - No constant manual interactions required in normal operations
+  - High reliability with critical issues occurring only once every 2 years
+  - Non-critical issues occurring once every 6 months
+  - Provisioning issues occurring approximately once per month
+  - Typical device provisioning time: 5-15 minutes depending on configuration
+
+### SLIDE 3: HISTORICAL CONTEXT AND EVOLUTION
+- Original development timeline:
+  - 2016-2019: Core system development by Tietoevry and Telia
+  - 2019: System stabilization and production deployment
+  - 2020: Ongoing enhancements and customization
+  - 2021-2024: Maintenance phase with gradual team changes
+- Key architects and developers:
+  - Ari Nieminen: Original architect (no longer with Tietoevry)
+  - Mika Savea: Core developer (still with Tietoevry, expert resource)
+  - Ari Lipponen: Lead architect and primary maintainer
+  - Eero Kopperi: Reporting and Qlik integration specialist (deceased 2023)
+  - Ville Soininen: Device support and alert policy developer
+  - Kurt Gunnelius: IP Network Engineer, hardware specialist
+  - Kevin: Research and integration specialist
+- Development approach:
+  - Custom components built from scratch by Telia/Tietoevry
+  - SevOne NMS as commercial core product
+  - Extensive customization required for operator-scale deployment
+  - "Nothing will work without customization" - core design principle
+  - Best SevOne features utilized and enhanced
+  - More intelligent data collection and automation enabled
+- Historical documentation:
+  - NetDoc wiki: https://netdoc.teliasonera.net/wiki/Category:Noora
+  - Internal architecture documents from 2019-2020
+  - Knowledge transfer sessions (2023-2024)
+  - Shadow session recordings and notes
+  - Historical emails from Ari Lipponen (April/May 2024)
+
+### SLIDE 4: BUSINESS VALUE AND OBJECTIVES - DETAILED
+- Primary business objectives:
+  1. Service Assurance:
+     - Real-time network monitoring
+     - Proactive alert management
+     - Incident prevention and detection
+     - Service level agreement (SLA) monitoring
+     - Customer impact analysis
+  2. Network Capacity Planning:
+     - Historical trend analysis
+     - Future capacity forecasting
+     - Network expansion planning
+     - Resource optimization
+     - Cost avoidance through efficient utilization
+- Specific monitoring capabilities:
+  - VOD service capacity monitoring
+  - Operator traffic monitoring
+  - Mobile core capacity monitoring
+  - IP edge capacity monitoring
+  - Metro ring report management
+  - Trend surveillance
+  - Access server CPU load monitoring
+  - IP CORE and ASBR capacity monitoring
+  - Core/Edge/Metro/Mgmt hardware monitoring
+  - Core/Edge/Metro/Mgmt trunk interface monitoring
+  - Network COS monitoring
+  - Metro capacity monitoring
+  - IP Transit capacity monitoring
+  - SD-WAN traffic monitoring
+  - Telco Cloud traffic monitoring
+  - Consumer IP address utilization trend analysis
+  - DDC traffic monitoring
+  - Hybrid Access server CPU load monitoring
+  - Ethernet Nordic service traffic monitoring
+  - Cable DVB-C SNR monitoring
+  - Hybrid Access traffic monitoring
+  - 3G and 4G service traffic monitoring
+  - BGP Peer routing monitoring
+  - Ficix MAC Accounting
+  - Cable Modem registration status monitoring
+  - CAGW capacity monitoring
+- Integration with business processes:
+  - Network planning and expansion
+  - Capacity management
+  - Incident management
+  - Change management
+  - Performance management
+  - Financial planning (license management)
+  - Vendor management (SevOne/IBM)
+
+### SLIDE 5: SYSTEM COMPONENTS AND RESPONSIBILITIES
+- Component breakdown with responsibility matrix:
+
+**INPUT COMPONENTS:**
+- Custom Integrations: Tietoevry (original) / Ari Lipponen (current)
+- Input Data Read: Tietoevry (original) / Ari Lipponen (current)
+- Provisioning Engine: Tietoevry (original) / Ari Lipponen (current)
+
+**CORE COMPONENTS:**
+- SevOne NMS - Device Modelling: Ari Lipponen
+- SevOne NMS - Metrics Polling: Ari Lipponen
+- SevOne NMS - Data Categorization: Ari Lipponen
+- SevOne NMS - Alarm Management: Kurt Gunnelius / Ari Lipponen
+
+**CUSTOM UI COMPONENTS:**
+- Custom - Realtime UIs: Ari Lipponen
+- Custom - Categorization UIs: Mika Tsokkinen (prev. Eero Kopperi) / Infra Planning
+- Custom - Management UIs: Ari Lipponen
+
+**OUTPUT COMPONENTS:**
+- Custom - Cron Scheduling: Tietoevry / Ari Lipponen
+- Custom - Data Export: Tietoevry / Ari Lipponen
+
+**MONITORING COMPONENTS:**
+- Custom - Input Data Read: Accenture
+- Custom - Provisioning Engine: Accenture
+- SevOne NMS - Data Categorization: Accenture
+- Custom - Data Export: Accenture
+
+- Current maintenance challenges:
+  - Accenture limited to monitoring only (no development skills)
+  - No proactive bug fixing or enhancement capabilities
+  - Limited vendor support (SevOne/IBM)
+  - Knowledge concentration in few individuals
+  - Documentation gaps in critical areas
+  - Aging system with limited modernization
+
+## SECTION 2: SYSTEM ARCHITECTURE - DEEP DIVE
+
+### SLIDE 6: HIGH-LEVEL ARCHITECTURE WITH DATA FLOW
+- Complete architecture diagram breakdown:
+
+**INPUT LAYER:**
+- SurfManager/Operator (SM/O) - Primary device inventory source
+- SAP ERP - Financial and spare parts data
+- Satellite Systems / SNET - Additional network data
+- SMO L2 Manager - Subinterface and service information
+- MIT Systems - Miscellaneous integration data
+- CSV-based data ingestion (nightly and real-time)
+- Provisioning Engine - Custom workflow automation
+- Rulebook-based decision making
+- Two-way integration with SM/O
+
+**CORE LAYER:**
+- SevOne Master Server (Ferguson)
+- vPAS100K Collectors (Aura and others)
+- Device modeling and management
+- Metrics polling engine
+- Data categorization system
+- Alarm management framework
+- No theoretical limits on scale
+- Floating license model for flexibility
+
+**CUSTOM UI LAYER:**
+- Rasmus Reporting System - Hierarchical group reporting
+- Embedded Dashboards - Real-time device/interface views
+- Health Monitoring Portal - System status and diagnostics
+- Rasmus Admin - Reporting configuration interface
+- Custom integrations with network orchestrator
+- User interfaces for categorization management
+- Noora system internal management UIs
+
+**OUTPUT LAYER:**
+- Qlik Sense Integration - Advanced analytics and reporting
+- Nelli Alert Manager - Incident management
+- Scheduled data exports
+- Automated report generation
+- External system integrations
+- Data aggregation and transformation
+
+**INFRASTRUCTURE LAYER:**
+- Intel hardware servers
+- VMware virtualization
+- Red Hat Enterprise Linux OS
+- Network connectivity and security
+- Storage and backup systems
+- High availability configuration
+
+### SLIDE 7: SEVONE CORE COMPONENTS - TECHNICAL DETAILS
+- SevOne architecture deep dive:
+
+**DEVICES:**
+- Physical network devices
+- Virtual devices (for calculation purposes)
+- Device metadata and attributes
+- Device grouping and categorization
+- Device discovery and registration
+- Device lifecycle management
+
+**OBJECTS:**
+- Interface objects (physical and logical)
+- CPU units and cores
+- Memory modules
+- Power supply units
+- Temperature sensors
+- Fan modules
+- COS queues
+- Service monitoring interfaces
+- Link objects (virtual calculations)
+- Aggregated port objects
+
+**INDICATORS:**
+- Bits In / Bits Out
+- Packet counts (in/out/discards)
+- Error counters
+- Utilization percentages
+- Temperature readings
+- Power status
+- Fan speed
+- CPU load
+- Memory usage
+- Interface status
+- Protocol-specific metrics
+
+**LICENSING MODEL:**
+- Object-based licensing (not device-based)
+- Floating licenses for flexibility
+- Pre-purchased license pool
+- License switching between environments
+- No additional cost for multiple indicators per object
+- Current license count: 171,000 objects
+- License cost: $1.50 per object (before discounts)
+- Annual support fee: 15% of license cost
+- License consumption monitoring critical for capacity planning
+
+**COLLECTOR ARCHITECTURE:**
+- Master server (Ferguson) - Central management
+- vPAS100K collectors - Distributed polling
+- Each collector handles specific device/object load
+- Easy scalability by adding collectors
+- Current configuration: 1 master + multiple collectors
+- Collector capacity monitoring essential
+- License distribution across collectors
+- High availability considerations
+
+### SLIDE 8: CUSTOM COMPONENTS - DETAILED BREAKDOWN
+- Provisioning Engine:
+  - Custom workflow automation
+  - Rulebook-based decision making
+  - CSV file processing and validation
+  - Device eligibility checking
+  - Reachability verification
+  - SevOne API integration
+  - Error handling and recovery
+  - Provisioning phase management
+  - Logging and auditing
+
+- Rasmus Reporting System:
+  - Hierarchical group navigation
+  - Device and interface reports
+  - Group-based reporting structure
+  - Report scheduling engine
+  - Custom report development
+  - User access control
+  - Report export capabilities
+  - Historical data access
+  - Performance optimization
+
+- Embedded Dashboards:
+  - Real-time statistics display
+  - Device inventory overview
+  - Interface monitoring
+  - Alarm logs and history
+  - Alert threshold information
+  - Spare part information
+  - Provisioning status indicators
+  - Customizable views
+  - Embedding via URI
+
+- Health Monitoring Portal:
+  - System status overview
+  - Provisioning control interface
+  - Action required items
+  - System control metrics
+  - Change report analysis
+  - External data validation
+  - Device dashboard
+  - Error detection and alerts
+  - Performance monitoring
+
+### SLIDE 9: TECHNICAL STACK AND INFRASTRUCTURE
+- Hardware infrastructure:
+  - Intel-based server hardware
+  - VMware virtualization platform
+  - Red Hat Enterprise Linux operating system
+  - High availability configuration
+  - Load balancing for collectors
+  - Storage area network (SAN)
+  - Backup and recovery systems
+  - Network connectivity (redundant paths)
+
+- Software stack:
+  - SevOne NPM (Network Performance Monitor)
+  - Custom PHP extensions
+  - Java-based components
+  - MySQL/MariaDB databases
+  - Apache HTTP Server
+  - Cron scheduling system
+  - SNMP polling engines
+  - CSV processing libraries
+  - API integration frameworks
+
+- Integration technologies:
+  - SNMP v2c and v3
+  - CSV file exchange
+  - RESTful APIs
+  - SOAP web services
+  - Database connectors
+  - SSH for secure access
+  - LDAP for authentication
+  - SSL/TLS for encryption
+
+- Development environment:
+  - Custom codebase (100,000+ lines)
+  - PHP as primary language
+  - Java for specific components
+  - Shell scripting for automation
+  - Python for data processing
+  - Version control system
+  - Test environment available
+  - Production environment
+  - Development workflows
+
+## SECTION 3: DEVICE PROVISIONING - COMPLETE WORKFLOW
+
+### SLIDE 10: PROVISIONING OVERVIEW - END-TO-END
+- Complete provisioning lifecycle:
+
+**TRIGGER PHASE:**
+- Network device added to SM/O inventory
+- Port Check function initiated
+- Generic Device Role assignment
+- Rulebook evaluation for Noora eligibility
+- CSV file generation (device + instruction)
+- File transfer to Noora provisioning machine
+
+**NOORA PROVISIONING PHASES:**
+- Phase 1: Loader (Device validation and discovery)
+- Phase 2: Pinning (Device registration and SNMP setup)
+- Phase 3: Discovery (Object enablement and configuration)
+- Phase 4: Link (Link object creation for historical continuity)
+
+**POST-PROVISIONING:**
+- Alarm policy application
+- Threshold monitoring activation
+- Reporting group assignment
+- Data export configuration
+- Ongoing monitoring and maintenance
+
+- Key characteristics:
+  - Fully automated process (no manual intervention normally)
+  - Rulebook-driven decision making
+  - Error handling and recovery mechanisms
+  - Comprehensive logging and auditing
+  - Integration with multiple systems
+  - Typical completion time: 5-15 minutes
+  - Exceptional cases may require manual intervention
+
+### SLIDE 11: SM/O PROVISIONING PHASES - DETAILED
+
+**PHASE 1: PORT CHECK - COMPLETE WORKFLOW**
+- Initiation triggers:
+  - New device added to SM/O inventory
+  - Existing device configuration change
+  - Manual port check request
+  - Scheduled inventory synchronization
+
+- Processing steps:
+  1. Device identification and metadata retrieval
+  2. Generic Device Role assignment process:
+     - Rulebook lookup based on device attributes
+     - Device type classification
+     - Network role determination
+     - Monitoring eligibility assessment
+  3. Role assignment execution:
+     - "Managed" devices (SNMP-pollable)
+     - "UnManaged" devices (dummy devices)
+     - "Unrecognized" role (should not occur in production)
+  4. Noora monitoring eligibility check:
+     - Rulebook evaluation for Noora monitoring
+     - Device type-specific rules
+     - Network segment rules
+     - Service type rules
+  5. Port selection for monitoring:
+     - SM/O Link identification
+     - Port type classification
+     - Monitoring requirement assessment
+     - Opposite end port verification
+  6. CSV file generation:
+     - Device metadata CSV (device_record.csv)
+     - Instruction file CSV (port instructions)
+     - SM/O link information
+     - Aggregated port data
+
+**PHASE 2: DEVICE PROVISIONING - DETAILED**
+- Eligibility verification process:
+  - Generic Device Role validation
+  - Noora provisioning rulebook lookup
+  - Device type-specific rules
+  - Network segment rules
+  - Service requirements assessment
+
+- Decision points:
+  - Rulebook match found → enable monitoring
+  - No rulebook match → no further action
+  - Exception handling for critical devices
+  - Manual override capabilities
+
+- Provisioning initiation:
+  - Device metadata preparation
+  - Initial device configuration
+  - Provisioning queue management
+  - Status tracking and reporting
+
+**PHASE 3: PORT PROVISIONING - COMPLETE**
+- Port selection criteria:
+  - Generic Device Role classification
+  - Device monitoring requirements
+  - Network topology considerations
+  - Service level agreements
+  - Historical monitoring data
+
+- SM/O Link handling:
+  - Link identification and validation
+  - Opposite end port verification
+  - Link metadata enrichment
+  - Monitoring eligibility rules
+
+- Port configuration:
+  - Port description field population
+  - Format: <deviceB> <portId> <speed>
+  - Custom speed settings from SM/O
+  - Port-specific monitoring parameters
+  - Threshold configurations
+
+### SLIDE 12: NOORA PROVISIONING PHASES - TECHNICAL DEEP DIVE
+
+**PHASE 1: LOADER - COMPLETE TECHNICAL WORKFLOW**
+- CSV file reception and processing:
+  - File transfer from SM/O to Noora provisioning machine
+  - File validation and integrity checks
+  - Backup creation (device_record.csv.bak)
+  - Parsing and data extraction
+  - Error handling for corrupted files
+
+- Device eligibility verification:
+  - Rulebook-based eligibility check
+  - Device type validation
+  - Network segment verification
+  - Service requirements assessment
+  - Historical data analysis
+
+- Device reachability check:
+  - ICMP ping test
+  - SNMP connectivity test
+  - Port accessibility verification
+  - Response time measurement
+  - Error classification and handling
+
+- SevOne discovery triggering:
+  - Discovery job creation
+  - Device metadata submission
+  - Discovery parameter configuration
+  - Discovery process monitoring
+  - Result validation and error handling
+
+**PHASE 2: PINNING - DETAILED PROCESS**
+- Device type determination:
+  - SNMP sysObjectID interrogation
+  - Device model identification
+  - Manufacturer identification
+  - Firmware version detection
+  - Capability assessment
+
+- SevOne registration check:
+  - Device existence verification
+  - Registration status check
+  - Duplicate device detection
+  - Conflict resolution procedures
+
+- SNMP object type identification:
+  - Supported MIB interrogation
+  - Object capability assessment
+  - Performance metric identification
+  - Health monitoring capabilities
+  - Custom object support
+
+- SNMP object configuration:
+  - Object enablement in SevOne
+  - Polling interval configuration
+  - Threshold parameter setup
+  - Alert policy assignment
+  - Data retention configuration
+
+**PHASE 3: DISCOVERY - COMPLETE OBJECT ENABLEMENT**
+- Hardware object enablement:
+  - CPU cores and modules
+  - Memory modules and banks
+  - Power supply units
+  - Fan modules
+  - Temperature sensors
+  - Voltage sensors
+  - Current sensors
+
+- Interface object enablement:
+  - Physical interfaces
+  - Logical interfaces
+  - Virtual interfaces
+  - Aggregated interfaces
+  - Subinterfaces
+  - VLAN interfaces
+
+- Service object enablement:
+  - COS queues
+  - Service monitoring interfaces
+  - Protocol-specific objects
+  - Application monitoring objects
+  - Custom service objects
+
+- SM/O instruction processing:
+  - Port description field population
+  - Custom speed configuration
+  - Port-specific parameters
+  - Link metadata enrichment
+  - Service association
+
+**PHASE 4: LINK - LINK OBJECT CREATION**
+- Link object purpose:
+  - Historical data continuity during port migrations
+  - Reporting consistency
+  - Change management support
+  - Network topology tracking
+  - Service impact analysis
+
+- Link creation process:
+  - SM/O link identification
+  - End port verification
+  - Link metadata collection
+  - Calculated object creation
+  - Statistics copying configuration
+  - Historical data preservation
+
+- Link object management:
+  - Link object naming conventions
+  - Link object lifecycle
+  - Link object monitoring
+  - Link object reporting
+  - Link object maintenance
+
+### SLIDE 13: PROVISIONING AUTOMATION AND ERROR HANDLING
+- Automation framework:
+  - Cron-based scheduling
+  - Provisioning script execution
+  - Phase transition management
+  - Error detection and recovery
+  - Logging and auditing
+  - Performance monitoring
+
+- Error handling mechanisms:
+  - CSV parsing errors (extra lines, corrupt data)
+  - Device reachability failures
+  - SNMP communication errors
+  - SevOne API failures
+  - Rulebook mismatch errors
+  - Duplicate device detection
+  - Conflict resolution procedures
+
+- Recovery procedures:
+  - Automatic retry mechanisms
+  - Manual intervention protocols
+  - Provisioning restart capabilities
+  - Error state clearing
+  - System notification triggers
+  - Escalation procedures
+
+- Common provisioning issues:
+  - Missing CSV files from SM/O
+  - Corrupted data in CSV files
+  - Device unreachable errors
+  - SNMP configuration issues
+  - Rulebook mismatch problems
+  - License capacity issues
+  - Performance bottlenecks
+
+- Troubleshooting tools:
+  - Provisioning control interface
+  - System logs and diagnostics
+  - Device dashboard
+  - Health portal
+  - Change reports
+  - External data validation
+
+## SECTION 4: MONITORING AND ALERTING - COMPLETE COVERAGE
+
+### SLIDE 14: MONITORING CAPABILITIES - TECHNICAL SPECIFICATIONS
+- Monitoring architecture:
+  - SNMP-based polling (v2c and v3)
+  - 180-second polling interval
+  - Over 2.5M statistics per cycle
+  - Distributed collector architecture
+  - Load-balanced polling
+  - High availability configuration
+
+- Device monitoring capabilities:
+  - Hardware status monitoring
+  - Interface monitoring
+  - Service monitoring
+  - Protocol monitoring
+  - Application monitoring
+  - Custom monitoring profiles
+
+- Monitoring by device role:
+  - Access devices (limited monitoring)
+  - CPE devices (basic monitoring)
+  - Edge devices (standard monitoring)
+  - Core network devices (comprehensive monitoring)
+  - Specialized devices (custom monitoring)
+
+- Monitoring profiles:
+  - Standard monitoring profile
+  - Enhanced monitoring profile
+  - Critical device profile
+  - Custom monitoring profiles
+  - Service-specific profiles
+
+### SLIDE 15: ALERT MANAGEMENT - COMPLETE WORKFLOW
+- Alert architecture:
+  - Threshold-based alerting
+  - Rule-based alert generation
+  - Multi-level alert classification
+  - Alert correlation engine
+  - Alert suppression mechanisms
+  - Alert escalation procedures
+
+- Alert classification system:
+  - STATUS alerts (shown in Nelli)
+  - PERFORMANCE alerts (internal only)
+  - CRITICAL severity alerts
+  - MAJOR severity alerts
+  - MINOR severity alerts
+  - WARNING severity alerts
+  - INFORMATIONAL alerts
+
+- Alert generation process:
+  1. Data collection from devices
+  2. Threshold comparison
+  3. Alert condition evaluation
+  4. Alert creation in SevOne
+  5. Alert classification
+  6. Alert prioritization
+  7. Alert forwarding to Nelli
+  8. Ticket creation in incident management
+
+- Alert lifecycle:
+  - Alert creation and initial state
+  - Alert acknowledgment
+  - Alert escalation
+  - Alert resolution
+  - Alert clearance
+  - Alert closure
+  - Alert archiving
+
+### SLIDE 16: ALERT WORKFLOW - END-TO-END PROCESS
+- SNMP polling process:
+  - Polling interval configuration
+  - Data collection execution
+  - Response validation
+  - Error handling
+  - Performance monitoring
+
+- Threshold monitoring:
+  - Static threshold configuration
+  - Dynamic threshold calculation
+  - Baseline-based thresholds
+  - Time-based threshold variations
+  - Device-specific thresholds
+  - Service-specific thresholds
+
+- Alert generation:
+  - Threshold breach detection
+  - Alert condition evaluation
+  - Alert creation parameters
+  - Alert severity assignment
+  - Alert categorization
+  - Alert metadata enrichment
+
+- Nelli integration:
+  - Alert forwarding configuration
+  - Nelli API integration
+  - Alert classification mapping
+  - Incident creation workflow
+  - Alert synchronization
+  - Status updates
+
+- Alert resolution:
+  - Root cause analysis
+  - Corrective action execution
+  - Alert clearance procedures
+  - Post-incident review
+  - Documentation updates
+  - Prevention strategies
+
+### SLIDE 17: COMMON ALERT SCENARIOS - DETAILED EXAMPLES
+- Device unreachable alerts:
+  - ICMP ping failure
+  - SNMP timeout
+  - Network connectivity loss
+  - Device power failure
+  - Maintenance window detection
+  - False positive prevention
+
+- Interface threshold breaches:
+  - Bandwidth utilization thresholds
+  - Error rate thresholds
+  - Discard rate thresholds
+  - Queue depth thresholds
+  - Latency thresholds
+  - Jitter thresholds
+
+- Hardware failure alerts:
+  - Power supply failure
+  - Fan failure
+  - Temperature threshold breach
+  - Memory failure
+  - CPU failure
+  - Disk failure
+
+- Service degradation alerts:
+  - QoS parameter violations
+  - SLA breach detection
+  - Service unavailability
+  - Performance degradation
+  - Response time increases
+  - Throughput reductions
+
+- Capacity threshold alerts:
+  - Interface capacity thresholds
+  - Device capacity thresholds
+  - Network segment capacity
+  - Service capacity thresholds
+  - Resource exhaustion detection
+  - Growth trend analysis
+
+## SECTION 5: REPORTING AND DATA OUTPUT - COMPLETE COVERAGE
+
+### SLIDE 18: REPORTING ARCHITECTURE - TECHNICAL DETAILS
+- Reporting components:
+  - Rasmus Reporting System
+  - Embedded Dashboards
+  - Qlik Sense Integration
+  - SevOne Native Reporting
+  - Custom Report Generator
+  - Scheduled Report Engine
+
+- Reporting data flow:
+  - Data collection from devices
+  - Data aggregation and processing
+  - Data categorization
+  - Report generation
+  - Report distribution
+  - Report archiving
+
+- Report types:
+  - Device reports
+  - Interface reports
+  - Group reports
+  - Service reports
+  - Capacity reports
+  - Trend reports
+  - Custom reports
+
+### SLIDE 19: RASMUS REPORTING SYSTEM - COMPLETE GUIDE
+- Rasmus architecture:
+  - Hierarchical group navigation
+  - Device and interface reporting
+  - Group-based reporting structure
+  - Report scheduling engine
+  - User access control system
+  - Report export capabilities
+  - Historical data access
+
+- Rasmus features:
+  - Device selection and filtering
+  - Interface selection and filtering
+  - Group selection and navigation
+  - Time period selection
+  - Report format selection
+  - Report customization
+  - Report scheduling
+  - Report export
+
+- Rasmus Admin interface:
+  - Group management
+  - Report configuration
+  - User management
+  - Schedule management
+  - Export configuration
+  - System settings
+  - Audit logging
+
+### SLIDE 20: EMBEDDED DASHBOARDS - TECHNICAL SPECIFICATIONS
+- Dashboard architecture:
+  - Real-time data display
+  - Device inventory overview
+  - Interface monitoring
+  - Alarm logs and history
+  - Alert threshold information
+  - Spare part information
+  - Provisioning status indicators
+  - Customizable views
+
+- Dashboard features:
+  - Device selection
+  - Interface selection
+  - Time period selection
+  - Data visualization options
+  - Alert filtering
+  - Export capabilities
+  - Embedding via URI
+  - Customization options
+
+- Dashboard integration:
+  - Network orchestrator integration
+  - External system embedding
+  - Single sign-on support
+  - Role-based access control
+  - Performance optimization
+  - Mobile device support
+
+### SLIDE 21: QLIK INTEGRATION - COMPLETE WORKFLOW
+- Qlik integration architecture:
+  - Daily data export process
+  - Automated grouping structure
+  - Data categorization engine
+  - Capacity planning integration
+  - Reporting data structure
+  - User interface integration
+
+- Qlik data flow:
+  - Data collection from SevOne
+  - Data transformation and enrichment
+  - Data grouping and categorization
+  - Data export to Qlik
+  - Qlik data processing
+  - Report generation in Qlik
+  - Report distribution
+
+- Qlik integration features:
+  - 1,800 Qlik groups
+  - 18,000 monitored objects
+  - Automated data grouping (99%)
+  - Daily statistics generation
+  - Capacity planning reports
+  - Trend analysis reports
+  - Custom report development
+
+### SLIDE 22: DATA EXPORT PROCESS - TECHNICAL DETAILS
+- Export architecture:
+  - Scheduled export jobs
+  - CSV-based data transfer
+  - Data transformation engine
+  - Export validation
+  - Error handling
+  - Performance monitoring
+
+- Export workflow:
+  - Data selection and filtering
+  - Data transformation
+  - Data validation
+  - Export file generation
+  - File transfer
+  - Export confirmation
+  - Error handling and retry
+
+- Export monitoring:
+  - Export job monitoring
+  - Performance metrics
+  - Error detection
+  - Alert generation
+  - Reporting
+  - Auditing
+
+## SECTION 6: SYSTEM INTEGRATIONS - COMPLETE COVERAGE
+
+### SLIDE 23: INTEGRATION OVERVIEW - TECHNICAL ARCHITECTURE
+- Integration framework:
+  - SurfManager/Operator (SM/O)
+  - SAP ERP
+  - Nelli Alert Manager
+  - Qlik Sense
+  - Satellite Systems
+  - Other OSS/BSS systems
+
+- Integration technologies:
+  - CSV file exchange
+  - API-based integration
+  - Database connectors
+  - Message queues
+  - Web services
+  - File transfer protocols
+
+- Integration patterns:
+  - Nightly batch processing
+  - Real-time data exchange
+  - Event-driven integration
+  - Scheduled data transfers
+  - On-demand data requests
+
+### SLIDE 24: SM/O INTEGRATION - COMPLETE TECHNICAL SPECIFICATIONS
+- SM/O integration architecture:
+  - Device information exchange
+  - Port and link information
+  - Subscription information
+  - Product and SLA information
+  - Location information
+  - Service information
+
+- SM/O data flow:
+  - Device inventory synchronization
+  - Port configuration updates
+  - Link topology changes
+  - Service provisioning updates
+  - Location information updates
+  - Maintenance window coordination
+
+- SM/O integration features:
+  - Two-way data exchange
+  - CSV file generation
+  - File transfer mechanisms
+  - Data validation
+  - Error handling
+  - Conflict resolution
+
+### SLIDE 25: SAP ERP INTEGRATION - DETAILED
+- SAP integration architecture:
+  - Spare part material information
+  - Stock volume information
+  - Device inventory data
+  - Financial data
+  - Procurement data
+  - Asset management data
+
+- SAP data flow:
+  - Inventory data synchronization
+  - Spare part information updates
+  - Stock level monitoring
+  - Financial data exchange
+  - Asset lifecycle management
+  - Procurement coordination
+
+- SAP integration features:
+  - Nightly batch processing
+  - Data transformation
+  - Error handling
+  - Data validation
+  - Conflict resolution
+  - Audit logging
+
+### SLIDE 26: NELLI INTEGRATION - COMPLETE WORKFLOW
+- Nelli integration architecture:
+  - Alert forwarding configuration
+  - Incident management integration
+  - Alert classification mapping
+  - Status synchronization
+  - Two-way communication
+  - Performance monitoring
+
+- Nelli data flow:
+  - Alert generation in SevOne
+  - Alert classification
+  - Alert forwarding to Nelli
+  - Incident creation in Nelli
+  - Status updates from Nelli
+  - Alert clearance coordination
+
+- Nelli integration features:
+  - Real-time alert forwarding
+  - Alert classification mapping
+  - Incident creation workflow
+  - Status synchronization
+  - Error handling
+  - Performance monitoring
+
+### SLIDE 27: QLIK INTEGRATION - TECHNICAL DEEP DIVE
+- Qlik integration architecture:
+  - Data export configuration
+  - Data transformation engine
+  - Data grouping structure
+  - Report generation
+  - User interface integration
+  - Performance optimization
+
+- Qlik data processing:
+  - Data collection from SevOne
+  - Data transformation rules
+  - Data enrichment processes
+  - Data grouping algorithms
+  - Report generation templates
+  - Performance optimization techniques
+
+- Qlik integration features:
+  - Automated data export
+  - Scheduled processing
+  - Error handling
+  - Data validation
+  - Performance monitoring
+  - User access control
+
+## SECTION 7: DAILY OPERATIONS - COMPLETE GUIDE
+
+### SLIDE 28: DAILY HEALTH CHECK PROCEDURE - STEP BY STEP
+- Complete daily health check workflow:
+
+**SERVER MONITORING:**
+1. SSH to Ferguson server
+2. Switch to provisor user
+3. Run fatal error check command:
+   ```bash
+   find /var/log/provisor/ -name "*.log" -exec echo {} \; -exec bash -c "grep -B 8 -A 5 Fatal {} | tail -13 | sed -e 's/^/\tFATAL ERROR FOUND! : /'" \;
+   ```
+4. Analyze fatal errors (focus on appltAllOjhectigroupRules.log)
+5. Run script execution time check:
+   ```bash
+   sudo -iu provisor
+grep -i "script finished" /var/log/provisor/exporter.log | tail -n 14
+   ```
+6. Verify execution times under 5000 threshold
+7. Check for abnormal script durations
+8. Investigate any performance degradation
+
+**SEVONE MONITORING:**
+1. Login to SevOne with TCAD credentials
+2. Navigate to Cluster Manager
+3. Check peer status and capacity
+4. Monitor license consumption trends
+5. Verify no rapid license growth (>1% per day)
+6. Check alert console for admin messages
+7. Validate alert timestamps match system time
+8. Review device manager for recent updates
+9. Check object manager for link objects
+10. Verify calculation editor configurations
+
+**RASMUS MONITORING:**
+1. Login to Rasmus with Veha LDAP
+2. Run alert report by severity
+3. Analyze critical alert count (98 expected, 300+ alarming)
+4. Review alert details and object information
+5. Check alert tree view for patterns
+6. Verify device groups are populated
+7. Test sandbox reports for functionality
+8. Check for spiky graph patterns
+9. Validate report generation performance
+10. Test UI responsiveness
+
+**HEALTH PORTAL MONITORING:**
+1. Login to Health Portal with Veha LDAP
+2. Review Action Required items
+3. Check Provisioning Control status
+4. Analyze System Control metrics
+5. Review Change Report for anomalies
+6. Check System Reports generation
+7. Validate External Data status
+8. Review Device Dashboard information
+9. Check Noora provisioning engine load
+10. Document any abnormalities
+
+### SLIDE 29: SERVER MONITORING - COMPLETE PROCEDURES
+- Server monitoring checklist:
+
+**FATAL ERROR CHECKING:**
+- Command execution and analysis
+- Log file locations and structure
+- Common fatal error patterns
+- Error classification and prioritization
+- Escalation procedures for critical errors
+- Documentation requirements
+- Historical error tracking
+
+**SCRIPT EXECUTION MONITORING:**
+- Performance threshold (5000 limit)
+- Script execution patterns
+- Performance trend analysis
+- Abnormal duration investigation
+- Resource utilization monitoring
+- Process management
+- Memory usage tracking
+
+**LOG FILE ANALYSIS:**
+- Log file locations:
+  - /var/log/provisor/
+  - /var/log/sevone/
+  - /var/log/rasmus/
+  - /var/log/health/
+- Log rotation policies
+- Log retention periods
+- Log analysis tools
+- Common log patterns
+- Error detection algorithms
+
+**SERVER PERFORMANCE METRICS:**
+- CPU utilization monitoring
+- Memory usage tracking
+- Disk I/O performance
+- Network bandwidth monitoring
+- Process count monitoring
+- Resource contention analysis
+- Performance optimization techniques
+
+### SLIDE 30: SEVONE MONITORING - DETAILED PROCEDURES
+- SevOne monitoring checklist:
+
+**CLUSTER MANAGER MONITORING:**
+- Peer status verification
+- License consumption analysis
+- Capacity trend tracking
+- Performance metrics collection
+- Resource allocation monitoring
+- Load balancing verification
+- High availability checks
+
+**ALERT CONSOLE MONITORING:**
+- Alert count validation
+- Alert severity distribution
+- Alert timestamp verification
+- Alert pattern analysis
+- Common alert types
+- Alert suppression verification
+- Alert correlation analysis
+
+**DEVICE MANAGER MONITORING:**
+- Recent device updates
+- Device discovery status
+- Device provisioning status
+- Device health indicators
+- Device configuration changes
+- Device lifecycle management
+- Device inventory verification
+
+**OBJECT MANAGER MONITORING:**
+- Object count verification
+- Object type distribution
+- Object health status
+- Object configuration
+- Object discovery status
+- Object lifecycle management
+- Object inventory verification
+
+### SLIDE 31: HEALTH PORTAL MONITORING - COMPLETE GUIDE
+- Health portal monitoring procedures:
+
+**ACTION REQUIRED MONITORING:**
+- Device responsiveness issues
+- Naming convention violations
+- Undefined device types
+- Provisioning failures
+- Resource owner notification
+- Escalation procedures
+- Resolution tracking
+
+**PROVISIONING CONTROL MONITORING:**
+- Device provisioning status
+- Phase transition tracking
+- Provisioning queue management
+- Error state analysis
+- Provisioning performance
+- Provisioning trends
+- Capacity planning
+
+**SYSTEM CONTROL MONITORING:**
+- Enabled object counts
+- Disabled object counts
+- Deleted object counts
+- System capacity metrics
+- Performance indicators
+- Resource utilization
+- Trend analysis
+
+**CHANGE REPORT ANALYSIS:**
+- Device change tracking
+- Object change tracking
+- Group change tracking
+- Configuration change tracking
+- Change impact analysis
+- Change trend analysis
+- Change documentation
+
+**EXTERNAL DATA VALIDATION:**
+- CSV file validation
+- Data parsing verification
+- Date check validation
+- File size monitoring
+- Row/column count tracking
+- Data integrity verification
+- Source system coordination
+
+**DEVICE DASHBOARD MONITORING:**
+- Device selection and filtering
+- Device information display
+- Provisioning status indicators
+- Health status indicators
+- Performance metrics
+- Configuration details
+- Historical data access
+
+## SECTION 8: TROUBLESHOOTING AND MAINTENANCE - COMPLETE GUIDE
+
+### SLIDE 32: COMMON ISSUES AND RESOLUTIONS - COMPREHENSIVE
+- Issue categorization:
+
+**PROVISIONING ISSUES:**
+- Device provisioning failures
+- Phase transition failures
+- CSV file errors
+- Device reachability problems
+- SNMP configuration issues
+- Rulebook mismatch problems
+- License capacity issues
+- Performance bottlenecks
+
+**DATA INTEGRATION ISSUES:**
+- Missing CSV files
+- Corrupted data files
+- File parsing errors
+- Data validation failures
+- Integration timeout issues
+- Source system errors
+- File transfer failures
+
+**ALERT MANAGEMENT ISSUES:**
+- Missing alerts
+- False positive alerts
+- Alert threshold issues
+- Nelli integration problems
+- Alert clearance failures
+- Alert correlation issues
+- Alert suppression problems
+
+**REPORTING ISSUES:**
+- Report generation failures
+- Data export issues
+- Qlik integration problems
+- Dashboard display issues
+- Performance problems
+- Data accuracy issues
+- Report distribution failures
+
+### SLIDE 33: PROVISIONING TROUBLESHOOTING - STEP BY STEP
+- Provisioning troubleshooting guide:
+
+**PHASE-SPECIFIC ISSUES:**
+- Phase 1 (Loader) issues:
+  - CSV file reception failures
+  - File validation errors
+  - Device eligibility problems
+  - Reachability test failures
+  - Discovery triggering failures
+
+- Phase 2 (Pinning) issues:
+  - Device type determination failures
+  - SevOne registration problems
+  - SNMP object identification failures
+  - Object configuration errors
+
+- Phase 3 (Discovery) issues:
+  - Hardware object enablement failures
+  - Interface object enablement failures
+  - Service object enablement failures
+  - SM/O instruction processing errors
+
+- Phase 4 (Link) issues:
+  - Link object creation failures
+  - SM/O link identification problems
+  - End port verification failures
+  - Calculated object configuration errors
+
+**CSV FILE ERRORS:**
+- File format validation
+- Data integrity checks
+- Extra line detection
+- Corrupt data handling
+- File repair procedures
+- Backup restoration
+- Error prevention strategies
+
+**DEVICE REACHABILITY PROBLEMS:**
+- ICMP ping testing
+- SNMP connectivity testing
+- Network path verification
+- Firewall rule checking
+- Device configuration verification
+- Credential validation
+- Alternative reachability methods
+
+**SNMP CONFIGURATION ISSUES:**
+- Community string verification
+- SNMP version compatibility
+- MIB support verification
+- Polling interval configuration
+- Timeout parameter adjustment
+- Retry configuration
+- SNMP trap configuration
+
+### SLIDE 34: DATA INTEGRATION TROUBLESHOOTING - COMPLETE
+- Data integration troubleshooting:
+
+**MISSING CSV FILES:**
+- File transfer verification
+- Source system status check
+- Network connectivity testing
+- File generation verification
+- Scheduled job monitoring
+- Manual transfer procedures
+- Error notification setup
+
+**CORRUPTED DATA HANDLING:**
+- File validation procedures
+- Data integrity checks
+- Backup restoration processes
+- Data repair techniques
+- Error detection algorithms
+- Prevention strategies
+- Source system coordination
+
+**FILE PARSING ERRORS:**
+- Parser configuration verification
+- File format validation
+- Data structure verification
+- Error message analysis
+- Parser log analysis
+- Parser performance monitoring
+- Parser update procedures
+
+**DATA VALIDATION FAILURES:**
+- Validation rule verification
+- Data format checks
+- Range validation
+- Consistency checks
+- Referential integrity verification
+- Business rule validation
+- Error handling procedures
+
+### SLIDE 35: ALERT TROUBLESHOOTING - COMPREHENSIVE
+- Alert troubleshooting procedures:
+
+**MISSING ALERTS:**
+- Alert generation verification
+- Threshold configuration checks
+- Alert policy verification
+- Alert suppression checks
+- Alert forwarding verification
+- Nelli integration testing
+- Alert logging analysis
+
+**FALSE POSITIVE ALERTS:**
+- Threshold configuration review
+- Baseline analysis
+- Alert correlation verification
+- Alert suppression rules
+- Alert filtering configuration
+- Alert classification review
+- Alert policy adjustments
+
+**ALERT THRESHOLD ISSUES:**
+- Threshold value verification
+- Baseline calculation review
+- Time-based threshold analysis
+- Device-specific threshold checks
+- Service-specific threshold checks
+- Threshold adjustment procedures
+- Threshold testing methodologies
+
+**NELLI INTEGRATION PROBLEMS:**
+- Integration configuration verification
+- API connectivity testing
+- Alert classification mapping review
+- Incident creation workflow testing
+- Status synchronization verification
+- Error handling procedures
+- Integration performance monitoring
+
+## SECTION 9: SYSTEM ADMINISTRATION - COMPLETE GUIDE
+
+### SLIDE 36: USER MANAGEMENT - DETAILED PROCEDURES
+- User management workflow:
+
+**VEHA LDAP INTEGRATION:**
+- LDAP server configuration
+- Authentication mechanisms
+- User attribute mapping
+- Group membership management
+- Role-based access control
+- Password policy enforcement
+- Account lockout policies
+
+**USER PROVISIONING PROCESS:**
+- New user request handling
+- User account creation
+- Role assignment
+- Access level configuration
+- Group membership assignment
+- Notification procedures
+- Documentation requirements
+
+**ROLE-BASED ACCESS CONTROL:**
+- Role definition and management
+- Permission assignment
+- Access level configuration
+- Role inheritance
+- Role testing procedures
+- Role documentation
+- Role review processes
+
+**PASSWORD MANAGEMENT:**
+- Password policy enforcement
+- Password complexity requirements
+- Password expiration (90-day cycle)
+- Password reset procedures
+- Self-service password management
+- Password synchronization
+- Password audit logging
+
+### SLIDE 37: SYSTEM CONFIGURATION - COMPLETE GUIDE
+- Configuration management:
+
+**RULEBOOK MANAGEMENT:**
+- Rulebook structure and organization
+- Rule definition and syntax
+- Rule testing procedures
+- Rule deployment processes
+- Rule version control
+- Rule documentation
+- Rule review processes
+
+**ALERT POLICY CONFIGURATION:**
+- Alert policy structure
+- Threshold configuration
+- Alert classification rules
+- Alert suppression rules
+- Alert correlation rules
+- Alert policy testing
+- Alert policy deployment
+
+**DEVICE GROUPING CONFIGURATION:**
+- Group definition and structure
+- Group membership rules
+- Group hierarchy management
+- Group-based reporting configuration
+- Group-based alerting configuration
+- Group testing procedures
+- Group documentation
+
+**REPORT SCHEDULING:**
+- Report schedule definition
+- Report frequency configuration
+- Report distribution configuration
+- Report format selection
+- Report recipient management
+- Report performance monitoring
+- Report schedule documentation
+
+### SLIDE 38: PERFORMANCE MONITORING - DETAILED
+- Performance monitoring procedures:
+
+**LICENSE CONSUMPTION TRACKING:**
+- License usage monitoring
+- License growth trend analysis
+- License capacity planning
+- License allocation optimization
+- License reporting
+- License audit procedures
+- License renewal processes
+
+**SYSTEM CAPACITY PLANNING:**
+- Capacity metrics collection
+- Capacity trend analysis
+- Capacity forecasting
+- Resource allocation planning
+- Performance optimization
+- Capacity reporting
+- Capacity review processes
+
+**PERFORMANCE OPTIMIZATION:**
+- Performance metrics collection
+- Performance bottleneck identification
+- Performance tuning techniques
+- Resource allocation optimization
+- Configuration parameter tuning
+- Performance testing procedures
+- Performance documentation
+
+**RESOURCE ALLOCATION:**
+- Resource utilization monitoring
+- Resource allocation policies
+- Resource contention analysis
+- Resource optimization techniques
+- Resource capacity planning
+- Resource reporting
+- Resource review processes
+
+## SECTION 10: ADVANCED TOPICS - COMPLETE COVERAGE
+
+### SLIDE 39: AUTOMATION FRAMEWORK - TECHNICAL DEEP DIVE
+- Automation architecture:
+
+**PROVISIONING AUTOMATION:**
+- Workflow automation engine
+- Phase transition management
+- Error handling and recovery
+- Logging and auditing
+- Performance monitoring
+- Configuration management
+- Testing procedures
+
+**SCHEDULED JOB MANAGEMENT:**
+- Cron job configuration
+- Job scheduling policies
+- Job execution monitoring
+- Job performance tracking
+- Job error handling
+- Job logging and auditing
+- Job documentation
+
+**CRON JOB CONFIGURATION:**
+- Cron syntax and structure
+- Job scheduling parameters
+- Job dependency management
+- Job execution environment
+- Job resource allocation
+- Job performance monitoring
+- Job error handling
+
+**AUTOMATION MONITORING:**
+- Automation job monitoring
+- Performance metrics collection
+- Error detection and handling
+- Logging and auditing
+- Reporting
+- Documentation
+- Review processes
+
+### SLIDE 40: CUSTOM DEVELOPMENT - COMPLETE GUIDE
+- Development environment:
+
+**PHP-BASED COMPONENTS:**
+- Development standards
+- Coding conventions
+- Testing procedures
+- Deployment processes
+- Version control
+- Documentation standards
+- Code review processes
+
+**RASMUS REPORTING EXTENSIONS:**
+- Extension architecture
+- Development standards
+- Testing procedures
+- Deployment processes
+- Version control
+- Documentation standards
+- Code review processes
+
+**EMBEDDED DASHBOARD DEVELOPMENT:**
+- Dashboard architecture
+- Development standards
+- Testing procedures
+- Deployment processes
+- Version control
+- Documentation standards
+- Code review processes
+
+**INTEGRATION SCRIPT DEVELOPMENT:**
+- Script architecture
+- Development standards
+- Testing procedures
+- Deployment processes
+- Version control
+- Documentation standards
+- Code review processes
+
+### SLIDE 41: SECURITY ARCHITECTURE - COMPLETE
+- Security framework:
+
+**AUTHENTICATION MECHANISMS:**
+- LDAP authentication
+- Local authentication
+- Multi-factor authentication
+- Certificate-based authentication
+- Token-based authentication
+- Authentication logging
+- Authentication monitoring
+
+**AUTHORIZATION FRAMEWORK:**
+- Role-based access control
+- Permission management
+- Access level configuration
+- Authorization logging
+- Authorization monitoring
+- Authorization testing
+- Authorization documentation
+
+**DATA SECURITY MEASURES:**
+- Data encryption
+- Data integrity protection
+- Data access control
+- Data backup procedures
+- Data recovery procedures
+- Data retention policies
+- Data disposal procedures
+
+**INTEGRATION SECURITY:**
+- Secure communication protocols
+- API security measures
+- Integration authentication
+- Integration authorization
+- Integration logging
+- Integration monitoring
+- Integration testing
+
+## SECTION 11: OPERATIONAL BEST PRACTICES - COMPLETE
+
+### SLIDE 42: COMMUNICATION PROTOCOLS - DETAILED
+- Communication framework:
+
+**SHARED MAILBOX MANAGEMENT:**
+- Mailbox monitoring procedures
+- Message categorization
+- Priority assignment
+- Response time targets
+- Escalation procedures
+- Documentation requirements
+- Performance monitoring
+
+**INCIDENT REPORTING PROCEDURES:**
+- Incident classification
+- Incident prioritization
+- Incident documentation
+- Incident escalation
+- Incident resolution
+- Incident closure
+- Incident review
+
+**STAKEHOLDER COMMUNICATION:**
+- Communication planning
+- Stakeholder identification
+- Communication channels
+- Communication frequency
+- Communication content
+- Communication documentation
+- Communication review
+
+**ESCALATION PATHS:**
+- Escalation levels definition
+- Escalation criteria
+- Escalation procedures
+- Escalation documentation
+- Escalation monitoring
+- Escalation review
+- Escalation testing
+
+### SLIDE 43: TEAM STRUCTURE AND ROLES - COMPLETE
+- Team organization:
+
+**CURRENT TEAM STRUCTURE:**
+- Ari Lipponen: Lead Architect and Primary Maintainer
+- Kurt Gunnelius: IP Network Engineer, Hardware Specialist
+- Kevin: Research and Integration Specialist
+- Accenture Team: Monitoring and Basic Operations
+- Veha Team: Server and Network Management
+- External Consultants: Specialized Support
+
+**KEY ROLES AND RESPONSIBILITIES:**
+- System Architect: Overall system design and strategy
+- Network Engineer: Hardware and network infrastructure
+- Integration Specialist: System integration and data flow
+- Monitoring Operator: Daily operations and monitoring
+- Reporting Specialist: Report development and management
+- Security Specialist: Security management and compliance
+- Documentation Specialist: Documentation development and maintenance
+
+**RESPONSIBILITY MATRIX:**
+- Role definitions and responsibilities
+- Task assignment and ownership
+- Decision-making authority
+- Approval processes
+- Documentation requirements
+- Performance monitoring
+- Review processes
+
+**SKILL REQUIREMENTS:**
+- Technical skills matrix
+- Training requirements
+- Certification requirements
+- Skill development plans
+- Performance evaluation criteria
+- Career development paths
+- Succession planning
+
+### SLIDE 44: DOCUMENTATION RESOURCES - COMPLETE
+- Documentation framework:
+
+**NETDOC WIKI:**
+- Wiki structure and organization
+- Content categories
+- Documentation standards
+- Update procedures
+- Review processes
+- Access control
+- Version history
+
+**SYSTEM ARCHITECTURE DIAGRAMS:**
+- Architecture diagram types
+- Diagram standards
+- Update procedures
+- Review processes
+- Access control
+- Version history
+- Documentation integration
+
+**OPERATIONAL PROCEDURES:**
+- Procedure documentation standards
+- Procedure development processes
+- Procedure testing procedures
+- Procedure deployment processes
+- Procedure review processes
+- Procedure documentation integration
+- Procedure version control
+
+**TROUBLESHOOTING GUIDES:**
+- Guide structure and organization
+- Troubleshooting standards
+- Guide development processes
+- Guide testing procedures
+- Guide deployment processes
+- Guide review processes
+- Guide documentation integration
+
+## SECTION 12: CASE STUDIES AND EXAMPLES - COMPLETE
+
+### SLIDE 45: PROVISIONING CASE STUDY - END-TO-END EXAMPLE
+- Complete provisioning example:
+
+**SCENARIO DESCRIPTION:**
+- New network device deployment
+- Device type: Cisco router
+- Network segment: Core network
+- Service requirements: Full monitoring
+- Expected provisioning time: 8-12 minutes
+
+**PROVISIONING WORKFLOW:**
+1. Device added to SM/O inventory
+2. Port Check function initiated
+3. Generic Device Role assigned
+4. Noora eligibility determined
+5. CSV files generated and transferred
+6. Phase 1: Loader execution
+7. Phase 2: Pinning execution
+8. Phase 3: Discovery execution
+9. Phase 4: Link execution
+10. Post-provisioning configuration
+11. Monitoring activation
+12. Reporting setup
+
+**TROUBLESHOOTING EXAMPLE:**
+- Issue: Device stuck in Phase 2
+- Root cause: SNMP configuration mismatch
+- Resolution: Community string correction
+- Prevention: Configuration validation
+- Documentation: Update troubleshooting guide
+
+**LESSONS LEARNED:**
+- Configuration validation importance
+- Error message analysis techniques
+- Resolution documentation requirements
+- Prevention strategy development
+- Knowledge sharing procedures
+
+### SLIDE 46: ALERT MANAGEMENT CASE STUDY - COMPLETE
+- Alert management example:
+
+**SCENARIO DESCRIPTION:**
+- Critical interface threshold breach
+- Device: Core router
+- Interface: 100G trunk
+- Threshold: 95% utilization
+- Duration: 15 minutes
+
+**ALERT WORKFLOW:**
+1. Threshold breach detection
+2. Alert generation in SevOne
+3. Alert classification (CRITICAL)
+4. Alert forwarding to Nelli
+5. Incident creation in Nelli
+6. Alert acknowledgment
+7. Root cause analysis
+8. Corrective action execution
+9. Alert clearance
+10. Incident closure
+11. Post-incident review
+12. Documentation update
+
+**INVESTIGATION PROCESS:**
+- Alert details analysis
+- Historical data review
+- Device configuration check
+- Network topology analysis
+- Traffic pattern analysis
+- Capacity planning review
+- Prevention strategy development
+
+**RESOLUTION WORKFLOW:**
+- Immediate mitigation actions
+- Long-term resolution planning
+- Change management procedures
+- Implementation planning
+- Testing procedures
+- Deployment processes
+- Monitoring and verification
+
+### SLIDE 47: REPORTING CASE STUDY - END-TO-END
+- Reporting example:
+
+**SCENARIO DESCRIPTION:**
+- Monthly capacity planning report
+- Report type: Interface utilization
+- Time period: Last 30 days
+- Device group: Core network
+- Recipient: Network planning team
+
+**REPORT GENERATION PROCESS:**
+1. Report request receipt
+2. Report parameter validation
+3. Data collection from SevOne
+4. Data transformation and enrichment
+5. Data grouping and categorization
+6. Report generation
+7. Report validation
+8. Report distribution
+9. Report archiving
+10. Feedback collection
+
+**DATA ANALYSIS PROCESS:**
+- Data quality verification
+- Trend analysis
+- Anomaly detection
+- Capacity forecasting
+- Growth rate calculation
+- Utilization pattern analysis
+- Recommendation development
+
+**REPORT CUSTOMIZATION:**
+- Format selection
+- Content customization
+- Visualization options
+- Filter configuration
+- Sorting options
+- Grouping configuration
+- Export format selection
+
+## SECTION 13: CONCLUSION - COMPLETE
+
+### SLIDE 48: SYSTEM SUMMARY - COMPREHENSIVE
+- Complete system overview:
+
+**KEY FEATURES:**
+- Network-transparent monitoring
+- Vendor-neutral architecture
+- Operator-scale capacity
+- End-to-end automation
+- Comprehensive integration
+- Advanced reporting
+- Proactive alerting
+
+**CAPABILITIES:**
+- Device monitoring
+- Interface monitoring
+- Service monitoring
+- Capacity planning
+- Trend analysis
+- Alert management
+- Reporting automation
+
+**BENEFITS:**
+- Unified monitoring environment
+- Reduced operational complexity
+- Improved network reliability
+- Enhanced capacity planning
+- Better resource utilization
+- Comprehensive reporting
+- Proactive issue detection
+
+### SLIDE 49: KEY TAKEAWAYS - COMPLETE
+- Essential lessons:
+
+**SYSTEM ARCHITECTURE:**
+- Four-component architecture
+- Customization requirements
+- Integration complexity
+- Automation capabilities
+
+**OPERATIONAL EXCELLENCE:**
+- Daily health check importance
+- Provisioning process understanding
+- Monitoring best practices
+- Troubleshooting methodologies
+
+**INTEGRATION INSIGHTS:**
+- SM/O integration criticality
+- Nelli integration workflows
+- Qlik integration benefits
+- Data flow understanding
+
+**TEAM COLLABORATION:**
+- Role clarity
+- Communication protocols
+- Escalation procedures
+- Knowledge sharing
+
+### SLIDE 50: NEXT STEPS AND ACTION ITEMS - DETAILED
+- Implementation roadmap:
+
+**SYSTEM FAMILIARIZATION:**
+- Architecture review
+- Component analysis
+- Integration mapping
+- Documentation review
+
+**OPERATIONAL PREPARATION:**
+- Daily health check training
+- Monitoring procedure training
+- Troubleshooting training
+- Escalation procedure training
+
+**TECHNICAL TRAINING:**
+- Provisioning process training
+- Alert management training
+- Reporting system training
+- Integration training
+
+**DOCUMENTATION REVIEW:**
+- NetDoc wiki review
+- Architecture diagram review
+- Operational procedure review
+- Troubleshooting guide review
+
+### SLIDE 51: CONTACT INFORMATION - COMPLETE
+- Support resources:
+
+**PRIMARY CONTACTS:**
+- Ari Lipponen: Lead Architect (ari.lipponen@teliacompany.com)
+- Kurt Gunnelius: IP Network Engineer (kurt.gunnelius@teliacompany.com)
+- Kevin: Research Specialist (kevin@teliacompany.com)
+- Noora Support: Shared Mailbox (noora-support@teliacompany.com)
+
+**ESCALATION CONTACTS:**
+- Nelli Team: Alert Management (nelli-support@teliacompany.com)
+- Veha Team: Server Management (veha-support@teliacompany.com)
+- Accenture Team: Monitoring Operations (accenture-noora@teliacompany.com)
+- TeliaNow: Incident Management (telianow-support@teliacompany.com)
+
+**DOCUMENTATION RESOURCES:**
+- NetDoc Wiki: https://netdoc.teliasonera.net/wiki/Category:Noora
+- System Architecture Documents: Internal share
+- Operational Procedures: Internal share
+- Troubleshooting Guides: Internal share
+
+**TRAINING RESOURCES:**
+- Knowledge Transfer Sessions: Recorded sessions
+- Shadow Session Notes: Documented procedures
+- Training Materials: Internal share
+- User Guides: Internal share
+
+### SLIDE 52: FEEDBACK AND IMPROVEMENT - COMPLETE
+- Continuous improvement framework:
+
+**FEEDBACK MECHANISMS:**
+- User feedback collection
+- Incident review processes
+- Performance monitoring
+- User satisfaction surveys
+- Feedback analysis
+- Improvement prioritization
+- Implementation planning
+
+**CONTINUOUS IMPROVEMENT:**
+- Process improvement initiatives
+- Automation enhancement projects
+- Integration improvement projects
+- Documentation improvement projects
+- Training enhancement projects
+- Performance optimization projects
+- User experience improvement projects
+
+**SYSTEM ENHANCEMENT:**
+- Feature request collection
+- Enhancement prioritization
+- Development planning
+- Testing procedures
+- Deployment processes
+- User acceptance testing
+- Production deployment
+
+**USER COMMUNITY:**
+- User group meetings
+- Knowledge sharing sessions
+- Best practice sharing
+- Lessons learned sharing
+- User community events
+- User training sessions
+- User feedback sessions
+
+## APPENDIX: PROVISIONING AUTOMATION - DEEP DIVE
+
+### SLIDE 71: PROVISIONING AUTOMATION OVERVIEW
+- Core engine transforming SM/O device data into SevOne monitored entities
+- Fully automated workflow handling complete device lifecycle
+- Critical for Noora's operational efficiency and scalability
+- Handles 5,000+ devices with 5-15 minute provisioning time
+- Reduces manual intervention from hours to minutes
+
+### SLIDE 72: CSV FILE PROCESSING WORKFLOW
+- Source: SM/O generates device_record.csv + instruction file
+- Transfer: Automated file transfer to Noora provisioning machine
+- Validation: File integrity, format, and data consistency checks
+- Backup: Automatic backup creation (device_record.csv.bak)
+- Parsing: Data extraction and transformation for Noora consumption
+- Error Handling: Extra line detection, corrupt data handling, format validation
+
+### SLIDE 73: ERROR HANDLING MECHANISMS
+- CSV Parsing Errors: Format validation, data integrity checks, repair procedures
+- Device Reachability: ICMP/SNMP testing, retry logic, network verification
+- SNMP Communication: Timeout handling, retry mechanisms, fallback procedures
+- SevOne API Failures: Error detection, retry logic, alternative processing
+- Rulebook Mismatches: Validation, exception handling, manual override capabilities
+- Duplicate Detection: Conflict resolution, unique identification procedures
+- License Monitoring: Capacity tracking, alerting, allocation optimization
+
+### SLIDE 74: PROVISIONING ENGINE MONITORING
+- Real-time Status: Current phase tracking for all devices
+- Performance Metrics: Execution time, resource utilization monitoring
+- Queue Management: Device processing queue visualization
+- Phase Tracking: Loader → Pinning → Discovery → Link progression
+- Error Analysis: Failure classification and impact assessment
+- Capacity Planning: Resource allocation and forecasting
+- Historical Trends: Performance analysis and optimization
+
+### SLIDE 75: COMMON PROVISIONING ISSUES
+- Missing CSV Files: Transfer verification, source coordination
+- Corrupted Data: Validation, backup restoration, repair
+- Unreachable Devices: Connectivity testing, credential verification
+- SNMP Configuration: Community string validation, MIB support
+- Rulebook Mismatches: Rule validation, exception handling
+- License Capacity: Monitoring, allocation optimization
+- Performance Bottlenecks: Resource analysis, optimization
+
+### SLIDE 76: AUTOMATION IMPLEMENTATION
+- Cron-based Scheduling: Scripts run every minute (crontab -l)
+- Script Execution: heartbeatgenerator, Device loader, Calculation Poller
+- Error Handling: Fatal error detection with grep patterns
+- Logging: Comprehensive logs in /var/log/provisor/
+- Performance Monitoring: Execution time tracking (<5000ms threshold)
+- Recovery Procedures: Manual restart via Health Portal
+
+### SLIDE 77: PROVISIONING WORKFLOW DETAILS
+- Trigger Phase: SM/O device addition/configuration change
+- Automation Engine: Cron-based script execution and monitoring
+- Phase Execution: Sequential progression through 4 phases
+- Monitoring & Recovery: Continuous status tracking and error handling
+- Completion & Handoff: Device configuration, policy application, monitoring initiation
+
+### SLIDE 78: TECHNICAL IMPLEMENTATION EXAMPLES
+- Command Examples:
+  ```bash
+  # Fatal error checking
+  find /var/log/provisor/ -name "*.log" -exec echo {} \; -exec bash -c "grep -B 8 -A 5 Fatal {} | tail -13 | sed -e 's/^/\tFATAL ERROR FOUND! : /'" \;
+  
+  # Script execution monitoring
+  sudo -iu provisor
+grep -i "script finished" /var/log/provisor/exporter.log | tail -n 14
+  ```
+- Log Analysis: Error pattern detection and classification
+- Performance Optimization: Resource allocation and tuning
+
+### SLIDE 79: REAL-WORLD PROVISIONING SCENARIOS
+- Device fi-oluhir-rer2: Inventory and spare parts configuration
+- Provisioning Control: Phase tracking and status monitoring
+- Manual Intervention: XML missing issues resolution
+- Kurt's Workflow: Configuration problem troubleshooting
+- Success Cases: End-to-end provisioning examples
+- Failure Cases: Common issues and resolutions
+
+### SLIDE 80: PROVISIONING AUTOMATION BENEFITS
+- Scalability: Handles 5,000+ devices efficiently
+- Reliability: Consistent device configuration across network
+- Efficiency: 5-15 minute provisioning vs hours manually
+- Accuracy: Eliminates human error in complex configurations
+- Auditability: Complete logging and activity tracking
+- Recovery: Built-in failure handling and exception management
+- Cost Savings: Reduced operational overhead and manual effort
+
+## APPENDIX B: MONITORING PRIORITIES AND STRATEGY
+
+### SLIDE 81: NOORA MONITORING PRIORITIES - COMPREHENSIVE
+
+#### Tier 1: Critical Infrastructure Monitoring (Highest Priority)
+- **Core/Edge/Metro/Mgmt hardware monitoring**
+  - Foundation of entire network infrastructure
+  - Hardware failures affect all services
+  - Fundamental monitoring requirement
+- **Core/Edge/Metro/Mgmt trunk interface monitoring**
+  - Backbone network connectivity
+  - Trunk failures cause major service disruptions
+  - Link object creation for historical continuity
+- **IP CORE and ASBR capacity monitoring**
+  - Core routing infrastructure
+  - Congestion affects all IP services
+  - Primary monitoring target
+- **BGP Peer routing monitoring**
+  - Internet connectivity and routing
+  - BGP issues cause service outages
+  - Critical monitoring point
+
+#### Tier 2: Service-Critical Monitoring (High Priority)
+- **Mobile core capacity monitoring**
+  - Mobile network backbone
+  - Affects all mobile services
+  - Key monitoring capability
+- **IP edge capacity monitoring**
+  - Service delivery edge
+  - Congestion affects customer experience
+  - Edge monitoring focus
+- **Metro ring report management**
+  - Metropolitan network resilience
+  - Ring failures affect regional services
+  - Metro ring troubleshooting priority
+- **SD-WAN traffic monitoring**
+  - Enterprise service delivery
+  - Affects business customer services
+  - SD-WAN monitoring target
+
+#### Tier 3: Service-Specific Monitoring (Important)
+- **VOD service capacity monitoring**
+  - High-bandwidth consumer service
+  - Affects video streaming quality
+  - VOD monitoring capability
+- **Operator traffic monitoring**
+  - Overall network traffic patterns
+  - Helps capacity planning
+  - Primary monitoring capability
+- **Network COS monitoring**
+  - Quality of Service enforcement
+  - Affects service prioritization
+  - COS monitoring importance
+- **3G and 4G service traffic monitoring**
+  - Mobile data services
+  - Affects mobile customer experience
+  - Mobile monitoring inclusion
+
+#### Tier 4: Access and Last-Mile Monitoring (Important but Secondary)
+- **Access server CPU load monitoring**
+  - Access network performance
+  - Affects customer connectivity
+  - Access monitoring capability
+- **Hybrid Access server CPU load monitoring**
+  - Converged access networks
+  - Affects hybrid service delivery
+  - Hybrid access monitoring
+- **Cable DVB-C SNR monitoring**
+  - Cable service quality
+  - Affects cable TV and internet
+  - Cable monitoring inclusion
+- **Ethernet Nordic service traffic monitoring**
+  - Regional Ethernet services
+  - Affects Nordic service delivery
+  - Ethernet monitoring target
+
+### SLIDE 82: ADDITIONAL MONITORING CAPABILITIES
+
+#### Specialized Services Monitoring
+- **Telco Cloud traffic monitoring**
+  - Cloud service infrastructure
+  - Emerging service area
+- **Consumer IP address utilization trend analysis**
+  - IP address management
+  - Capacity planning
+- **DDC traffic monitoring**
+  - Data center connectivity
+  - Critical infrastructure
+- **Cable Modem registration status monitoring**
+  - Cable customer connectivity
+  - Service assurance
+- **CAGW capacity monitoring**
+  - Carrier gateway performance
+  - Service delivery
+- **Ficix MAC Accounting**
+  - MAC address tracking
+  - Network security
+
+### SLIDE 83: MONITORING STRATEGY AND RATIONALE
+
+#### Strategy Principles
+- **Infrastructure First**: Core hardware and connectivity monitored most aggressively
+- **Service Impact**: Monitoring prioritized by potential customer impact
+- **Capacity Planning**: Critical paths monitored for growth trends
+- **SLA Compliance**: Services with SLAs get higher monitoring priority
+- **Automation Focus**: Most critical elements have automated monitoring and alerting
+
+#### Rationale from Documentation
+- **Provisioning Documentation**: Core hardware and trunk monitoring are fundamental
+- **KT Sessions**: Hardware monitoring mentioned as most critical
+- **Slide Materials**: Core/edge/metro monitoring listed first
+- **Shadow Sessions**: Metro ring issues get immediate attention
+
+#### Implementation Approach
+- **Tier 1**: Real-time monitoring with immediate alerting
+- **Tier 2**: Real-time monitoring with priority alerting
+- **Tier 3**: Near real-time monitoring with threshold alerting
+- **Tier 4**: Scheduled monitoring with trend analysis
+- **Specialized**: Event-driven monitoring based on service requirements
+
+### SLIDE 84: MONITORING PRIORITIZATION MATRIX
+
+| Priority Tier | Monitoring Focus | Impact Level | Response Time | Alerting Level |
+|--------------|------------------|--------------|---------------|----------------|
+| Tier 1 (Critical) | Core infrastructure | Network-wide | Immediate | Critical alerts |
+| Tier 2 (Service) | Customer services | Service group | <5 minutes | Major alerts |
+| Tier 3 (Service) | Specific services | Service | <15 minutes | Minor alerts |
+| Tier 4 (Access) | Customer access | Local | <30 minutes | Warning alerts |
+| Specialized | Niche services | Limited | <60 minutes | Informational |
+
+### SLIDE 85: MONITORING IMPLEMENTATION GUIDELINES
+
+#### Best Practices
+- **Threshold Configuration**: Set appropriate thresholds for each priority tier
+- **Alert Correlation**: Implement correlation rules to reduce alert noise
+- **Automated Response**: Configure automated responses for Tier 1 issues
+- **Escalation Procedures**: Define clear escalation paths based on priority
+- **Capacity Planning**: Use monitoring data for proactive capacity management
+- **Documentation**: Maintain up-to-date monitoring configuration documentation
+
+#### Operational Recommendations
+- **Daily Review**: Check Tier 1 monitoring status in daily health checks
+- **Trend Analysis**: Perform weekly trend analysis on all monitoring tiers
+- **Threshold Tuning**: Quarterly review and adjustment of monitoring thresholds
+- **New Service Integration**: Evaluate monitoring priority for new services
+- **Incident Review**: Analyze monitoring effectiveness after major incidents
+
+## APPENDIX C: COMMON ALERT TYPES AND CLASSIFICATION
+
+### SLIDE 86: COMMON ALERT TYPES OVERVIEW
+- Comprehensive classification of Noora alert types
+- Alert categorization by impact and response requirements
+- Integration with Nelli incident management system
+- Alert lifecycle and handling procedures
+
+### SLIDE 87: DEVICE UNREACHABLE ALERTS
+- **Alert Types**:
+  - ICMP ping failure alerts
+  - SNMP timeout alerts
+  - Network connectivity loss alerts
+  - Device power failure alerts
+  - Maintenance window detection alerts
+- **Characteristics**:
+  - Multiple verification attempts before alerting
+  - Differentiation between planned/unplanned outages
+  - Integration with network topology data
+- **Impact**: Critical - affects all monitoring for device
+- **Response**: Immediate network connectivity investigation
+- **Example**: Device fi-oluhir-rer2 becomes unresponsive
+
+### SLIDE 88: INTERFACE THRESHOLD BREACH ALERTS
+- **Alert Types**:
+  - Bandwidth utilization thresholds (>95%)
+  - Error rate thresholds (>0.1% errors)
+  - Discard rate thresholds (>0.01% discards)
+  - Queue depth thresholds
+  - Latency thresholds
+  - Jitter thresholds
+- **Characteristics**:
+  - Configurable thresholds by interface type
+  - Time-based threshold variations
+  - Baseline-based dynamic thresholds
+  - Multi-level warning/critical thresholds
+- **Impact**: High - affects service quality and performance
+- **Response**: Traffic analysis and capacity review
+- **Example**: 100G trunk interface reaches 95% utilization
+
+### SLIDE 89: HARDWARE FAILURE ALERTS
+- **Alert Types**:
+  - Power supply failure alerts
+  - Fan failure alerts
+  - Temperature threshold breaches
+  - Memory failure alerts
+  - CPU failure alerts
+  - Disk failure alerts
+- **Characteristics**:
+  - Hardware-specific alerting with sensor verification
+  - Multiple sensor cross-validation
+  - Predictive failure alerts based on trends
+  - Hardware inventory integration
+- **Impact**: Critical - potential service disruption
+- **Response**: Hardware replacement procedures
+- **Example**: Core router power supply failure detected
+
+### SLIDE 90: SERVICE DEGRADATION ALERTS
+- **Alert Types**:
+  - QoS parameter violation alerts
+  - SLA breach detection alerts
+  - Service unavailability alerts
+  - Performance degradation alerts
+  - Response time increase alerts
+  - Throughput reduction alerts
+- **Characteristics**:
+  - Service-level monitoring with SLA integration
+  - Customer impact assessment
+  - Service dependency mapping
+  - Historical performance comparison
+- **Impact**: High - affects customer experience
+- **Response**: Service restoration procedures
+- **Example**: VOD service response time exceeds SLA
+
+### SLIDE 91: CAPACITY THRESHOLD ALERTS
+- **Alert Types**:
+  - Interface capacity thresholds
+  - Device capacity thresholds
+  - Network segment capacity alerts
+  - Service capacity thresholds
+  - Resource exhaustion detection
+  - Growth trend analysis alerts
+- **Characteristics**:
+  - Proactive capacity monitoring
+  - Trend-based forecasting algorithms
+  - Multi-level thresholds (warning/critical)
+  - Capacity planning integration
+- **Impact**: Medium-High - potential future service impact
+- **Response**: Capacity planning and expansion
+- **Example**: Core router approaching 85% capacity
+
+### SLIDE 92: CONFIGURATION CHANGE ALERTS
+- **Alert Types**:
+  - Unauthorized configuration change alerts
+  - Configuration mismatch alerts
+  - Rulebook violation alerts
+  - Policy compliance alerts
+- **Characteristics**:
+  - Change detection mechanisms
+  - Configuration baseline comparison
+  - Compliance verification rules
+  - Change approval workflow integration
+- **Impact**: Medium - potential security/compliance issues
+- **Response**: Configuration review and correction
+- **Example**: Unauthorized SNMP community string change
+
+### SLIDE 93: SECURITY-RELATED ALERTS
+- **Alert Types**:
+  - Authentication failure alerts
+  - Access violation alerts
+  - Unauthorized access attempts
+  - Security policy violations
+- **Characteristics**:
+  - Security event monitoring
+  - Access pattern analysis
+  - Anomaly detection algorithms
+  - Integration with security systems
+- **Impact**: High - potential security breaches
+- **Response**: Security incident response procedures
+- **Example**: Multiple failed authentication attempts
+
+### SLIDE 94: INTEGRATION FAILURE ALERTS
+- **Alert Types**:
+  - SM/O integration failure alerts
+  - SAP integration failure alerts
+  - Nelli integration failure alerts
+  - Qlik integration failure alerts
+  - CSV file processing failure alerts
+- **Characteristics**:
+  - Integration health monitoring
+  - Data flow verification
+  - File transfer monitoring
+  - Integration latency tracking
+- **Impact**: Medium-High - affects data consistency
+- **Response**: Integration troubleshooting procedures
+- **Example**: SM/O CSV file transfer failure
+
+### SLIDE 95: PERFORMANCE DEGRADATION ALERTS
+- **Alert Types**:
+  - Polling performance degradation
+  - Reporting performance degradation
+  - Database performance alerts
+  - System resource exhaustion alerts
+- **Characteristics**:
+  - Performance metric monitoring
+  - Baseline comparison
+  - Trend analysis
+  - Resource utilization tracking
+- **Impact**: Medium - affects system efficiency
+- **Response**: Performance optimization procedures
+- **Example**: SevOne polling latency exceeds threshold
+
+### SLIDE 96: PROVISIONING FAILURE ALERTS
+- **Alert Types**:
+  - Phase 1 (Loader) failure alerts
+  - Phase 2 (Pinning) failure alerts
+  - Phase 3 (Discovery) failure alerts
+  - Phase 4 (Link) failure alerts
+  - CSV processing failure alerts
+- **Characteristics**:
+  - Phase-specific alerting
+  - Provisioning status monitoring
+  - Error classification
+  - Provisioning queue monitoring
+- **Impact**: High - affects new device onboarding
+- **Response**: Provisioning troubleshooting procedures
+- **Example**: Device stuck in Phase 2 provisioning
+
+### SLIDE 97: ALERT CLASSIFICATION SYSTEM
+
+#### By Severity:
+- **CRITICAL**: Immediate action required
+  - Core hardware failures
+  - Network outages
+  - Major service disruptions
+- **MAJOR**: Urgent action required
+  - Service degradation
+  - Capacity thresholds
+  - Integration failures
+- **MINOR**: Action required
+  - Performance warnings
+  - Configuration issues
+  - Resource warnings
+- **WARNING**: Awareness required
+  - Approaching thresholds
+  - Informational alerts
+  - Maintenance notifications
+- **INFORMATIONAL**: Informational only
+  - Configuration changes
+  - System events
+  - Status updates
+
+#### By Category:
+- **STATUS**: Shown in Nelli incident views
+  - Targeted for CC Karlstad
+  - Customer-impacting alerts
+  - Service disruption alerts
+- **PERFORMANCE**: Internal monitoring only
+  - Performance metrics
+  - Capacity warnings
+  - System health alerts
+
+#### By Response Time:
+- **Immediate**: <5 minutes
+  - Critical infrastructure alerts
+  - Major service outages
+- **Urgent**: <15 minutes
+  - Service-impacting alerts
+  - High-priority issues
+- **Standard**: <30 minutes
+  - Performance alerts
+  - Medium-priority issues
+- **Routine**: <60 minutes
+  - Informational alerts
+  - Low-priority issues
+
+### SLIDE 98: ALERT HANDLING PROCEDURES
+
+#### Alert Lifecycle:
+1. **Detection**: Threshold breach or condition met
+2. **Classification**: Severity and category assignment
+3. **Prioritization**: Response time determination
+4. **Notification**: Nelli integration and alert forwarding
+5. **Acknowledgment**: Operator acknowledgment
+6. **Investigation**: Root cause analysis
+7. **Resolution**: Corrective action implementation
+8. **Clearance**: Alert resolution confirmation
+9. **Closure**: Incident closure and documentation
+10. **Review**: Post-incident analysis
+
+#### Handling Procedures by Type:
+- **Device Unreachable**: Network connectivity testing, device verification
+- **Threshold Breaches**: Traffic analysis, capacity review, threshold adjustment
+- **Hardware Failures**: Hardware replacement, spare part verification
+- **Service Degradation**: Service restoration, SLA compliance check
+- **Capacity Alerts**: Capacity planning, expansion procedures
+- **Configuration Changes**: Configuration review, compliance verification
+- **Security Alerts**: Security incident response, access review
+- **Integration Failures**: Integration testing, data flow verification
+- **Performance Issues**: Performance optimization, resource allocation
+- **Provisioning Failures**: Provisioning restart, error analysis
+
+### SLIDE 99: ALERT MANAGEMENT BEST PRACTICES
+
+#### Configuration Best Practices:
+- **Threshold Setting**: Set appropriate thresholds based on baseline
+- **Baseline Establishment**: Establish performance baselines for each device type
+- **Dynamic Thresholds**: Implement dynamic thresholds where possible
+- **Multi-Level Alerts**: Configure warning and critical thresholds
+- **Alert Suppression**: Implement suppression rules to reduce noise
+- **Dependency Mapping**: Configure alert dependencies to prevent cascades
+
+#### Operational Best Practices:
+- **Alert Review**: Daily review of critical alerts
+- **Trend Analysis**: Weekly trend analysis of alert patterns
+- **Threshold Tuning**: Quarterly threshold review and adjustment
+- **Alert Documentation**: Maintain up-to-date alert documentation
+- **False Positive Analysis**: Regular analysis of false positive alerts
+- **Alert Correlation**: Implement alert correlation rules
+
+#### Performance Optimization:
+- **Alert Volume Monitoring**: Track alert volume trends
+- **Response Time Tracking**: Monitor alert response times
+- **Alert Effectiveness**: Measure alert effectiveness regularly
+- **Continuous Improvement**: Implement alert management improvements
+- **Team Training**: Regular alert management training
+- **Process Review**: Periodic alert process reviews
+
+### SLIDE 100: ALERT MANAGEMENT CASE STUDIES
+
+#### Case Study 1: Critical Interface Threshold Breach
+- **Scenario**: Core router 100G trunk reaches 95% utilization
+- **Alert Type**: Interface threshold breach (CRITICAL)
+- **Response**: Immediate traffic analysis and capacity review
+- **Resolution**: Traffic rerouting and capacity expansion
+- **Lessons**: Importance of proactive capacity planning
+
+#### Case Study 2: Device Unreachable Alert
+- **Scenario**: Core router becomes unresponsive
+- **Alert Type**: Device unreachable (CRITICAL)
+- **Response**: Network connectivity testing and device verification
+- **Resolution**: Power supply replacement and device reboot
+- **Lessons**: Hardware redundancy importance
+
+#### Case Study 3: Service Degradation Alert
+- **Scenario**: VOD service response time exceeds SLA
+- **Alert Type**: Service degradation (MAJOR)
+- **Response**: Service component analysis and performance review
+- **Resolution**: Database optimization and caching implementation
+- **Lessons**: Service dependency mapping importance
+
+#### Case Study 4: Provisioning Failure Alert
+- **Scenario**: New device stuck in Phase 2 provisioning
+- **Alert Type**: Provisioning failure (MAJOR)
+- **Response**: Provisioning log analysis and error identification
+- **Resolution**: SNMP configuration correction and provisioning restart
+- **Lessons**: Configuration validation importance
+
+## END OF PRESENTATION
+
+This comprehensive expanded presentation provides complete technical coverage of the Noora system based on actual operational documentation, knowledge transfer sessions, and system materials. The presentation includes detailed technical specifications, step-by-step procedures, troubleshooting guides, and real-world examples to ensure complete understanding of the system's architecture, operations, and maintenance requirements. The appended sections provide additional technical insights into Provisioning Automation, Monitoring Priorities, and Common Alert Types, offering a complete reference for Noora system operations and alert management.

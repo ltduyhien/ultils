@@ -1,0 +1,49 @@
+NOORA DATA OUTPUT
+
+¢ Noora offers multiple ways of
+accessing the data
+
+« Raw data is available through
+SevOne native user interfaces or via
+in house build user interfaces like
+Rasmus
+
+« The custom user interfaces offer
+more flexible data queries and are
+target to be easily approachable
+
+Internal
+
+ri) SevOne does not aggregate any data
+so precision is not impacted over time
+
+——— |,
+ee
+— [Monitoring [Reporting
+—— luk
+
+Reporting
+
+Reporting
+
+lu
+
+Nelli alert
+Manager
+
+ative |
+
+SurfManager &
+Operator
+
+Reporting
+
+a
+
+GlikSen se
+
+SurfManager
+‘Customer (SMC)
+
+External Systems
+

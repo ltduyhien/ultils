@@ -1,0 +1,586 @@
+# NOORA SYSTEM COMPREHENSIVE PLAYBACK PRESENTATION - ENHANCED
+
+This presentation provides a detailed technical overview of the Noora (SevOne) monitoring system based on actual documentation, knowledge transfer sessions, and operational materials.
+
+## SECTION 1: SYSTEM INTRODUCTION AND OVERVIEW
+
+### SLIDE 1: TITLE SLIDE
+- Noora (SevOne) Network Monitoring System
+- Telia Company's Unified Monitoring and Reporting Platform
+- Comprehensive Technical Overview Based on Actual System Documentation
+- Presented by: Noora Operations Team
+- Date: August 2026
+- Version: 3.0 Enhanced
+
+### SLIDE 2: SYSTEM OVERVIEW - ENHANCED
+- Network-transparent and vendor-neutral monitoring system designed for operator-scale infrastructure
+- Combines network monitoring and reporting under one unified environment
+- Serves both network planning units and network monitoring/operations teams
+- Key statistics:
+  - Over 2,500,000 indicator statistics updated every 180 seconds
+  - Over 1,000,000 lines of CSV-formatted inventory data processed nightly
+  - Approximately 5,000 devices monitored with over 4,200 active monitoring points
+  - 140,000 enabled objects and 1,400,000 disabled objects in SevOne database
+  - 171,000 object licenses with 1.50 USD per license cost (before discounts)
+  - Over 100,000 lines of custom code developed by Telia and Tietoevry over 3+ years
+  - 1,800 Qlik reporting groups containing 18,000 monitored objects
+  - 200,000+ objects distributed across 4 collector peers
+- System characteristics:
+  - Fully automated end-to-end workflow from input to output
+  - No constant manual interactions required in normal operations
+  - High reliability with critical issues occurring only once every 2 years
+  - Non-critical issues occurring once every 6 months
+  - Provisioning issues occurring approximately once per month
+  - Typical device provisioning time: 5-15 minutes depending on configuration
+
+### SLIDE 3: HISTORICAL CONTEXT AND EVOLUTION
+- Original development timeline:
+  - 2016-2019: Core system development by Tietoevry and Telia
+  - 2019: System stabilization and production deployment
+  - 2020: Ongoing enhancements and customization
+  - 2021-2024: Maintenance phase with gradual team changes
+- Key architects and developers:
+  - Ari Nieminen: Original architect (no longer with Tietoevry)
+  - Mika Savea: Core developer (still with Tietoevry, expert resource)
+  - Ari Lipponen: Lead architect and primary maintainer
+  - Eero Kopperi: Reporting and Qlik integration specialist (deceased 2023)
+  - Ville Soininen: Device support and alert policy developer
+  - Kurt Gunnelius: IP Network Engineer, hardware specialist
+  - Kevin: Research and integration specialist
+- Development approach:
+  - Custom components built from scratch by Telia/Tietoevry
+  - SevOne NMS as commercial core product
+  - Extensive customization required for operator-scale deployment
+  - "Nothing will work without customization" - core design principle
+  - Best SevOne features utilized and enhanced
+  - More intelligent data collection and automation enabled
+- Historical documentation:
+  - NetDoc wiki: https://netdoc.teliasonera.net/wiki/Category:Noora
+  - Internal architecture documents from 2019-2020
+  - Knowledge transfer sessions (2023-2024)
+  - Shadow session recordings and notes
+  - Historical emails from Ari Lipponen (April/May 2024)
+
+### SLIDE 4: BUSINESS VALUE AND OBJECTIVES - DETAILED
+- Primary business objectives:
+  1. Service Assurance:
+     - Real-time network monitoring
+     - Proactive alert management
+     - Incident prevention and detection
+     - Service level agreement (SLA) monitoring
+     - Customer impact analysis
+  2. Network Capacity Planning:
+     - Historical trend analysis
+     - Future capacity forecasting
+     - Network expansion planning
+     - Resource optimization
+     - Cost avoidance through efficient utilization
+- Specific monitoring capabilities:
+  - VOD service capacity monitoring
+  - Operator traffic monitoring
+  - Mobile core capacity monitoring
+  - IP edge capacity monitoring
+  - Metro ring report management
+  - Trend surveillance
+  - Access server CPU load monitoring
+  - IP CORE and ASBR capacity monitoring
+  - Core/Edge/Metro/Mgmt hardware monitoring
+  - Core/Edge/Metro/Mgmt trunk interface monitoring
+  - Network COS monitoring
+  - Metro capacity monitoring
+  - IP Transit capacity monitoring
+  - SD-WAN traffic monitoring
+  - Telco Cloud traffic monitoring
+  - Consumer IP address utilization trend analysis
+  - DDC traffic monitoring
+  - Hybrid Access server CPU load monitoring
+  - Ethernet Nordic service traffic monitoring
+  - Cable DVB-C SNR monitoring
+  - Hybrid Access traffic monitoring
+  - 3G and 4G service traffic monitoring
+  - BGP Peer routing monitoring
+  - Ficix MAC Accounting
+  - Cable Modem registration status monitoring
+  - CAGW capacity monitoring
+- Integration with business processes:
+  - Network planning and expansion
+  - Capacity management
+  - Incident management
+  - Change management
+  - Performance management
+  - Financial planning (license management)
+  - Vendor management (SevOne/IBM)
+
+### SLIDE 5: SYSTEM ARCHITECTURE - ENHANCED
+- Four main components:
+  1. Input (Custom integrations, provisioning engine)
+  2. Core (SevOne NMS)
+  3. Custom UI (Rasmus, embedded dashboards)
+  4. Output (Data export, Qlik integration)
+- Architecture diagram and data flow overview
+- Input layer: SurfManager/Operator, SAP ERP, satellite systems, SMO L2 Manager, MIT systems
+- Core layer: SevOne master server, vPAS100K collectors, device modeling, metrics polling, data categorization, alarm management
+- Custom UI layer: Rasmus reporting, embedded dashboards, health portal, management UIs
+- Output layer: Qlik Sense integration, Nelli alert manager, scheduled exports, automated reporting
+- Infrastructure layer: Intel servers, VMware, Red Hat OS, network connectivity, storage, backup systems
+
+### SLIDE 6: SEVONE CORE COMPONENTS - ENHANCED
+- Master server and vPAS100K collectors architecture
+- Three key elements: Devices, Objects, Indicators
+- No theoretical limits on devices, objects, or indicators
+- Current system: 140,000 enabled objects, 1.4M disabled objects
+- Licensing model: 171,000 object licenses
+- Devices: Physical and virtual devices, metadata, grouping, discovery, lifecycle management
+- Objects: Interfaces, CPU, memory, power supplies, temperature sensors, fans, COS queues, service interfaces, link objects
+- Indicators: Bits in/out, packet counts, error counters, utilization, temperature, power status, fan speed, CPU load, memory usage
+- Collector architecture: Master server (Ferguson), vPAS100K collectors (Aura), distributed polling, easy scalability
+- Licensing: Object-based, floating licenses, pre-purchased pool, $1.50 per license, 15% annual support fee
+
+### SLIDE 7: CUSTOM COMPONENTS - ENHANCED
+- Provisioning Engine (Tietoevry): Workflow automation, rulebook-based decisions, CSV processing, device eligibility, reachability verification, SevOne API integration, error handling, logging
+- Rasmus Reporting System: Hierarchical group navigation, device/interface reports, report scheduling, custom development, user access control, export capabilities, historical data access
+- Embedded Dashboards: Real-time statistics, device inventory, interface monitoring, alarm logs, threshold information, spare parts, provisioning status, customizable views, URI embedding
+- Health Monitoring Portal: System status, provisioning control, action items, system metrics, change reports, external data validation, device dashboard, error detection
+- Custom integrations: SM/O two-way integration, SAP data exchange, Nelli alert forwarding, Qlik data export, satellite system connections
+
+### SLIDE 8: TECHNICAL STACK - ENHANCED
+- Hardware: Intel servers, VMware, Red Hat OS, high availability configuration, load balancing, storage area network, backup systems, redundant network paths
+- Software: SevOne NPM, custom PHP extensions, Java components, MySQL/MariaDB, Apache HTTP Server, cron scheduling, SNMP polling engines
+- Integration: SNMP v2c/v3, CSV file exchange, RESTful APIs, SOAP web services, database connectors, SSH, LDAP authentication, SSL/TLS encryption
+- User interfaces: Web-based dashboards, Rasmus reporting, embedded dashboards, health portal, management UIs, custom integrations
+- Development: 100,000+ lines custom code, PHP primary language, Java components, shell scripting, Python data processing, version control, test/production environments
+
+### SLIDE 9: PROVISIONING OVERVIEW - ENHANCED
+- Fully automated device provisioning process
+- Based on Generic Device Role classification
+- Four-phase provisioning workflow
+- Integration with SurfManager/Operator (SM/O)
+- Trigger phase: Device added to SM/O, port check initiated, role assignment, rulebook evaluation, CSV generation, file transfer
+- Noora phases: Loader (validation/discovery), Pinning (registration/SNMP), Discovery (object enablement), Link (link objects)
+- Post-provisioning: Alarm policy application, threshold monitoring, reporting group assignment, data export configuration
+- Characteristics: No manual intervention normally, rulebook-driven, error handling, comprehensive logging, 5-15 minute completion, exceptional cases may need intervention
+
+### SLIDE 10: SM/O PROVISIONING PHASES - ENHANCED
+- Phase 1: Port Check
+  - Assigns Generic Device Role
+  - Determines if Noora monitoring should be enabled
+  - Rulebook-controlled by Tela
+  - Device identification and metadata retrieval
+  - Role assignment process (Managed/UnManaged/Unrecognized)
+  - Noora monitoring eligibility check
+  - Port selection for monitoring
+  - CSV file generation (device_record.csv + instructions)
+- Phase 2: Device Provisioning
+  - Checks if SevOne monitoring should be enabled
+  - Uses Noora provisioning rulebook
+  - Eligibility verification process
+  - Decision points and exception handling
+  - Provisioning initiation and queue management
+- Phase 3: Port Provisioning
+  - Selects ports for monitoring
+  - Based on Generic Device Role and monitoring requirements
+  - SM/O Link identification and verification
+  - Port configuration and metadata enrichment
+  - Port description field population (<deviceB> <portId> <speed>)
+
+### SLIDE 11: NOORA PROVISIONING PHASES - ENHANCED
+- Phase 1: Loader
+  - Receives CSV files from SM/O (data + instruction)
+  - Checks device eligibility
+  - Verifies device reachability
+  - Triggers SevOne discovery
+  - CSV file reception and processing
+  - File validation and integrity checks
+  - Backup creation and error handling
+  - Device eligibility verification
+  - Reachability testing (ICMP, SNMP, port accessibility)
+- Phase 2: Pinning
+  - Determines device type
+  - Checks SevOne registration
+  - Sets supported SNMP object types
+  - Device type determination (SNMP sysObjectID)
+  - Registration status verification
+  - Duplicate device detection
+  - SNMP object capability assessment
+  - Object configuration in SevOne
+- Phase 3: Discovery
+  - Enables discovered objects
+  - Hardware objects (CPU, memory, fans, power supplies)
+  - Port objects with SM/O metadata
+  - Additional objects (COS queues, service interfaces)
+  - Hardware object enablement (CPU, memory, PSU, fans, sensors)
+  - Interface object enablement (physical, logical, virtual, aggregated)
+  - Service object enablement (COS queues, service interfaces)
+  - SM/O instruction processing and metadata enrichment
+- Phase 4: Link
+  - Builds link objects in SevOne
+  - Prevents historical data interruption during port migrations
+  - Rulebook-based for backbone network ports
+  - Link object creation for historical continuity
+  - SM/O link identification and end port verification
+  - Calculated object creation and statistics copying
+  - Link object management and reporting
+
+### SLIDE 12: PROVISIONING AUTOMATION - ENHANCED
+- CSV file processing workflow
+- Error handling and recovery mechanisms
+- Provisioning engine monitoring
+- Common provisioning issues and resolutions
+- Automation framework: Cron-based scheduling, phase transition management, error detection, logging, performance monitoring
+- Error handling: CSV parsing errors, device reachability failures, SNMP errors, API failures, rulebook mismatches, duplicates
+- Recovery procedures: Automatic retries, manual intervention, provisioning restart, error state clearing, notifications, escalation
+- Common issues: Missing CSV files, corrupted data, unreachable devices, SNMP configuration, rulebook mismatches, license capacity, performance bottlenecks
+- Troubleshooting tools: Provisioning control interface, system logs, device dashboard, health portal, change reports, external data validation
+
+### SLIDE 13: MONITORING CAPABILITIES - ENHANCED
+- Over 2.5M statistics updated every 180 seconds
+- Device monitoring: Hardware status, interfaces, services
+- Service monitoring: QoS, traffic patterns, capacity
+- Custom monitoring profiles by device role
+- Monitoring architecture: SNMP-based polling, 180-second intervals, distributed collectors, load-balanced, high availability
+- Device monitoring: Hardware status, interface monitoring, service monitoring, protocol monitoring, application monitoring
+- Monitoring by role: Access devices (limited), CPE (basic), Edge (standard), Core (comprehensive), Specialized (custom)
+- Monitoring profiles: Standard, enhanced, critical device, custom, service-specific profiles
+
+### SLIDE 14: ALERT MANAGEMENT - ENHANCED
+- SevOne alarm policy configuration
+- Alert classification: STATUS vs PERFORMANCE
+- Integration with Nelli Alert Manager
+- Common alert types and workflows
+- Alert architecture: Threshold-based, rule-based, multi-level classification, correlation engine, suppression mechanisms, escalation procedures
+- Alert classification: STATUS (Nelli), PERFORMANCE (internal), CRITICAL, MAJOR, MINOR, WARNING, INFORMATIONAL
+- Alert generation: Data collection → threshold comparison → condition evaluation → alert creation → classification → prioritization → Nelli forwarding → ticket creation
+- Alert lifecycle: Creation → acknowledgment → escalation → resolution → clearance → closure → archiving
+
+### SLIDE 15: ALERT WORKFLOW - ENHANCED
+- Threshold monitoring and alarm generation
+- Alert categorization and prioritization
+- Nelli integration and ticket creation
+- Alert resolution and clearance workflow
+- SNMP polling: Interval configuration, data collection, response validation, error handling, performance monitoring
+- Threshold monitoring: Static/dynamic thresholds, baseline-based, time-based variations, device/service-specific thresholds
+- Alert generation: Threshold breach detection, condition evaluation, creation parameters, severity assignment, categorization, metadata enrichment
+- Nelli integration: Alert forwarding, API integration, classification mapping, incident creation, status synchronization, error handling
+- Alert resolution: Root cause analysis, corrective actions, clearance procedures, post-incident review, documentation, prevention strategies
+
+### SLIDE 16: COMMON ALERT SCENARIOS - ENHANCED
+- Device unreachable alerts: ICMP/SNMP failures, network connectivity loss, power failures, maintenance detection, false positive prevention
+- Interface threshold breaches: Bandwidth utilization, error rates, discard rates, queue depth, latency, jitter thresholds
+- Hardware failure alerts: Power supply, fan, temperature, memory, CPU, disk failures
+- Service degradation alerts: QoS violations, SLA breaches, unavailability, performance degradation, response time, throughput issues
+- Capacity threshold alerts: Interface/device/network capacity, service capacity, resource exhaustion, growth trend analysis
+
+### SLIDE 17: REPORTING ARCHITECTURE - ENHANCED
+- Rasmus: Custom hierarchical reporting
+- Embedded Dashboards: Real-time device/interface views
+- Qlik Integration: 1,800 groups, 18,000 objects
+- SevOne Native: Standard reporting
+- Reporting components: Rasmus, embedded dashboards, Qlik integration, SevOne native, custom report generator, scheduled report engine
+- Reporting data flow: Collection → aggregation → categorization → generation → distribution → archiving
+- Report types: Device, interface, group, service, capacity, trend, custom reports
+
+### SLIDE 18: RASMUS REPORTING SYSTEM - ENHANCED
+- Device and interface reports
+- Group-based reporting navigation
+- Report scheduling and automation
+- Rasmus Admin interface for configuration
+- Rasmus architecture: Hierarchical navigation, device/interface reporting, group structure, scheduling engine, access control, export capabilities, historical data access
+- Rasmus features: Device/interface selection, filtering, group navigation, time periods, format selection, customization, scheduling, export
+- Rasmus Admin: Group management, report configuration, user management, schedule management, export configuration, system settings, audit logging
+
+### SLIDE 19: EMBEDDED DASHBOARDS - ENHANCED
+- Device and interface dashboards
+- Embeddable via URI
+- Real-time statistics display
+- Alarm logs and threshold information
+- Device inventory overview
+- Spare part information
+- Dashboard architecture: Real-time display, inventory overview, interface monitoring, alarm logs, threshold info, spare parts, provisioning status, customizable views
+- Dashboard features: Device/interface selection, time periods, visualization options, alert filtering, export capabilities, URI embedding, customization
+- Dashboard integration: Network orchestrator, external embedding, single sign-on, role-based access, performance optimization, mobile support
+
+### SLIDE 20: QLIK INTEGRATION - ENHANCED
+- Daily data export to Qlik
+- Automated grouping structure
+- Capacity planning reports
+- 99% automated data grouping
+- Qlik integration: Data export configuration, transformation engine, grouping structure, report generation, UI integration, performance optimization
+- Qlik data flow: Collection → transformation → enrichment → grouping → export → Qlik processing → report generation
+- Qlik features: 1,800 groups, 18,000 objects, automated grouping, daily statistics, capacity planning, trend analysis, custom reports
+
+### SLIDE 21: DATA EXPORT PROCESS - ENHANCED
+- Scheduled data export jobs
+- CSV-based data transfer
+- Qlik data grouping and export activation
+- Rasmus Admin control interface
+- Export architecture: Scheduled jobs, CSV transfer, data transformation, export validation, error handling, performance monitoring
+- Export workflow: Data selection → transformation → validation → file generation → transfer → confirmation → error handling
+- Export monitoring: Job monitoring, performance metrics, error detection, alert generation, reporting, auditing
+
+### SLIDE 22: KEY INTEGRATIONS - ENHANCED
+- SurfManager/Operator (SM/O): Device/port/subscription data
+- SAP ERP: Spare parts, inventory, financial data
+- Nelli: Alert management and incident tracking
+- Qlik: Reporting and analytics
+- Integration framework: CSV exchange, API-based, database connectors, message queues, web services, file transfer protocols
+- Integration patterns: Nightly batch, real-time exchange, event-driven, scheduled transfers, on-demand requests
+- SM/O integration: Device inventory, port configuration, link topology, service provisioning, location info, maintenance coordination
+- SAP integration: Spare parts, stock levels, financial data, asset management, procurement coordination
+- Nelli integration: Alert forwarding, incident management, classification mapping, status synchronization, real-time communication
+- Qlik integration: Data export, transformation, grouping, report generation, UI integration, performance optimization
+
+### SLIDE 23: INTEGRATION WORKFLOW - ENHANCED
+- CSV-based data exchange
+- API-based interactions
+- Scheduled data transfers
+- Real-time alert forwarding
+- SM/O data flow: Inventory synchronization, port updates, link changes, service updates, location updates, maintenance coordination
+- SAP data flow: Inventory synchronization, spare part updates, stock monitoring, financial exchange, asset lifecycle, procurement coordination
+- Nelli data flow: Alert generation → classification → forwarding → incident creation → status updates → clearance coordination
+- Qlik data flow: Collection → transformation → enrichment → grouping → export → Qlik processing → report generation
+
+### SLIDE 24: DAILY HEALTH CHECK PROCEDURE - ENHANCED
+- Server health monitoring
+- SevOne cluster management
+- Alert monitoring and validation
+- Device provisioning status
+- Report generation verification
+- Integration health checks
+- Server monitoring: SSH to Ferguson, fatal error checks, script execution monitoring, log analysis, performance metrics
+- SevOne monitoring: Cluster manager checks, license consumption, alert validation, device manager updates, object manager status
+- Rasmus monitoring: Alert reports, severity analysis, device groups, sandbox testing, UI functionality, performance checks
+- Health portal: Action items, provisioning control, system metrics, change reports, external data validation, device dashboard checks
+
+### SLIDE 25: SERVER MONITORING - ENHANCED
+- Fatal error checking (1-liner commands)
+- Script execution time monitoring
+- Process monitoring and management
+- Log file analysis
+- Fatal error checking: Command execution, log file analysis, error classification, escalation procedures, documentation
+- Script execution: Performance thresholds, execution patterns, trend analysis, abnormal duration investigation, resource monitoring
+- Log file analysis: Locations (/var/log/provisor/, /var/log/sevone/, /var/log/rasmus/), rotation policies, retention periods, analysis tools, common patterns
+- Server performance: CPU utilization, memory usage, disk I/O, network bandwidth, process count, resource contention analysis
+
+### SLIDE 26: SEVONE MONITORING - ENHANCED
+- Cluster manager capacity checks
+- License consumption monitoring
+- Alert validation and timestamp checks
+- Device manager updates
+- Cluster manager: Peer status, license consumption, capacity trends, performance metrics, resource allocation, load balancing, high availability
+- Alert console: Alert count validation, severity distribution, timestamp verification, pattern analysis, suppression verification, correlation analysis
+- Device manager: Recent updates, discovery status, provisioning status, health indicators, configuration changes, lifecycle management, inventory verification
+- Object manager: Object counts, type distribution, health status, configuration, discovery status, lifecycle management, inventory verification
+
+### SLIDE 27: HEALTH PORTAL MONITORING - ENHANCED
+- Action required items
+- Provisioning control status
+- System control metrics
+- Change report analysis
+- External data validation
+- Device dashboard checks
+- Action required: Device responsiveness, naming violations, undefined devices, provisioning failures, resource owner notification, escalation
+- Provisioning control: Device status, phase transitions, queue management, error analysis, performance trends, capacity planning
+- System control: Enabled/disabled/deleted objects, system capacity, performance indicators, resource utilization, trend analysis
+- Change reports: Device/object/group changes, configuration changes, impact analysis, change trends, documentation
+- External data: CSV validation, data parsing, date checks, file size monitoring, data integrity, source system coordination
+- Device dashboard: Device selection, information display, provisioning status, health indicators, performance metrics, configuration details
+
+### SLIDE 28: COMMON ISSUES - ENHANCED
+- Device provisioning failures
+- Data parsing errors
+- Integration failures
+- Alert generation issues
+- Reporting problems
+- Provisioning issues: Phase failures, CSV errors, reachability problems, SNMP configuration, rulebook mismatches, license capacity, performance bottlenecks
+- Data integration: Missing CSV files, corrupted data, parsing errors, validation failures, timeout issues, source system errors, transfer failures
+- Alert management: Missing alerts, false positives, threshold issues, Nelli integration problems, clearance failures, correlation issues, suppression problems
+- Reporting issues: Generation failures, export issues, Qlik integration problems, dashboard display issues, performance problems, accuracy issues, distribution failures
+
+### SLIDE 29: PROVISIONING TROUBLESHOOTING - ENHANCED
+- Phase-specific issues
+- CSV file errors
+- Device reachability problems
+- SNMP configuration issues
+- Rulebook mismatches
+- Phase 1 issues: CSV reception failures, validation errors, eligibility problems, reachability failures, discovery triggering failures
+- Phase 2 issues: Device type determination failures, registration problems, SNMP object identification failures, configuration errors
+- Phase 3 issues: Hardware/object/service enablement failures, SM/O instruction processing errors
+- Phase 4 issues: Link object creation failures, SM/O link identification problems, end port verification failures, calculated object configuration errors
+- CSV errors: Format validation, data integrity checks, extra line detection, corrupt data handling, file repair, backup restoration
+- Reachability problems: ICMP/SNMP testing, network path verification, firewall rules, device configuration, credential validation, alternative methods
+- SNMP configuration: Community string verification, version compatibility, MIB support, polling intervals, timeout parameters, retry configuration, trap configuration
+
+### SLIDE 30: DATA INTEGRATION TROUBLESHOOTING - ENHANCED
+- Missing CSV files
+- Corrupted data handling
+- File parsing errors
+- Data validation failures
+- Integration timeout issues
+- Missing CSV: File transfer verification, source system status, network connectivity, file generation, scheduled jobs, manual transfer, error notifications
+- Corrupted data: File validation, integrity checks, backup restoration, data repair, error detection, prevention strategies, source coordination
+- Parsing errors: Parser configuration, file format validation, data structure verification, error message analysis, parser logs, parser performance, parser updates
+- Validation failures: Rule verification, data format checks, range validation, consistency checks, referential integrity, business rules, error handling
+
+### SLIDE 31: USER MANAGEMENT - ENHANCED
+- Veha LDAP integration
+- User provisioning process
+- Role-based access control
+- Password management
+- LDAP integration: Server configuration, authentication mechanisms, user attribute mapping, group membership, role-based access, password policies, account lockout
+- User provisioning: New user requests, account creation, role assignment, access levels, group membership, notifications, documentation
+- Role-based access: Role definitions, permission assignment, access levels, role inheritance, role testing, role documentation, role reviews
+- Password management: Policy enforcement, complexity requirements, expiration cycles, reset procedures, self-service management, synchronization, audit logging
+
+### SLIDE 32: SYSTEM CONFIGURATION - ENHANCED
+- Rulebook management
+- Alert policy configuration
+- Device grouping configuration
+- Report scheduling
+- Rulebook management: Structure/organization, rule definition/syntax, testing procedures, deployment processes, version control, documentation, review processes
+- Alert policy: Structure, threshold configuration, classification rules, suppression rules, correlation rules, testing, deployment
+- Device grouping: Definition/structure, membership rules, hierarchy management, reporting configuration, alerting configuration, testing, documentation
+- Report scheduling: Schedule definition, frequency configuration, distribution configuration, format selection, recipient management, performance monitoring, documentation
+
+### SLIDE 33: PERFORMANCE MONITORING - ENHANCED
+- License consumption tracking
+- System capacity planning
+- Performance optimization
+- Resource allocation
+- License tracking: Usage monitoring, growth trends, capacity planning, allocation optimization, reporting, audit procedures, renewal processes
+- Capacity planning: Metrics collection, trend analysis, forecasting, resource allocation, performance optimization, reporting, review processes
+- Performance optimization: Metrics collection, bottleneck identification, tuning techniques, resource allocation, configuration tuning, testing, documentation
+- Resource allocation: Utilization monitoring, allocation policies, contention analysis, optimization techniques, capacity planning, reporting, review processes
+
+### SLIDE 34: AUTOMATION FRAMEWORK - ENHANCED
+- Provisioning automation workflows
+- Scheduled job management
+- Cron job configuration
+- Automation monitoring
+- Provisioning automation: Workflow engine, phase transitions, error handling, logging, performance monitoring, configuration management, testing
+- Scheduled jobs: Job configuration, scheduling policies, execution monitoring, performance tracking, error handling, logging, documentation
+- Cron configuration: Syntax/structure, scheduling parameters, dependency management, execution environment, resource allocation, performance monitoring, error handling
+- Automation monitoring: Job monitoring, performance metrics, error detection, logging, reporting, documentation, review processes
+
+### SLIDE 35: CUSTOM DEVELOPMENT - ENHANCED
+- PHP-based custom components
+- Rasmus reporting extensions
+- Embedded dashboard development
+- Integration script development
+- PHP components: Development standards, coding conventions, testing procedures, deployment processes, version control, documentation, code reviews
+- Rasmus extensions: Architecture, development standards, testing procedures, deployment processes, version control, documentation, code reviews
+- Dashboard development: Architecture, development standards, testing procedures, deployment processes, version control, documentation, code reviews
+- Integration scripts: Architecture, development standards, testing procedures, deployment processes, version control, documentation, code reviews
+
+### SLIDE 36: SECURITY ARCHITECTURE - ENHANCED
+- Authentication mechanisms
+- Authorization framework
+- Data security measures
+- Integration security
+- Authentication: LDAP, local, multi-factor, certificate-based, token-based, logging, monitoring
+- Authorization: Role-based access, permission management, access levels, logging, monitoring, testing, documentation
+- Data security: Encryption, integrity protection, access control, backup procedures, recovery procedures, retention policies, disposal procedures
+- Integration security: Secure protocols, API security, authentication, authorization, logging, monitoring, testing
+
+### SLIDE 37: COMMUNICATION PROTOCOLS - ENHANCED
+- Shared mailbox management
+- Incident reporting procedures
+- Stakeholder communication
+- Escalation paths
+- Mailbox management: Monitoring procedures, message categorization, priority assignment, response targets, escalation procedures, documentation, performance monitoring
+- Incident reporting: Classification, prioritization, documentation, escalation, resolution, closure, review
+- Stakeholder communication: Planning, identification, channels, frequency, content, documentation, review
+- Escalation paths: Level definitions, criteria, procedures, documentation, monitoring, review, testing
+
+### SLIDE 38: TEAM STRUCTURE AND ROLES - ENHANCED
+- Current team organization
+- Key roles: Ari Lipponen (architect), Kurt Gunnelius (IP Network Engineer)
+- Accenture: Monitoring and basic operations
+- Veha team: Server and network management
+- Team structure: System architect, network engineer, integration specialist, monitoring operator, reporting specialist, security specialist, documentation specialist
+- Responsibility matrix: Role definitions, task assignment, decision-making authority, approval processes, documentation requirements, performance monitoring, review processes
+- Skill requirements: Technical skills matrix, training requirements, certification requirements, development plans, evaluation criteria, career paths, succession planning
+
+### SLIDE 39: DOCUMENTATION RESOURCES - ENHANCED
+- NetDoc wiki (https://netdoc.teliasonera.net/wiki/Category:Noora)
+- System architecture diagrams
+- Operational procedures
+- Troubleshooting guides
+- NetDoc wiki: Structure, content categories, documentation standards, update procedures, review processes, access control, version history
+- Architecture diagrams: Diagram types, standards, update procedures, review processes, access control, version history, documentation integration
+- Operational procedures: Documentation standards, development processes, testing procedures, deployment processes, review processes, documentation integration, version control
+- Troubleshooting guides: Structure, troubleshooting standards, development processes, testing procedures, deployment processes, review processes, documentation integration
+
+### SLIDE 40: PROVISIONING CASE STUDY - ENHANCED
+- Device provisioning workflow example
+- Common provisioning scenarios
+- Troubleshooting example
+- Resolution process
+- Scenario: New Cisco router deployment in core network, expected provisioning time 8-12 minutes
+- Workflow: SM/O inventory → port check → role assignment → eligibility → CSV generation → Phase 1-4 execution → post-provisioning configuration
+- Troubleshooting: Device stuck in Phase 2, root cause SNMP configuration mismatch, resolution community string correction, prevention configuration validation
+- Lessons: Configuration validation importance, error message analysis, resolution documentation, prevention strategies, knowledge sharing
+
+### SLIDE 41: ALERT MANAGEMENT CASE STUDY - ENHANCED
+- Alert generation example
+- Alert investigation process
+- Resolution workflow
+- Prevention strategies
+- Scenario: Critical 100G trunk interface threshold breach (95% utilization for 15 minutes)
+- Workflow: Threshold breach → alert generation → classification → Nelli forwarding → incident creation → acknowledgment → root cause analysis → resolution → clearance → closure → review → documentation
+- Investigation: Alert details, historical data, device configuration, network topology, traffic patterns, capacity planning
+- Resolution: Immediate mitigation, long-term planning, change management, implementation, testing, deployment, monitoring
+
+### SLIDE 42: REPORTING CASE STUDY - ENHANCED
+- Report generation example
+- Data analysis process
+- Report customization
+- Distribution workflow
+- Scenario: Monthly capacity planning report for core network interface utilization (last 30 days)
+- Process: Request receipt → parameter validation → data collection → transformation → enrichment → grouping → generation → validation → distribution → archiving → feedback
+- Data analysis: Quality verification, trend analysis, anomaly detection, capacity forecasting, growth rates, utilization patterns, recommendations
+- Customization: Format selection, content customization, visualization options, filtering, sorting, grouping, export formats
+
+### SLIDE 43: SYSTEM SUMMARY - ENHANCED
+- Key features and capabilities
+- System benefits
+- Operational overview
+- Future direction
+- Features: Network-transparent monitoring, vendor-neutral architecture, operator-scale capacity, end-to-end automation, comprehensive integration, advanced reporting, proactive alerting
+- Capabilities: Device monitoring, interface monitoring, service monitoring, capacity planning, trend analysis, alert management, reporting automation
+- Benefits: Unified environment, reduced complexity, improved reliability, enhanced capacity planning, better resource utilization, comprehensive reporting, proactive detection
+- Future: Automation enhancements, integration improvements, reporting capabilities, predictive analytics, system modernization
+
+### SLIDE 44: KEY TAKEAWAYS - ENHANCED
+- Noora's strength in automation and integration
+- Importance of daily health checks
+- Critical role of provisioning engine
+- Integration with Nelli for alert management
+- Comprehensive reporting capabilities
+- System architecture: Four-component design, customization requirements, integration complexity, automation capabilities
+- Operational excellence: Daily health check importance, provisioning process understanding, monitoring best practices, troubleshooting methodologies
+- Integration insights: SM/O integration criticality, Nelli integration workflows, Qlik integration benefits, data flow understanding
+- Team collaboration: Role clarity, communication protocols, escalation procedures, knowledge sharing
+
+### SLIDE 45: NEXT STEPS - ENHANCED
+- System familiarization
+- Daily operations training
+- Troubleshooting practice
+- Integration with existing workflows
+- Familiarization: Architecture review, component analysis, integration mapping, documentation review
+- Operations training: Daily health checks, monitoring procedures, troubleshooting training, escalation procedures
+- Technical training: Provisioning process, alert management, reporting system, integration training
+- Documentation review: NetDoc wiki, architecture diagrams, operational procedures, troubleshooting guides
+
+### SLIDE 46: CONTACT INFORMATION - ENHANCED
+- Support: noora-support@teliacompany.com
+- Key contacts: Ari Lipponen, Kurt Gunnelius, Kevin
+- Documentation: NetDoc wiki
+- Escalation: Nelli team, Veha team
+- Primary contacts: Ari Lipponen (architect), Kurt Gunnelius (IP Network Engineer), Kevin (research), Noora Support (shared mailbox)
+- Escalation contacts: Nelli Team (alerts), Veha Team (servers), Accenture Team (monitoring), TeliaNow (incidents)
+- Documentation: NetDoc wiki, system architecture docs, operational procedures, troubleshooting guides
+- Training: Knowledge transfer sessions, shadow session notes, training materials, user guides
+
+## END OF PRESENTATION
+
+This enhanced presentation provides comprehensive coverage of the Noora system with expanded bullet points covering all aspects based on actual operational documentation, knowledge transfer sessions, and system materials. Each slide now contains detailed technical information while maintaining a clear structure for effective knowledge transfer.

@@ -1,0 +1,30 @@
+near 5 000 device and over 4 200
+
+ALERT AND REPORT AUTOMATION Soir groupe ous mumesyeem
+
+Automated Automated Automated Automated alert
+input data statistic data data and report
+collection collection categorizing management
+
+Telia OSS and BSS CPU Alert rule
+tnventodes = Sul Target: Edge & 1006 & LAG
+Noora Environment ower Supply’
+=> F eacompony os.
+aS ; SevO! =
+=» ine
+Mobile ae eeu
+tt Trigger: CPU Load >95%
+Fixed IP Action: Generate critical alert
+Networks
+Cae pe ES Traffic report
+—] Edge <<
+ia Mer cocks Target: Mobile & Tampere
+VU Indicators: Bits In, Bits Out
+panies Timespan: past 7 days
+= Scheduling: every Mon 84M
+Sse Action: Create TOP-10 report
+Dsl
+Radiolink
+
+Internal
+

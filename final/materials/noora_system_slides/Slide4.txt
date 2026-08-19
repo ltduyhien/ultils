@@ -1,0 +1,26 @@
+SYSTEM OVERVIEW
+
+« Noora System Heath potat
++ SevOne NMS (core) anagem
++ Noora engine —
+m7
++ Noora data handling =a5 Rasmus Admin
+‘crow >) janagement lNnallat
++ Input data feed = z ae
+
++ SNET, SMO, SAP... ana
+Noora custom Uls
+
++ System management
+
+Tet Etand
++ Report management bdpsecat =; =
++ Custom Statistics andestomer
+cqupment j
+¢ External output data 1. a = on
+; environments H dus
++ Alert reporting [Reporting H =s7) coe ‘SurfMianager & ‘Surfitana ger
++ Capacity reporting | = = ‘Operator Cuntomer(SC)
+H poring paring
++ Realtime reporting ' ee | a sums sunne
+Internal H CNS ‘liksense

@@ -1,0 +1,293 @@
+Noora Shadow Sessions - Detailed Incidents and Handling Procedures
+
+This document provides a detailed overview of known incidents, their specific handling procedures, technical communication methods, and resolution steps based on the content from kt_sessions and shadow_sessions.
+
+=== Detailed Incidents and Handling Procedures ===
+
+1. Missing or Corrupted Data from External Sources
+   - Incident Details:
+     - CSV files with extra lines or wrong formats.
+     - Parsing errors in the External Data tab.
+     - Date validation failures indicating missing or outdated data.
+   - Handling Procedures:
+     - Identify the specific CSV file causing the issue using the External Data tab.
+     - SSH into the ferguson server and navigate to the CSV file location.
+     - Apply hot fixes to the CSV file to correct formatting issues.
+     - Monitor the provisioning engine status to ensure the fix is applied correctly.
+     - Verify that the data parsing status changes to "OK" after the fix.
+   - Technical Communication:
+     - Use the Noora shared mailbox to report the issue and the applied fix.
+     - Create a TeliaNow ticket if the issue persists or requires further escalation.
+     - Contact the Resource Manager (Kevin Kivi) for critical data issues that cannot be resolved internally.
+   - Resolution Steps:
+     - Document the specific steps taken to fix the CSV file.
+     - Verify that the provisioning engine processes the corrected data.
+     - Confirm that the data is correctly integrated into the Noora system.
+   - Reference: shadow3_noora.txt, kt3_noora.txt
+
+2. Broken Links Reported by Users
+   - Incident Details:
+     - Links reported as broken by users like Juho Kontio.
+     - Links flagged as deleted in the Object Manager.
+     - Duplicate links causing confusion and errors.
+   - Handling Procedures:
+     - Use the Object Manager to search for the specific device and link.
+     - Check the Calculation Editor for link expressions and verify their correctness.
+     - Preserve link history by keeping the link with the correct expression.
+     - Delete duplicate or incorrect links to resolve conflicts.
+     - Verify link functionality by checking the graph and data flow after fixes.
+   - Technical Communication:
+     - Contact the Resource Manager for escalation if the issue cannot be resolved internally.
+     - Document all communications and actions taken to resolve the issue.
+     - Provide a detailed report on the steps taken and the outcome.
+   - Resolution Steps:
+     - Confirm that the link is functioning correctly and providing data.
+     - Verify that the link history is preserved if required.
+     - Document the resolution steps for future reference.
+   - Reference: shadow3_noora.txt, kt5_noora.txt
+
+3. Device Provisioning Issues
+   - Incident Details:
+     - Devices not responding to provisioning requests.
+     - Devices stuck in specific provisioning phases.
+     - Missing data and corrupted metadata in devices.
+   - Handling Procedures:
+     - Use the Device Dashboard to check the status of the device.
+     - Verify SNMP responsiveness and pooling status for the device.
+     - Check the Device Summary for alerts and hardware status.
+     - Investigate missing data and corrupted metadata using system logs.
+     - Contact Kurt or Kevin for hardware-related issues that require further investigation.
+   - Technical Communication:
+     - Use the shared mailbox to report the issue and the steps taken.
+     - Report findings in weekly meetings with Telia to discuss the issue.
+     - Escalate the issue to the Resource Manager if necessary.
+   - Resolution Steps:
+     - Document all troubleshooting steps and findings.
+     - Verify that the device is correctly provisioned and functioning.
+     - Confirm that the device data is accurate and up-to-date.
+   - Reference: shadow3_noora.txt, kt3_noora.txt
+
+4. Nelli Integration Issues
+   - Incident Details:
+     - Nelli Pulse debug level messages failing.
+     - Integration between SevOne and Nelli breaking.
+     - Debug messages not being acknowledged or deleted by Nelli.
+   - Handling Procedures:
+     - Check the integration between SevOne and Nelli using the Nelli Pulse debug messages.
+     - Verify that the debug messages are being sent and received correctly.
+     - Contact the Nelli team for escalation if the integration issue persists.
+     - Improve communication with Nelli to ensure timely updates and resolutions.
+   - Technical Communication:
+     - Use the Noora shared mailbox to report the integration issue.
+     - Create a TeliaNow ticket to document the issue and the steps taken.
+     - Contact the Nelli team directly to discuss the issue and find a resolution.
+   - Resolution Steps:
+     - Document the specific steps taken to resolve the integration issue.
+     - Verify that the integration between SevOne and Nelli is functioning correctly.
+     - Confirm that the debug messages are being acknowledged and deleted by Nelli.
+   - Reference: shadow9_noora.txt, kt8_noora.txt
+
+5. Stuck Phase 2 Devices
+   - Incident Details:
+     - Devices stuck in phase 2 of the provisioning process.
+     - Provisioning engine not processing the devices correctly.
+     - Devices not moving to the next provisioning phase.
+   - Handling Procedures:
+     - Kurt checks the SMO and provisioning status for the device.
+     - Delete the device from the Device Discovery to reset the provisioning process.
+     - Trigger a new provisioning process for the device.
+     - Monitor the provisioning engine to ensure the device moves through the phases correctly.
+   - Technical Communication:
+     - Contact the Resource Manager for escalation if the issue persists.
+     - Document all actions and findings related to the stuck device.
+     - Provide a detailed report on the steps taken and the outcome.
+   - Resolution Steps:
+     - Confirm that the device is correctly provisioned and functioning.
+     - Verify that the device data is accurate and up-to-date.
+     - Document the resolution steps for future reference.
+   - Reference: shadow8_noora.txt, kt6_noora.txt
+
+6. Missing Chassis Inventory Info
+   - Incident Details:
+     - Missing chassis inventory information for specific devices.
+     - Devices not providing complete inventory data.
+     - SAP data missing for certain devices.
+   - Handling Procedures:
+     - Investigate the issue by checking the device logs and configuration.
+     - Check the pinning logs for any errors or anomalies.
+     - Consult with Kurt for further analysis and troubleshooting.
+     - Verify that the device configuration is correct and up-to-date.
+   - Technical Communication:
+     - Use the shared mailbox to report the issue and the steps taken.
+     - Report findings in weekly meetings with Telia to discuss the issue.
+     - Escalate the issue to the Resource Manager if necessary.
+   - Resolution Steps:
+     - Document all troubleshooting steps and findings.
+     - Verify that the device is providing complete inventory data.
+     - Confirm that the SAP data is correctly integrated into the Noora system.
+   - Reference: shadow8_noora.txt, kt8_noora.txt
+
+7. Server Boot Issues
+   - Incident Details:
+     - Unscheduled boot of Noora causing provisioning scripts to fail.
+     - Provisioning scripts not starting after the boot.
+     - Previous processes not being killed, causing conflicts.
+   - Handling Procedures:
+     - Ensure that the provisioning scripts run after the boot.
+     - Kill previous processes to resolve conflicts.
+     - Start new processes to ensure the provisioning engine functions correctly.
+     - Follow fail-safe processes for running scripts after a boot.
+   - Technical Communication:
+     - Contact the Resource Manager for escalation if the issue persists.
+     - Document all actions and findings related to the server boot issue.
+     - Provide a detailed report on the steps taken and the outcome.
+   - Resolution Steps:
+     - Confirm that the provisioning scripts are running correctly.
+     - Verify that the provisioning engine is functioning as expected.
+     - Document the resolution steps for future reference.
+   - Reference: shadow9_noora.txt, kt4_noora.txt
+
+8. Admin Alert Mailer Issues
+   - Incident Details:
+     - Admin alert mailer failing to send alerts.
+     - Alerts not being delivered to the intended recipients.
+     - System logs showing errors related to the alert mailer.
+   - Handling Procedures:
+     - Check the system logs for errors related to the alert mailer.
+     - Clear the cache to resolve any temporary issues.
+     - Investigate the issue further to identify the root cause.
+     - Verify that the alert mailer is functioning correctly after the fix.
+   - Technical Communication:
+     - Use the shared mailbox to report the issue and the steps taken.
+     - Report findings in weekly meetings with Telia to discuss the issue.
+     - Escalate the issue to the Resource Manager if necessary.
+   - Resolution Steps:
+     - Document all troubleshooting steps and findings.
+     - Verify that the alert mailer is sending alerts correctly.
+     - Confirm that the alerts are being delivered to the intended recipients.
+   - Reference: shadow8_noora.txt, kt8_noora.txt
+
+9. XML Issues
+   - Incident Details:
+     - XML issues causing problems in the Noora Health portal.
+     - Devices not providing XML data due to errors.
+     - SOAP calls failing due to XML issues.
+   - Handling Procedures:
+     - Check the Device Dashboard for XML issues related to specific devices.
+     - Investigate the root cause of the XML problems using system logs.
+     - Contact IBM for support if the issue is related to their software.
+     - Verify that the XML data is correctly integrated into the Noora system.
+   - Technical Communication:
+     - Use the shared mailbox to report the issue and the steps taken.
+     - Report findings in weekly meetings with Telia to discuss the issue.
+     - Escalate the issue to the Resource Manager if necessary.
+   - Resolution Steps:
+     - Document all troubleshooting steps and findings.
+     - Verify that the XML data is accurate and up-to-date.
+     - Confirm that the SOAP calls are functioning correctly.
+   - Reference: shadow7_noora.txt, kt7_noora.txt
+
+10. Capacity Issues
+    - Incident Details:
+      - Capacity issues causing performance degradation.
+      - License consumption reaching critical thresholds.
+      - System resources being overutilized.
+    - Handling Procedures:
+      - Monitor system capacity and resource usage using the Cluster Manager.
+      - Check license consumption and thresholds to identify potential issues.
+      - Investigate capacity trends and anomalies to understand the root cause.
+      - Contact Kurt or Kevin to discuss capacity management strategies.
+    - Technical Communication:
+      - Report capacity problems to the Resource Manager for escalation.
+      - Follow capacity management procedures to resolve the issue.
+      - Document all actions and findings related to the capacity issue.
+    - Resolution Steps:
+      - Verify that the system capacity is within acceptable limits.
+      - Confirm that the license consumption is optimized.
+      - Document the resolution steps for future reference.
+    - Reference: shadow6_noora.txt, kt6_noora.txt
+
+11. Performance Issues
+    - Incident Details:
+      - Performance issues causing system slowdowns.
+      - CPU, memory, and disk usage reaching critical levels.
+      - System metrics indicating performance degradation.
+    - Handling Procedures:
+      - Monitor system performance and metrics using the Cluster Manager.
+      - Check CPU, memory, and disk usage to identify potential issues.
+      - Investigate performance anomalies and issues to understand the root cause.
+      - Contact Kurt or Kevin to discuss performance management strategies.
+    - Technical Communication:
+      - Report performance problems to Telia for further investigation.
+      - Follow performance management procedures to resolve the issue.
+      - Document all actions and findings related to the performance issue.
+    - Resolution Steps:
+      - Verify that the system performance is within acceptable limits.
+      - Confirm that the CPU, memory, and disk usage are optimized.
+      - Document the resolution steps for future reference.
+    - Reference: shadow6_noora.txt, kt6_noora.txt
+
+12. Data Retention Issues
+    - Incident Details:
+      - Data retention issues causing storage problems.
+      - Retention policies not being followed correctly.
+      - Storage usage reaching critical levels.
+    - Handling Procedures:
+      - Monitor data retention and storage usage using the Cluster Manager.
+      - Check retention policies and compliance to identify potential issues.
+      - Investigate retention issues and anomalies to understand the root cause.
+      - Contact Kurt or Kevin to discuss data retention strategies.
+    - Technical Communication:
+      - Report retention problems to the Resource Manager for escalation.
+      - Follow data retention procedures to resolve the issue.
+      - Document all actions and findings related to the retention issue.
+    - Resolution Steps:
+      - Verify that the data retention is within acceptable limits.
+      - Confirm that the storage usage is optimized.
+      - Document the resolution steps for future reference.
+    - Reference: shadow6_noora.txt, kt6_noora.txt
+
+=== Communication Protocols ===
+
+1. Shared Mailbox
+   - Use the Noora shared mailbox for team communication.
+   - Report findings and issues to the team.
+   - Document all communications and actions taken.
+   - Reference: shadow3_noora.txt, kt3_noora.txt
+
+2. TeliaNow Tickets
+   - Create TeliaNow tickets for issues and requests.
+   - Escalate incidents as necessary.
+   - Document all actions and findings related to the issue.
+   - Reference: shadow5_noora.txt, kt5_noora.txt
+
+3. Weekly Meetings
+   - Attend weekly meetings with Telia and Noora teams.
+   - Review daily health check findings and issues.
+   - Discuss open incidents and problems.
+   - Document meeting discussions and decisions.
+   - Reference: shadow7_noora.txt, kt7_noora.txt
+
+4. Resource Manager
+   - Contact the Resource Manager for escalation.
+   - Report critical issues and findings.
+   - Document all actions and findings related to the issue.
+   - Reference: shadow3_noora.txt, kt3_noora.txt
+
+5. Documentation
+   - Document all actions and findings.
+   - Provide weekly reports on status and progress.
+   - Reference: shadow7_noora.txt, kt7_noora.txt
+
+=== Best Practices ===
+
+1. Follow daily health check procedures.
+2. Monitor system performance and resource usage.
+3. Investigate anomalies and errors promptly.
+4. Document all actions and findings.
+5. Communicate issues and resolutions to Telia.
+6. Follow escalation procedures for critical issues.
+
+=== Summary ===
+
+This document provides a detailed overview of known incidents, their specific handling procedures, technical communication methods, and resolution steps based on the content from kt_sessions and shadow_sessions. It serves as a comprehensive reference for understanding how to handle incidents and communicate effectively within the Noora system.

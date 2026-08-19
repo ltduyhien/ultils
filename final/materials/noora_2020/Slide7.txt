@@ -1,0 +1,25 @@
+over 100 000 lines of code has been
+
+N OORA > SEVON E written by Telia and Tieto over 3 years
+
+Noora system overview
+
+* Noora environment is build
+around SevOne NMS core
+
+« Native SevOne product cannot
+consume an operator scale
+infrastructure without
+customization (nothing will!)
+
+« With customization we can utilize
+the best SevOne features and
+even enhances some of them
+and enabled more intelligent data
+collection and automation
+
+* https://netdoc.teliasonera.net/wiki
+/Category:Noora
+
+Internal
+

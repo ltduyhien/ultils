@@ -1,0 +1,67 @@
+Subject: RE: NOORA consolidation - roadmap
+
+Hi!
+
+Thanks for the meeting this morning. There were questions so I try to clear out main points here. Also adding Jari as a CC.
+
+ 
+
+In the meeting Massimiliano expressed that we could use the same kind of assessment procedure that was used to for Petra and Eniq: hire Accenture to evaluate and document the current system capabilities and then assess what is needed to create the same in the new target solution.
+
+ 
+
+For this I commented that we should not try to copy what Noora does but to describe the automated features and how the stakeholders benefit from that. Bengzhan+other systems most likely are able to do similar things but the approach might be totally different. The success for migration should be measured how much or little manual work is added once the migration is completed.
+ 
+
+Examples of automation in Noora
+
+When adding devices to OSS SM/O Inventory/Orchestrator (SurfManager&Operator)
+Devices are automatically assigned a specific Generic Device Role (based on Telia controlled rulebook)
+Service Assurance / Alarms
+Devices are automatically added to PM system (based on Telia controlled rulebook)
+Device object SNMP polling for metrics collection is automatically started (based on internal rulebook)
+Interface object SNMP polling for metrics collection is automatically started (based on OSS/BSS data)
+Alarm policies are automatically added to certain device objects (based on internal rule manager Rasmus Admin)
+Alarm policies are automatically added to certain interface objects (based on internal rule manager Rasmus Admin)
+Triggered alarms are automatically sent to current CC tool NELLI (trap explorer)  
+Reporting / Infra, planning
+Interface object SNMP polling for metrics collection is automatically started (based on OSS/BSS data)
+Logical interface / service object SNMP polling for metrics collection is automatically started (based on OSS/BSS data)
+Interface/service objects are automatically placed to reporting structures
+Reporting structure statistics data is directly updated with new objects (realtime reporting)
+Reporting structure statistics data is automatically exported to QlikSense (long term reporting)
+When modifying existing device on OSS SM/O Inventory/Orchestrator
+Modifications are automatically sent to PM system
+Service Assurance / Alarms
+Device metadata is updated
+New interface objects are automatically added for monitoring
+Removed interface objects are automatically removed from monitoring
+Reporting / Infra, planning
+New interfaces/services are automatically added to reporting structures
+Removed interfaces/services are automatically removed from reporting structures
+When deleting device from OSS SM/O Inventory/Orchestrator
+Deletion task is automatically sent to PM system
+Service Assurance / Alarms
+Polling is stopped
+Alarms are automatically removed
+Device is marked as deleted (kept for n-days to keep statistics)
+Reporting / Infra, planning
+Polling is stopped
+Interface/service objects are removed from reporting structures
+ 
+
+ 
+
+So, maybe a bit long list but this gives the understanding how automated the system is. I will give you an rather sad example, that we lost our key reporting person last year (heart attack) and we managed 6 months without any hands in the reporting side without basically nobody noticing anything as the system kept everything updated even though the network constantly “lived”. Of course there are so called rulebooks and reporting need initial structure (one time definition) so it’s not all-automatized. But when the network has no big changes, then the system is truly automated and we do not need to touch anywhere. There are few special things Noora also does, but this basic automation (device/interface) should be the starting point.
+
+ 
+
+I would like this automation would be starting point to see Bengzhan in action. I would really like to know how that system accomplishes the items in this list.  The area where Noora works is backbone and in there we have long-lived devices where the changes happen in the device itself. So, it is a bit different world than for example CPE monitoring where the device or its components do not really change during its life span.
+
+ 
+
+I added a Noora one-slider to this, just a brief overview of the systems and what is connected to it.
+
+ 
+
+-Ari

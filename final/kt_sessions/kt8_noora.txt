@@ -1,0 +1,111 @@
+Shadow Session 8
+
+SSH to ferguson
+swith to proviser
+run the one liners
+exit
+
+Go to SevOne UI
+Login with TCAD ID
+Cluster Manager, Check License number, capacity
+Check alert
+cehck devices
+
+Rasmus,
+Alert treeview
+Device Groups
+
+By severity
+critical
+
+admin
+try the top most
+
+Continue with Juho case,
+Check Noora shared mailbox,
+Kurt returned, he ran port check, now it seems to be ok, in capacity planner
+From this we understand Juho did not have the ability to run the portcheck.
+
+Juho email:
+Capacity planner if,
+a ring topology
+
+The end of the ring is calculation ends. 
+
+SevOne
+massey name server for Noora SevOne
+
+Obejct manager:
+Verify the link is available again. The issue was resolved within 2 days
+
+Hi,
+Kurt made the port check and 
+
+'
+Veryfy the device from the graph, check calculation editor. 
+Nelli Pulse: Debug level message that we send to Nelli, Nelli acknowledge and delete it, ensure the integration. If it fails tweice in a row, in get message in noora mailbox. Could of time we receive that.
+
+=============================
+
+Automations, Crontab job need a KT, we will prioritize today. Then we will try to ansswer the KT.
+
+=========
+Open issue: by Rami
+Transport planning Finnish group
+
+List of devices: He belives they have been provioned incorrectly, the invetnory which list the components for the devices.
+
+Fix this, need report for cost calculation
+
+Suggest reprovisioning a few times, then run port check if not fixed. 
+
+Rami acknowkedged, now Kurt is back, we mention this issue
+
+Noora Health for troubleshooting
+Select device in Device Dashboard
+
+fi-oluhir-rer2, Kurt could have fixed this
+This shows the inventory for spare parts
+
+What he did: he keeps an eye for invetnory status, he needs provide the report in install base (lis of spare parts). 
+
+fi-jrv-rer1
+Working properly
+
+fi-posi-rer1
+familiar error, no XML available
+
+fi-kasb-rer1
+the same issue
+
+fi-inkkbog-csg1
+chasis is missing
+
+fi-yljluuode-csg1
+working
+
+GO to Provision Control
+Mostly the XML missing devices are shown here.
+
+SevOne: Go to Object Manager
+Search for obejct of the denice: type device name: fi-posi-rer1
+The control character, we can search for it
+So these devices are critical, better not reboot it, the boot fix it sometimes, have to check if FSP booting fix it.
+
+Assumption: SAP doe snot give the chassis inventory info
+
+some years ago, batch port check, the source of the issue is wrong confiog of the device. SMO configuration
+provision in SMO, after that Noora provision in Noora => graph
+SMO bug, port check => provision in SMO => Noora accept the wrong configuration
+Kurt is service assurance, he is close to the hardware.
+They ahve config save whether the device get installed, it pull the config for that type.
+=> symptom, missing data, SAP data missing
+
+=============
+
+Crontab: simple one liner, run script, simple does not care whether the script is running, there is fail safe for Noora. Unscehduled boot of Noora => some proivision script dont start afte rthe boot.
+
+Process of making sure the script run after the boot. Killing previous process so it starts a new one. There is fail safe proicess for running the script.
+
+
+

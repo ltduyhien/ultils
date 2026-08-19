@@ -1,0 +1,32 @@
+sudo ssh to ferguson,
+login as proviser
+
+crontab -l
+every defined minute it run the heartbeatgenerator bash
+that settin up a threasold dummy for levels of alert that send to nelli has a script catching the debug message, check the integration betwwen sevone and nelli. Escaltion 2st thing is contacting Nelli team. Should improve communication with Nelli to know if ther eis any updates coming.
+
+This email is useful for troubleshooting for many cases in the past.
+
+Noora provisioning : Device loader
+running every minute looking for new work to do on differnt phases
+
+Calculation Poller
+
+portlinkremover handle data 
+
+Trigger
+
+SevOne exporter => to qlik
+
+Many of these script are run with the fatal 1 liner
+
+There have been plan or suggestion that should be done on Noora codebase. It happens internally in Telia. We do not have visibility. Kurt suggest we do not touch it, do not break it.
+
+familiar with the test system of Noora / there is a test environment of Noora.
+1 test ferguson and 1 test poller
+
+ITwiki has urls for all of them.
+
+VeHa IT team will do the booting of ferguson
+We are not informed about the booting process.
+3 times so far, the last time has the problem about not deleted pid file.

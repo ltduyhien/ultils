@@ -1,0 +1,16 @@
+ARCHITECTURAL DESIGN
+
+« Network-transparent and vendor-neutral monitoring system to offer
+unified monitoring and reporting data under one single environment
+
+From :
+
+a2 =
+~S” El
+Network B =I = zal
+ali
+Se |
+
+Internal
+
+\)

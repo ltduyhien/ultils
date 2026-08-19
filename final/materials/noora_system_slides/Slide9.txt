@@ -1,0 +1,41 @@
+RAW DATA
+
++ SevOne System has two ya S
+different databases: DATA eprom sire
+contains the raw statistics,
+CONFIG contains everything
+else
+
+FI-HSSV-ASBR1
+
+\
+1
+i
+1
+ee TEW/1 ! poll device
+T
+ca BITSIN H
+i
+1
+1
+1
+1
+1
+1
+y
+
+« As almost everything is polled
+and updated every 180
+second, the system will store
+2,7M values to the DATA
+database during every interval \
+
++ ©) 180seconds DEVICE X
+
+store value
+
+penn n nanan n= == == === ==,
+
+Internal
+
+\)

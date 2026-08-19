@@ -1,0 +1,21 @@
+ri) Noora SevOne system has 140 000
+enabled and 1 400 000 disabled objects
+
+SEVONE LICENSING
+
+¢ SevOne licensing model is based on « A single SevOne object is used when
+object utilization monitoring / data collection is enabled for:
++ Licenses must be pre-purchased in order interiace
+to enable any data collection * cpu unit ;
+* power supply unit
+« Asingle SevOne "object license” is a + temperature sensor
+
+floating license which is not bound to any + Any number of indicators / statistics under
+device or object each object (e.g. packets in, discards out
++ Bought licenses can be switched between under interface object) can be created without
+
+different SevOne environments any additional costs
+
+Internal
+
+\)

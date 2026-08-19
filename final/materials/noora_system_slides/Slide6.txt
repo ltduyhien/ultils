@@ -1,0 +1,23 @@
+NOORA REPORTING
+
+Designed for Service Assurance
+Devices are polled every 180 seconds
+Polled data is immediately available
+Raw data, data retention 240 days
+
+Noora raw statistics are available via
+
++ Rasmus Reporting System
+- Device and Interface dashboards
+- Group reporting dashboards
++ Horizon Reporting System
+- Device and interface statistics
+- Group reporting statistics
++ Directly in SMO via Embedded Graphs
+— Static Device and Interface dashboards
+- Inventory and Spare Part dashboard
+
+Internal
+
+sept pp wnt in
+

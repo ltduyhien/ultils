@@ -1,0 +1,33 @@
+Dashboards are currently available
+
+DATA OUTPUT - EMBED. DASHBOARDS © icomsii0 and cik Sense
+
+« Embeddable device and interface
+dashboards are the newest custom
+user interfaces in Noora
+
+10 he 1 Mm ping socam| Oe
+
+« These dashboards can be embedded
+to any system via simple URI
+
+« Dashboards offer less user interaction
+options as Rasmus but more instant
+content like:
+
++ Noora provisioning status
+
++ Basic device and interface statistics
++ Active and cleared alarms logs
+
++ Alert threshold information per object
++ Device inventory overview
+
++ Spare part information
+
+Internal
+
+I
+
+ERERRERREERERREERE
+

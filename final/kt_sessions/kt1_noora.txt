@@ -1,0 +1,97 @@
+UI create custom statistic
+Capacity planning for future build based on history of capacity. Noora provide longer time of history metrics
+SevOneDDC is a different old version
+SevOne is SevOne instance in Noora
+New SevOne is under Veha, separated with a lot of integration. 
+Ramus Admin control the grouping control in Custom Provisioning
+Health is a very powerful tool it can monitor the health of all Noora eco system
+Embedded available in 
+SurfManager is 2 way integration, Tietoevry handle the implementation Embeded stats and SurfManager
+Plunk is missing here, 
+
+High level architecture stacks:
+Users: capacity planners, control cengter
+Interfacing applications
+Integration architecture, provisioning
+Rammus, php java extentions
+sevoneNPM, SW application
+Intel hw, vm ware, red hat OS
+
+Class of service CoS monitoring:
+way of clasify device type (as service) (not enabled at the moment)
+
+Horizon, UI for reporting, modern way of presenting data.
+
+Noora raw stats are available
+
+Qlik we do not have access, we are responsible for Qlik ingtegration
+
+SevOne Noora: More strict customization, categorization, version number is different
+
+
+about 200k objects distributed in 4 peers
+Only one server running
+
+a device can belong to many groups
+
+Users mostly use another service for dashboard and reporting
+
+==================
+
+2nd questions:
+
+1: DDC no docs, mainthing is with all integration criticality of Noora is more interest group, responsibility are dicvded more. teams are based on system, we contact teams, IT operation center, Kevin as a key member, research person of Noora, Nelli person we meet weekly, otgether work on issues. Veha team also we meet. Kurt Gunnelius (ITOPS, closer to hardware, longer history with Noora). Dta corupted? what is issue, helping with communication, locate the issue, ensuring dataflow to exneral system is being fed by noora. Infrastrcture in Noora. Work close with Kevin, Kurt. Something minor will mention in group chat. Kurt have insigns how to wotk with issue. Kurt's title: IP Network Engineer 
+
+Communicatiopn expectation, we have Noora shared mail box, about capacity planner, and other ggroups. check with different tems about ways of cooumincation andd expectation of way of work, expectation change all the time,  team channel or tickets system. TeliaNow is widely used, for Noora could be used in the future. rule of thumb;: lookup the system from CMDB, they could list relevant personnel and we can contact resource owner.
+
+2. Apply same formula:
+daily health check: longer with Noora, main server, different UI, whether data is flown and processed the right way, couple of check on the server. not details yet, will further in other sessions.
+check communication in checklist and daily communication, shared mailbox. Important information in shjared mailbox. Contact Telia for choice of language for communication.
+
+3 & 4 Already covered in the 1st hour. 
+Noora has 2 main jobs: service assureance alert policy, network resporting support capacity planning.
+
+5. Pooling data SNMP, device info there is config. SevOne do pooling. PHP based, CSV file, SMO. could return later for this question
+
+6. There is also virtual device. Licensing is important to understand, licencing is based on phisical devices. Custom integration in Noora is highly based on virtual devices. virtual device is support item to help with what Noora does. Device provisioning, Device.
+
+Network hardware => Pooling from SevOne, surfmanaager get catalog of devices and provision them, device provision enable tin SevOne, enrich. Nelli Alert, resolve alert drop the ticket from Nelli
+
+Splunk system: We are not respinsible for integration of Nelli and Splunk. From Nelli, it is considered as external of Noora.
+
+Ramus Admin manage grouping, Noora Health belongs here
+
+Reports fo to Qlik
+7. Tool: noora Health, data has been receive? go to parser correctly ? Cehck through UI, check on server for fatal erros, check script that run daily which does nto take too long. 
+
+Logs: we usually do not cehck logs. 1 liner custom for doing that. Everything is through UI.
+
+8. Logs are stored in the Health check Application database. They store Noora servers. receive alert in email to shared mailbox. We have no visibility on the mornitering server. Criticality: they are Nelli, define criticality. Mornitoring job that ensure integration to Nelli is working, receive in mailbox, protocol: wait for a nother circle in the mornitoring. Usually Nelli team mention we use monthly reboot. Criticality is high with Noora. 
+
+9. What access is needed:
+- Shared mailbox to use external maessage
+- Noora server, main server ask login of Noora, new logs, use 1 liner
+- UI access, not raw minitoring, UI acess cehck other parts of the system
+- everyuthing is under Veha
+(at the moment)
+10. Data insight, reporting prtal in Noora: we do not have anything to do Qlik report, no access
+- report dashboard: tomorrow we will go through
+11. huge qwuestion, main job of Noora, need 1 KT session for alerting, rulebooks, grouping based on devices, object that trigger alerts that are sent to Nelli.
+
+12. - fix: not make changes to cxonfig yet at this point, could made at least one or 2 so far one and half years ago. we do no touch config, if we do, we do it close with Telia, need to be approved. THis is for interall noora logic, intergration netwroking, we do contact newtwork person to do it, passport protocol between 2 system we ask netwrok people to do that changes. 
+
+We do no config changes.
+
+Missing data: depends on the source, in the graph we saw several sources where nOora get data, SAP SMO, criticality toomatti, missing for tomamtti, we wait. buyt if corupted data from Noora we have to actr wucikly. question this has many answer depends on qwhich system and criticality.
+
+
+
+
+
+
+
+
+
+
+
+

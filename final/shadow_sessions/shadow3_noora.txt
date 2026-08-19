@@ -1,0 +1,40 @@
+Noora Shadow Session 3
+
+External Data Issues:
+- Monitor for missing or corrupted data from external sources
+- Check External Data tab for parsing errors and date validation
+- Investigate CSV file issues (extra lines, wrong format)
+- Contact Resource Manager for critical data issues
+- Apply hot fixes for CSV files when necessary
+- Monitor provisioning engine status and device processing
+
+Device Troubleshooting:
+- Use Device Dashboard to check device status and provisioning
+- Verify SNMP responsiveness and pooling status
+- Check Device Summary for alerts and hardware status
+- Investigate missing data and corrupted metadata
+- Contact Kurt or Kevin for hardware-related issues
+- Document all troubleshooting steps and findings
+
+Link Management:
+- Investigate broken links reported by users (Juho Kontio)
+- Use Object Manager to find and fix link issues
+- Check Calculation Editor for link expressions
+- Preserve link history when possible
+- Delete duplicate or incorrect links
+- Verify link functionality after fixes
+
+Communication Protocols:
+- Use Noora shared mailbox for issue reporting
+- Create TeliaNow tickets for integration issues
+- Contact Resource Manager for escalation
+- Document all communications and actions
+- Provide weekly reports on open issues and resolutions
+
+Best Practices:
+- Do not make configuration changes without Telia approval
+- Use caution with bulk actions on devices
+- Monitor provisioning engine load and performance
+- Check system logs for errors and warnings
+- Follow structured troubleshooting methodology
+- Document all changes and investigations

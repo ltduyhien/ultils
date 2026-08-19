@@ -1,0 +1,121 @@
+User management: Noora admin
+Under Veha, use the same Veha LDAP
+
+Cluster manager:
+ferguson: main server
+aura: 
+
+Amount of license total: include VM so this is not true
+admin: rules, objects
+
+Devices manager
+CD: link between 2 devices: use for calculation prupose
+click device summary for more information
+there are more meta data in the UI
+
+Object:
+Use filter for browsing effectively
+
+Alerts:
+check for timestamp
+
+Policy browser:
+very critical for Noora work
+
+Alert definitions in Wiki: there are desscription on alerts policy. There are SevONe and Nelli levels corresponding. When the alerts are sent in email. There are no case we have to change the policy. 
+
+Report Manager:
+Native is not used because custom report is much more powerful. Some of them are obsollete for 7+ years.
+
+CMDB items: SurfManager: monitoring Sonera IT backbone network
+
+Use different browser for Noora UI. Firefox for Noora UI
+Health portal VehaLDAP
+massey.express.sonera.net
+
+VeHa LDAP credentials for Noora UI's
+
+Rasmus: Report system
+daily health check: whether alert workings
+Show errors if there is something not working
+Group: there are category to help users create reports
+We can use report for our work
+
+admin site of Rasmus: 
+
+grouping coming from rule book : custom component in We can change the grouping in Rasmus but we should not
+we can add device for sandbox and test
+
+all of ring has been configured mannually. CSV is sent automatically to be sent to resolver
+
+daily health check: create sandbox of random devices, cehck if we have indicator for IP, graphs for data history
+
+in SevOne we can get the group information as well from rule book. for example: Deviec Manager => Device Grouping
+Noora rule book create this grouping
+
+Action reqired:
+give us a glimps on devices that is not response to SMNP
+name is not on convention
+new devices has not been defined
+when there is failed devices, norify resource owner Kurt, Kevin
+Trigger provisioning button to check if device is respinding or not
+but dont do that for group of devices, if they all have problem, it will flush the provisioning engine.
+Be cautious with bulk actions
+It also shows devices under provisioning
+missing OS support
+We do not develop new fault categories in Noora Health
+
+Provision control
+Native discovery is from SevOne discovery
+
+System Tools
+compare the grouping, for example
+
+System control: stattistics
+here is the place to find the number of devices/licenses
+
+Rule generics, 
+regex based how to provisioning
+
+CHange report
+See what changes have been done through a period of time
+
+System reports: list all reports have been made , they are PHP
+
+external data
+This is also things we need to report
+THere will be error details if there is. we can fix problem with the information
+
+level of criticality
+Date check: did not receive CSV from the source, which mean we get old CSV
+Parsing Data: failure means corupted data, wrong syntax or structure
+System: didferetnt teams and methods of commucnaition
+tommati has tickets in tissu, moved to TeliaNow
+
+
+THere is a server betwwen tomaatti betwwen it and SevOne
+
+CMDB => Resource manager => FInd the contact needed
+if CMDB is outdated, ask Telia contacts like Kevin or Kurt
+
+
+6. depends on contract
+7. some documentation on Noora, VeHa wiki. There are minimal documentation on
+8. N/A PHP report, take a look later
+9. TeliaNow related, problem management. TeliaNow is new to us, minimal tickets. Incident comes from emails mostly. How would we do this, discus with Telia
+11. no example, not requried to provide
+12. Not experience
+13. Lopping with Kevin and Kurt, accessment on the impact, one of dailyu health cehck, monitor on of the script and it gets slow more time on investigation.
+14. In VeHa, 
+
+15. Try provisioning, Contact resource owner if if it is still failed. port check on the device, out of our scope
+16. System tools, system reports
+17. cahnge log, device info
+18. Device not going through provisioning, comeitmes devices corupted meta data.
+19. Later, but already go through some
+20. We do not have documented steps
+21. Will provide the list, theere are couple of things opening on the table
+22.23 Admin role for DDC, user provisioning
+
+
+

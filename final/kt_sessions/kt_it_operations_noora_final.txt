@@ -1,0 +1,175 @@
+NOORA IT OPERATIONS KNOWLEDGE TRANSFER - COMPREHENSIVE ANSWERS
+================================================================
+
+This document provides detailed answers to all Noora IT Operations knowledge transfer questions
+based on the extracted documentation, KT session notes, and system information.
+
+=== SYSTEM OVERVIEW ===
+
+Q1. What is SevOneDDC and its relationship to Noora?
+A1. SevOneDDC is a comprehensive network monitoring platform specifically designed for Telia's Finland and Sweden operations. It is built on SevOne NMS (Network Management System) and integrated with Noora's custom components. SevOneDDC provides real-time monitoring of network devices, advanced cluster management capabilities, and sophisticated alert notification systems. The platform ensures high availability, network reliability, and comprehensive performance monitoring across Telia's critical infrastructure.
+
+Q2. What are the main components of SevOneDDC architecture?
+A2. SevOneDDC architecture consists of:
+   - Distributed monitoring nodes for data collection
+   - Centralized management interfaces for administration
+   - Policy-based alert configuration systems
+   - Cluster management functionality for load balancing
+   - Database architecture for storing performance data
+   - Integration capabilities with external systems
+
+Q3. What is the objective of SevOneDDC?
+A3. The primary objective of SevOneDDC is to pool devices by SNMP (Simple Network Management Protocol). It provides real-time monitoring, performance data collection, and alert management to ensure network reliability and performance across Telia's infrastructure.
+
+=== DEVICE AND MONITORING MANAGEMENT ===
+
+Q4. How does SevOneDDC collect performance data?
+A4. SevOneDDC collects performance data through:
+   - SNMP pooling of network devices
+   - Performance evaluation by end users
+   - CPU and memory monitoring handled by end users
+   - Data collection frequency visible in device lists
+
+Q5. What is a device in SevOneDDC and how is device discovery handled?
+A5. In SevOneDDC:
+   - Devices are typically added manually by end users
+   - Operations team checks the status of SevOneDDC
+   - User Manager tool is used for adding/removing devices
+   - Device discovery is not automated; devices are added manually
+   - Operations may assist end users with feedback and support
+
+Q6. What is flow monitoring in SevOneDDC?
+A6. Flow monitoring in SevOneDDC involves:
+   - Tracking events and alerts from network devices
+   - No direct action required on alerts (handled by end users)
+   - Verification that alert timestamps match device activities
+   - Ensuring the alerting system functions correctly
+
+=== ALERT AND INCIDENT MANAGEMENT ===
+
+Q7. What are the monitoring jobs in SevOneDDC and their criticality?
+A7. Monitoring jobs in SevOneDDC:
+   - No scheduled jobs or cron jobs
+   - Monitoring involves observing alerts from the dashboard
+   - Some alerts configured to send emails by users
+   - Care must be taken not to delete any configurations
+   - Criticality depends on the nature of the alert and its impact
+
+Q8. What access is required for monitoring in SevOneDDC?
+A8. Required access for monitoring includes:
+   - Admin access for system administration
+   - User Provisioning: Creating and deactivating user accounts
+   - Role Definition: Establishing user types with granular permissions
+   - Access Control: Managing user access to clusters and views
+   - Self-Service Capabilities: Enabling custom reports and dashboards
+   - Administrative Functions: Handling system-wide configurations
+
+Q9. What are alerts and thresholds in SevOneDDC?
+A9. Alerts and thresholds in SevOneDDC:
+   - Configured by end users
+   - Alert Collection: Gathering device alerts from monitored elements
+   - Timestamp Validation: Verifying accurate timestamping
+   - Policy Application: Processing alerts according to policies
+   - Destination Routing: Sending alerts to configured destinations
+   - Delivery Verification: Ensuring proper alert delivery
+   - Operations must be cautious with configuration management
+
+=== USER ACCESS AND SYSTEM MANAGEMENT ===
+
+Q10. What is the Data Insight / reporting portal in SevOneDDC?
+A10. The Data Insight / reporting portal:
+   - Utilized by end users for reporting
+   - Operations provide support related to access rights
+   - Assistance with configuration provided when needed
+   - Operations do not act on reports directly
+
+Q11. How are user roles and permissions managed in SevOneDDC?
+A11. User management in SevOneDDC:
+   - Handled through the User Manager tool
+   - Includes provisioning the Tiga role
+   - User Provisioning: Creating and deactivating accounts
+   - Role Definition: Establishing user types with permissions
+   - Access Control: Managing access to clusters and views
+   - Self-Service Capabilities: Enabling custom reports
+   - Administrative Functions: Handling system-wide configurations
+
+=== CAPACITY PLANNING AND PERFORMANCE ===
+
+Q12. What are common issues and troubleshooting methods in SevOneDDC?
+A12. Common issues and troubleshooting:
+   - Covered in subsequent sessions
+   - Some historical cases may provide insights
+   - No significant issues noted recently
+   - Troubleshooting involves checking configurations and logs
+
+Q13. What is capacity planning in SevOneDDC?
+A13. Capacity planning in SevOneDDC:
+   - Involves monitoring licensing and thresholds
+   - End users take action based on alerts
+   - Operations inform Telia's resource manager regarding capacity
+   - Kevin Kivi is notified of capacity issues
+
+Q14. What is streaming telemetry in SevOneDDC?
+A14. Streaming telemetry in SevOneDDC:
+   - Covers capacity, topology, dashboard, and services
+   - Provides real-time data streaming and monitoring
+   - Enhances visibility into network performance
+
+=== INTEGRATION AND AUTOMATION ===
+
+Q15. What database architecture does SevOneDDC use?
+A15. Database architecture in SevOneDDC:
+   - Cluster Manager checks database connections
+   - Manages system logs and settings
+   - Further details on database type and maintenance needed
+   - Ensures data integrity and availability
+
+Q16. What are the common integrations in SevOneDDC?
+A16. Common integrations in SevOneDDC:
+   - Alerts forwarded to destinations defined in SevOneDDC
+   - End users responsible for integrations
+   - Nerve Center requires detailed information
+   - No daily integration checks
+   - Focus on maintaining the SevOneDDC platform
+   - Supporting end users with integration issues
+
+=== OPERATIONAL PROCEDURES ===
+
+Q17. What are the common support activities in SevOneDDC?
+A17. Common support activities include:
+   - Daily operational checks
+   - System Health Monitoring: Platform availability and status
+   - Cluster Performance Analysis: Node health and resource utilization
+   - Alert Flow Verification: Proper alert generation and delivery
+   - Capacity Monitoring: Resource usage and planning
+   - Log Review: Examining logs for anomalies
+   - Proactive monitoring with minimal end-user contact
+
+Q18. What is the release management and branching strategy in SevOneDDC?
+A18. Release management and branching strategy:
+   - Information not available
+   - Further details needed from documentation or team
+
+Q19. What are the post-deployment checks or sanity checks in SevOneDDC?
+A19. Post-deployment checks:
+   - Information not available
+   - Further details needed from documentation or team
+
+=== DOCUMENTATION AND SUPPORT ===
+
+Q20. What is the Telia Confluence access for SevOneDDC?
+A20. Telia Confluence access:
+   - User management functions include provisioning and access control
+   - Documentation available in Telia's internal wiki
+   - Further details needed from the provided link
+
+Q21. What are the upgrade and patch implementation procedures in SevOneDDC?
+A21. Upgrade and patch implementation:
+   - Information not available
+   - Further details needed from documentation or team
+
+=== SUMMARY ===
+
+SevOneDDC is a comprehensive network monitoring platform integrated with Noora's custom components. It provides real-time monitoring, performance data collection, and alert management for Telia's critical infrastructure. The system includes advanced cluster management, user access control, and integration capabilities with external systems. Daily operational checks and support activities ensure the platform's reliability and performance.
+
+For detailed visual references and additional information, refer to the original documentation and KT session notes.

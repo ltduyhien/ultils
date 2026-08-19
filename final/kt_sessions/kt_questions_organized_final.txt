@@ -1,0 +1,182 @@
+ORGANIZED KT SESSION QUESTIONS
+==================================================
+
+=== KT Session: KT Session 1 - Noora ===
+
+Questions:
+1. What are the distributed responsibilities and ways of working RACI between ITO and rest?
+2. How does the day of a support associate look and what activities do you performs for Noora application if there is no incident?
+3. Noora Architecture? What is Noora? What are the main components of Noora?
+4. What is the Objective of Noora?
+5. How does Noora collect performance data?
+6. What is a device in Noora? What is a device discovery?
+7. What is flow monitoring in Noora? Eg: monitoring inputs for the application Queues logs, dashboards, Splunk?
+8. What are the monitoring jobs that run, and what output they share? Where are they stored, its criticality.?
+9. What access do we need to do the monitoring?
+10. What is Data Insight / reporting portal in Noora?
+11. What are alerts and threshold in Noora?
+12. What are common issues which can be fixed by making changes in config ?How do you troubleshoot missing data in Noora?
+13. What is capacity planning in Noora?
+14. What is streaming Telemetry?
+15. What database architecture does Noora use?
+16. What are the common Noora integrations?
+17. What are common Noora support activities?eg: daily activities includes detailed steps. Any SOP/ Maintenance manual
+18. How do you carry out release management and what is your branching strategy (if any)?
+19. Are there any user accounts list, any jobs linked to the user accounts?
+20. What are the post deployment checks or sanity checks (if any) ?
+
+--------------------------------------------------
+
+=== KT Session: KTSession-2-Noora ===
+
+Questions:
+1. What are the steps followed to triage the incident based on the priority?
+2. What are the teams that handle the various integrations (database, SAP etc.) and who are the stakeholders we need to communicate when the issue is not in our scope?
+3. Who are points of escalation if we don't get support from the dependent integration teams and are they common or separate for each integration?
+4. What are the Logs, dashboards, DB checks, interface checks, and batch/job checks when an incident occurs?
+5. Who is responsible for patching and upgrades of the servers in application and database?
+6. What are the known incidents that happen, and we fix them with workarounds? What is the documentation present for the work arounds?
+7. Give the examples of code fix or direct database fix or any appliance issue fix which have been done during the incident resolution?
+8. Can we do problem management in TeliaNow/Plazza portal ? if yes what are the steps ?
+9. What are the queues or interfaces for applications in TeliaNow portal?
+10. Show us a PIR(Post incident Report) report, where does it get documented and who are the stakeholders to communicate this to? (Process to be followed)
+11. Can you walk us through a scenario, where we are expected to how we conduct system integration test for third party patch and fixes (if Noora Apppliance has a patch?)
+12. Where is the performance being monitored and how is slowness being reported ?
+13. What is the standard troubleshooting approach for device pooling failures and data collection issues?
+14. How do we identify whether an issue is related to Noora , network devices, SNMP, or underlying infrastructure?
+15. Which logs and dashboards should be checked first during incident investigation?
+16. What are the common cause of missing performance data, threshold alerts, or report failures?
+17. What are the critical health checks that should be performed daily/weekly?
+18. How is the RCA performed and documented for Noora related incidents?
+19. What known risks, open problems, or upcoming changes should be the support team be aware of?
+20. Can we get the server access ?
+
+--------------------------------------------------
+
+=== KT Session: KT Session3-Noora ===
+
+Questions:
+1. What are the recurring incidents ?
+2. Are there any open-problem tickets ?
+3. What tool is used to create a problem ticket. And what tools are linked to ? (like in Jira the problem is created, and the incident is linked in Telia Now etc.)
+4. If there is an issue in Noora appliance which needs a code fix, what deployment process do we follow if the code fix has a larger impact ? or a smaller impact ?
+5. What are the known issues which are open like if there is a job which generates a file, but sometimes it does not place it at the correct location then what workaround we do if there is no permanent fix. are there any such scenarios ?
+6. What is the use case of Root cause analysis for Noora?
+7. How would you perform RCA for a device not pulling in Noora?
+8. What is the known error in Noora?
+9. What information should a known errors record contain?
+
+--------------------------------------------------
+
+=== KT Session: KT Session4-Noora ===
+
+Questions:
+1. What is the continuous running automated health checks ? Where are they located ? Tools being used ? Who are the stakeholders interested in reports? Reports in Admin messages. No stakeholders interested
+2. What does Stuck orders follow up and resolution mean to each application in our context? Something pending related to Noora. Eg. Monitoring , provisioning request, data collection, device onboarding, discovery, integration etc.
+3. How do we start and stop application instances for each application ? what are the detailed steps and the necessary precautions ? Is there any usecase?
+4. Give me the application configurations per env and how to maintain them ? Production Noora applicance.
+5. Show us the process to load the data in test env. (Example stages like anonymization) and how to use test data ?
+6. what are the steps to keep data sync with other systeams and what are the intervals in which this sync is processed or applicable ?
+7. What are the steps for Integration testing mockups activation / deactivation?
+8. How do we Create request for SPP and PSU / Remote VPN access updates for profiles and what are the applicable scenarios ? SPP(Service Pack Patch contains Bug fixes, security fixes, performance improvement and minor enhancement) and PSU (Platform/System update contains OS update, Kernel updates, Security hardening etc.)
+9. How do we create firewall opening ? and what is the difference between the user or profile opening ?
+10. Please tell us how we Keep system related application configuration data updated in CMDB ?
+11. Walk us through the trigger conditions which create relevant incidents so what alarms we need to monitor and study ?
+
+--------------------------------------------------
+
+=== KT Session: KT Session5-Noora ===
+
+Questions:
+1. What business process it supports or what part of business process ?
+2. How are the modules interacting with each other ?
+3. What are the modules directly talking to the integration systeams and how do they communicate ?
+4. What kind of changes do we make to the database and how ?
+5. What data comes from each system ?
+6. What are the main database entities and their relationships ?
+7. How are users added to the system and are they synced form other systeams or in house ?
+8. What are the components which need license or certificates and what is their expiry or when to renew them ?
+9. Do we use any logging framework ?
+10. What is the test coverage or even unit test cases in place ?
+11. What are the tech details related to the integrations ? like API, or message from queues or any other SQL job sharing data to the system
+
+--------------------------------------------------
+
+=== KT Session: KT Sessions-6-Noora ===
+
+Questions:
+1. What types of data management activities are performed for each application?
+2. What data scripts are maintained and where are they stored?
+3. Who is allowed to prepare, review, approve, and execute data correction scripts?
+4. Please provide last 12 months statistics/report produced for data errors, failure rates or data handling issues?
+5. List down all the activities related to data management and when (example What data extracts, purges or reports are performed regularly)?
+6. What GDPR considerations must be checked before handling or correcting data?
+7. When be data issues registered as Incidents versus Service Requests?
+8. Can you walk us through one real data issue from detection to correction and closure?
+9. How performance data stored in Noora, and what is the retention policy for different metric types?
+10. What are the procedures for onboarding new devices and ensuring their data is correctly collected and stored?
+11. How does Noora handle data aggregation, roolups, and historical data management?
+12. What mechanisms are available for managing data growth and optimizing storage utilization?
+13. What are the Key database components in Noora, how do they support scalability and high availability?
+14. How reports , dashboard, and data exports generated, and what data governance controls exists for them?
+15. What backup, recovery, and desaster recovery procedures are in place for Noora data?
+16. What best practices should followed for data quality, retention, archiving, and compliance within the Noora appliance?
+
+--------------------------------------------------
+
+=== KT Session: KT Session-7-Noora ===
+
+Questions:
+1. We would like to see a sample SLA/KPI report, and how do I generate a report for application ?
+2. What application of health statistics are expected quarterly, such as vulnerabilities or patches? Please provide a couple of reports from last 1 year.
+3. What is the meaning of end-to-end/value-chain performance statistics and what is expected? Please provide sample.
+4. What existing dashboard, report format or template is currently used?
+5. Where is the document overview/IT Wiki/Confluence page for each application?
+6. Where are runbooks stored for incident handling, deployment, rollback, monitoring, batch/jobs and known workarounds?
+7. What operational review meetings exist for these applications and how often are they held?
+8. How are stakeholder satisfaction or service performance improvements measured?
+
+--------------------------------------------------
+
+=== KT Session: KT Session-8-Noora ===
+
+Questions:
+1. What is the current IBM Noora version and deployment architecture? Required explanation of deployment architecture(https://itwiki.atlassian.teliacompany.net/spaces/DATAMEDIATION/pages/714753289/Architecture+Flow)
+2. Any Application specific license and support agreements?
+3. Is High Availability (HA) and  Disaster Recovery (DR) configured? Need to know more about it.
+4. How are devices discovered and onboarded into Noora?
+5. What monitoring methods are used (SNMP, Flow, Telemetry, ICMP)? Any work flow?
+6. How many devices and objects are currently monitored?
+7. What are the standard polling intervals?
+8. What are the key KPIs and performance metrics being monitored?
+9. How are alerts and thresholds configured?
+10. What are the critical alerts requiring immediate action?
+11. How is alert escalation handled?
+12. Is Noora integrated with ServiceNow or other ticketing tools? We need to know the Tiga user provisioning access policy
+13. What is the process for alert tuning and false-positive reduction?
+14. Which dashboards are most critical for operations teams? Any specific dashboard ?
+15. What standard reports are generated and for whom?
+16. How is report scheduling and distribution managed?
+17. What is the historical data retention period?
+18. How are custom dashboards and reports created and maintained?
+19. How are user roles, permissions, and access requests managed?
+20. What routine health checks should operators perform?
+21. What is the process for Noora upgrades and patching?
+22. How are backups performed, validated, and restored?
+23. How are SSL certificates and system credentials managed?
+24. How to create request for firewall openings (systeams)?
+25. What are the most common Noora incidents and their resolutions?
+26. How do we troubleshoot missing performance data or polling failures?
+27. Which logs, tools, and commands are used during incident investigation?
+28. When should IBM Noora Support be engaged, and what information is required for a support case?
+29. What integrations, automations, operational runbooks, support contacts, and escalation procedures should the support team know?
+30. Security – Use monthly SSR (Security Scan Repository) to find and fix security vulnerabilities?
+31. Any authentication and authorization for the application?
+32. For any administrative message what should we do? Eg: Peer <peer name> is at <n> capacit or Peer <peer name> dropped <n> flow records, Invalid VMWare plugins configuration for device etc.
+33. KPI alert any ?
+34. How many object types?
+35. NooraDDc login using TCAD only now a days?
+36. Any server access and its login method? need to check with Joonas
+
+--------------------------------------------------
+

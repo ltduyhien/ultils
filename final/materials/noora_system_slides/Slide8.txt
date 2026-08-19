@@ -1,0 +1,66 @@
+SEVONE DATA CONCEPT
+
+* SevOne data structure is build
+around devices, objects and
+indicators
+
+* System has currently ~4k
+network devices, ~120k
+objects and ~2,7M indicators
+
+* SevOne licensing model is
+based on the number of active
+objects
+
+« Asingle license cost is ~1.2€
+
+Internal
+
+Devices
+
+FI-HSSV-ASBR1
+
+ME-JDA-SO1
+
+Objects
+
+Indicators
+
+‘CPU UTILIZATION
+
+'BB-AVSD-DO2
+
+CPU
+
+MEMORY UTILIZATION
+
+DN12345
+
+MEMORY
+
+MEMORY TOTAL
+
+(00064321
+
+TE1/1
+
+BITSIN
+
+(COS QUEUE RT
+
+PACKETS OUT
+
+ERRORS IN
+
+DISCARDS OUT
+
+MULTICAST PACKETS IN
+
+TOTAL PACKETS OUT
+
+‘VOLUME
+
+FORWARDED BITS.
+
+DROPPED PACKETS
+

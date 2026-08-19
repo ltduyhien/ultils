@@ -1,0 +1,202 @@
+Subject: RE: NOORA AM task => included in ADM
+ 
+Hi!
+
+ 
+
+Thanks for the meeting and for the understanding related to this matter.
+
+ 
+
+I don’t know if Jorge wrote meeting minutes but just to briefly put things in a nutshell, it was commonly agreed that something needs to be done for the Noora maintenance part and specially to situation when bug fixing or even configuration is required. Today Accenture is only supervising the system, they do not have skills to fix issues not to mention developed anything. By development here, I don’t mean creating something totally new, but rather when you fix a bug or notice a deviation, rather than just putting the least amount of effort to get rid of the issue, one would actually do a minor development so that the bug or even other bugs would be prevented in the future. Or develop the way logs are gathered. Or create auto-notifications on known deviation. These type of maintenance, related small development activities I am truly missing from these ADM companies. I can say, this kind of thing was constant with Tietoevery. Things were created and enhanced without asking. And that is how it should be.
+
+ 
+
+If we take the road to hire a consultant now in the beginning as the first step, the names from Tietoevry were (Noora original coders):
+
+ 
+
+Ari Nieminen
+Mika Savea
+ 
+
+Ari Nieminen is no longer working in Tietoevry and probably not attainable. I know he is still working with Telia Legacy product Alerta. Mika Savea is still in Tietoevry and might be interested if request was made. Just to note and as mentioned in the meeting, he is an expert and assigning him to watch some dashboard is waste of skills and money. Accenture is better suited for that.
+
+ 
+
+To understand the work scope of Noora and how much work might be needed, I added a long text description below. Read if you have time, it took me this long to write on Friday evening, so appreciate if you read it through.
+
+ 
+
+Have a sunny weekend!
+
+ 
+
+-Ari
+
+ 
+
+ 
+
+ 
+
+Noora (SevOne) components
+
+ 
+
+In rough view, Noora consists of four parts:
+
+Input
+Custom - Integrations
+Custom - Input data read
+Custom - Provisioning Engine
+Core
+SevOne NMS - Device modelling
+SevOne NMS - Metrics Polling
+SevOne NMS - Data Categorization
+SevOne NMS - Alarm management
+Custom-UI
+Custom - Realtime UIs
+Custom - Categorization UIs
+Custom - Management UIs
+Output
+Custom - Cron scheduling
+Custom - Data export
+ 
+
+Custom means that Tietoevry or Telia/Ari Lipponen has created content, from nothing. SevOne NMS means commercial product. In short, input reads data in and manages the SevOne product via custom build provisioning engine, which is basically a chain of workflows. Core is the SevOne NMS and it models devices, polls metrics, categorizes data and creates alarms. Custom-UI offers custom graphical user interfaces which some are integrated directly into network orchestrator. There are also UIs for categorization management and Noora system internal management. Output contains schedules and data export components.
+
+ 
+
+The parts are created by:
+
+Input                     : Tietoevry
+Core                       : SevOne
+Custom-UI          : Ari Lipponen
+Output                 : Tietoevry
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Bug fixing
+
+ 
+
+And in the beginning, bug fixing was handled as so:
+
+Input                     : Tietoevry
+Core                       : SevOne
+Custom-UI          : Ari Lipponen
+Output                 : Tietoevry
+ 
+
+Bug fixing in this context means a code level change (not a UI clickable fix). At one point (around when Bengzhan was introduced), I was the only one left handling all of these. Now at least we have regained SevOne support. But Input and output have been on me for the last 3 years.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Configuration tasks
+
+ 
+
+For configuration, Noora was handled as so:
+
+Input
+Custom - Integrations                                     : Tietoevry / Ari Lipponen
+Custom - Input data read                              : Tietoevry / Ari Lipponen
+Custom - Provisioning Engine                      : Tietoevry / Ari Lipponen
+Core
+SevOne NMS - Device modelling                : Ari Lipponen
+SevOne NMS - Metrics Polling                     : Ari Lipponen
+SevOne NMS - Data Categorization           : Ari Lipponen
+SevOne NMS - Alarm management           : Kurt Gunnelius / Ari Lipponen
+Custom-UI
+Custom - Realtime UIs                                    : Ari Lipponen
+Custom - Categorization UIs                        : Mika Tsokkinen ( prev. Eero Kopperi ) / Infra Planning
+Custom - Management UIs                           : Ari Lipponen
+Output
+Custom - Cron scheduling                             : Tietoevry / Ari Lipponen
+Custom - Data export                                      : Tietoevry / Ari Lipponen
+ 
+
+ 
+
+Configuration means that something can be changed or fixed using an existing user interface. In the past we could use Tietoevry for input and output. I also should have a real right hand, but never got one. There is Kurt Gunnelius from Päivi Londen CPS NSD IP NW & Transport IP Networks East who tries to maintain the responsibility related to alarms. On reporting side, I had a passionate data analysis developer Eero Kopperi handling data categorization part but unfortunately, we suddenly lost Eero year ago. There is also Noora specific custom user interface build into SMO system (originally build-by SMO Tieto developer Pasi Siren) which is used by Mikael Forsten’s Infra Planning team to control metro ring reporting.
+
+ 
+
+But to highlight, Accenture is not here as they don’t posses enough skills to touch anything. They just monitor and inform. So, you understand that I have been on my one with this.
+
+ 
+
+ 
+
+ 
+
+ 
+
+Monitoring tasks
+
+ 
+
+For monitoring, Noora is handled as so:
+
+Input
+Custom - Integrations                                     : -
+Custom - Input data read                              : Accenture
+Custom - Provisioning Engine                      : Accenture
+Core
+SevOne NMS - Device modelling                : -
+SevOne NMS - Metrics Polling                     : -
+SevOne NMS - Data Categorization           : Accenture
+SevOne NMS - Alarm management           : -
+Custom-UI
+Custom - Realtime UIs                                    : -
+Custom - Categorization UIs                        : -
+Custom - Management UIs                           : -
+Output
+Custom - Cron scheduling                             : -
+Custom - Data export                                      : Accenture
+ 
+
+So, we use Accenture to tell us how the system is working. They use tools that I have created to them monitor how the system is behaving and the report to “Noora Team” on weekly meetings.  Noora Team consists of Ari Lipponen, Kurt Gunnelius, Ville Rajala, Juha Mäenpää (Accenture) and Kasperi Ilkka (Accenture). From these, Accenture can open internal tickets and query things, Ville, well don’t really do Noora at all, and Kurt rarely has time to do any Noora tasks. And now the one person that does something has gotten himself quite a heavy new role. So yeah…
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Amount of work in Noora
+
+ 
+
+I will estimate this in a mount of events:
+
+Critical issue, requiring SevOne (IBM) vendor support                      : once every two years (1 to 4 weeks)
+Non-critical issue, requiring SevOne (IBM) vendor support             : once every two years (1 to 4 weeks)
+Critical bug in the custom parts of the system                                      : once every year (1 to 3 days)
+Non-critical bug issue in the custom parts of the system                 : once per six months (5-20 hours)
+Issue with a provisioning, alarm or reporting (not a bug)                 : once per month (1-5 hours)
+ 
+
+In general, the system has been stable from the start. I wrote critical issues once every two years, but even these are mostly related to SevOne software upgrades. You may need to understand that the flow from input to output, even extending from network orchestrator to CC fault ticketing and Qlik Sense on reporting side, is fully automated. We have no constant manual interactions in the middle. Therefore, as we don’t touch anything, we don’t either break anything. Usually, minor issues are seen when the networks are dramatically changed or totally new type of equipment are introduced or if changes are done to the OSS/BSS systems itself.
+
+ 

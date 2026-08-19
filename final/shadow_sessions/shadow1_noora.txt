@@ -1,0 +1,49 @@
+Noora Shadow Session 1
+
+Login to SevOne
+Veha TCAD Login
+Capacity check, Licenses check, Alert Check
+Device maangers, check ofr new devices
+Take a moment to cehkc whether th elink is related to the devices
+
+Name change is a direct modification of the device details
+
+Login to ferguson
+run the one liner
+swithc to provisor
+un the one liner
+
+Go to Rasmus
+Run alert re port by severity, critical
+track amount of alaerts
+
+
+Alert tree view
+device gorups
+
+Sandbox
+choose object group
+
+Weekly, we mention CPU uiltilize
+not loading data is alarming
+
+
+Health portal
+Today we look at php log for device provisioning
+
+System control, 
+check capacity, otjers
+
+Change report
+Check Device hcange report for 1 week
+Check Obejct change report for 1 week
+report the empty groups
+
+System reports (if drop down does not drop down, it is a glitch, reload, or click menu again, log out. login again)
+Exporter Groupå Report, report function is working, glimpse on the data
+
+External Data
+Date check warning, one day is missing. 1 day missing is ok. Most likely CSV is in the wrong server, automation issue, it is sittin on proxy server, has not moved to Noora
+Parsing is fine
+
+Device Dashboard

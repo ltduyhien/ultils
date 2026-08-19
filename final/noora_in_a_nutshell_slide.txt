@@ -1,0 +1,34 @@
+# Noora in a Nutshell
+
+## Slide: Noora Overview
+
+### SevOne – What is it?
+- **Performance Monitoring System**: SevOne offers all-in-one monitoring and reporting solutions for carrier and backhaul networks, SD-WAN, SDN, cloud, and datacenter environments.
+- **Complexity**: Monitoring operator-scale infrastructures with diverse platforms, networks, and systems is challenging. A single SevOne instance cannot handle this out-of-the-box.
+
+### Noora – What is that?
+- **Initial Project Name**: Noora was initially the project name for creating IP Backbone monitoring in Finland using a single SevOne instance. It was later chosen as the official system name.
+- **Highly Customized**: The SevOne system was highly customized for Noora, making it significantly different from other SevOne instances used in Telia.
+- **Custom Components**: Noora includes many custom system components, making it a separate system that uses SevOne (NMS) as a core component.
+- **Automated Functions**: Noora features automated data enrichment and categorization functions, providing significant value to the system.
+
+### What does it monitor?
+- **Networks**: Noora monitors Finnish Inter-Regional (Core), Regional (edge and metro), and Local-Aggregation networks.
+- **Platforms**: It also monitors Hybrid-Access Gateway and SD-WAN platforms.
+- **Services**: Noora collects service-related data from TV, SDN, 3G, 4G, and 5G services.
+- **Network Cross Points**: Monitoring includes backbone to Telco-Cloud and NNI to other operators.
+
+### Who uses it?
+- **SA Organization Units**: Noora is responsible for reactive and proactive network surveillance and threshold-based alarm handling for Finnish IP Backbone devices.
+- **Operational Network Teams**: Noora offers multiple custom graphical user interfaces for real-time troubleshooting and data analysis.
+- **Business and Planning Units**: Noora collects network performance data and manages reporting structures and statistical data for the Qlik system. Network planning and building costs are calculated and predicted based on Noora's data.
+
+### Noora Architecture Overview
+- **Integration**: Noora is integrated with many systems, with the main input system being SurfManager & Operator (SM/O), a network orchestrator that provisions devices to Noora.
+- **Automation**: Device provisioning, like all functions inside Noora, is automated.
+- **Data Enrichment**: Noora enriches initial input data from SM/O by collecting database information from other BSS & OSS systems like Satellite Systems and Tomaatti.
+- **Data Collection**: While SevOne offers multiple data collection methods, Noora uses only SNMP to collect all data.
+- **Data Processing**: Enriched input data and collected statistics are automatically categorized in SevOne and sent towards three main paths:
+  - **Operational Reporting (real-time)**: Provides real-time data for operational purposes.
+  - **Network Surveillance (alarms)**: Manages threshold-based alarms for network monitoring.
+  - **Capacity and Business Reporting (long-term)**: Provides long-term data for capacity planning and business reporting.

@@ -1,0 +1,25 @@
+SEVONE CLUSTER SETUP
+
+*« SevOne NMS can use physical servers or virtual
+appliances
+
+« The statistical data stored in DATA database is
+unique per server / appliance while the CONFIG
+database is replicated
+
+* This allows the SevOne system to scale up easily
+
+oa
+
+ENDUSER
+
+Internal
+
+Collector
+
+« The master and collector servers /
+appliances can be separated to
+different security and network
+zones
+
+\)

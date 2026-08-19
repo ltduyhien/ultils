@@ -1,0 +1,93 @@
+KT Noora 3
+
+1. external data issues, not receiving data, receiving corupted data, data does not arrive at correct destiantion. itegration issue. => mention RM. TOday we did not receive tomatti data, we will wait 1.-2 days. If corupted, requires immediate action, contact RM and relevant team. Tomatti, we do hot fix itself, CSV cause  provision engine mayhem, we fix the CSV ourselves. Main example: extra lines should not be there. Provision engine starts to work again immediately after fix. 
+External data page => list files => red in Data parsing => shut down provisioning engine => Provision control => all device being process in provision engine , build up devices list processing. (30-40 devices, climbing)
+
+=> check the CSV file with indicated line number, remember the file first. SSH to the server and then follow the path. => Data Parsing will show OK again, => Provision control => press Auto update, if correct, the list of devices will start to go down that confirm the fix.
+
+SuperPutty => ferguson1 (example) = SSH connect
+
+cd /opt/provisioning/dump/
+ls -hartl
+check bottom files for most recent CSV
+parser is automatic
+device_record.csv => backup
+less device_record.csv
+device || info || info
+backup file naming convention is our own convention
+we can come up with even better safe convention to back up
+exit
+
+Error or warning in Date Check (External Data)
+Data can have older file, wait 2-3 days, if not fix, escalate
+
+Couple of times, devices go to the provisioning engine. List of devices, over 100, did not go to provisioning as expected. One of the info, in Noora, hardware avaialbe, the issue is that 
+
+Device Dashboard => select device=> show last SMO update => suggest action. Show most recent alerts
+Hardware tab=> status of hardware => Kurt investigated => find out that, problem is in the configuration of the type of device, Cisco devices, model, have to make config changes in the devices. SMO did not get device info. 400 devices, have to do patch fix and then port check. "Port check" => ping the device (But we do not have to do that). They trigger Noora also for provisioning. When they fix it, they fix it it has to be fixed for future device, they ahve to fix it in Day One devices.
+
+There is currently ongoing discussion with end userregarding Cisco devices, capacity planner "Rami Kivirinta" He is occasionally send message to Noora shared mail box with the issue, once a month. Kurt has touched some of the devices.
+
+4th: Problem link issue, user "Juho Kontio", he occasioannly send message to the Noora shared mail box, he share 1-23 links that does not work, that cause error in SMO manager, for fixing taht we have establish a protocol. 
+
+Link: virtual thing that caculate the traffic between 2 devices in Noora. They define the link in SMO (Surf). Juho is the one who see the error. Quick fix, do in SevOne UI, then Noora Health portal, reprovision device(build the link again). (WIll be shown at a later time).
+
+3. TeliaNow, we used to have Plaza, but now we use TeliaNow. We created test ticket for Tomatti. We have establish the way to create the ticket but when we face the problem, in april, the process did not work anymore because Plaza does not have the category anymore. TeliaNow now might have the category,
+
+TeliaNow => Plaza => Fiancne purcahsing => SAP categories (they used to have integration stuffs here). Subject: file did not arrive. 
+
+CMDB (resource listing) => search for "SAP ERP" => 
+Check collum, go to parent, check Oragnaization, there are RM for this resource, explain we have integration issue, how could we create a ticket with you. This works when we do not have procedure
+
+TeliaNow coudl be confusing, need conmmunication
+
+There is no Jira, only TeliaNow, Teams
+
+4. IBM SevOne, we never done code fix. Need to ask Telia if the situation ever occurs.
+
+5. Known issues which are open: bunch of device not working, the hot fixes for data that get provisioning working. Parser should be deveoped in a way that it does not break the provisioning.
+
+6. RCA for Noora, we need to research and use available tools
+
+7. Noora Health, we in Action required (Home), contact Kurt.
+
+Some devices have corupted meta data, that has probem with SevOne itself. Control character in meta data (weird character). IN SevOne, ther eis a bug, it save to tjhe database itself with weird characdter, when APi call is done, there is an error. Ther eis few devices that has the issue, the faulty part of the network device was change so Telia order the fix for the item. Kurt notice that you boot the device compltely, it actually fix the character.
+
+Not pooled data => missing data, corupted data
+Check Device dashboard => SNMP responsiveness is empty. Try provisioning again. Go to alaert list to see whether the device is down or not.
+
+Device Dashbaord => device => check for "SevOne pooling". SNMP reachable. This could be fixed by going to SevOne and enable the pooling of the device.
+
+9. Check Wiki Veha, there is no record or documentation for Noora errors, troubleshooting.
+SevOne, check if the pooling is enabled. THat coudl be cehcked before we start to ask further. in SMO, device monitor is my default is disable, Noora missed the part where the device.
+
+If the error data, then we already gone through.
+
+==================
+
+Port Check: How monitoring is done in Noora. Automazartion is always start with the port check. set current generic device role that the monitoring is based on, check if should be enabled to Noora. If yes, enable the port that hsould be used for check. SMO create 2 CSV files of device and objects and send to noora for provisionig end. Provisioning has 4 phases. use SevOne API 
+
+We provision device X, to phase 1, we can see in Noora 
+
+Example new objective ever created. Have to do an alarm type , group objective group is used to control what alarm is anale. Cirtical device could be.
+
+
+Atter phased 3 it go to obecjtive types group, comparing to the threshold and go to oset up threashold fo.
+
+If the hteashold is met, sevone creat alarm object 
+
+========
+health check / SevOne
+check Administration => cluster manager => check peers for capacity and number of licenses
+
+Kurt cahnged the rule, he cahgned the rule book to not enable certainly and it drops the capacity. 
+
+Device maangers => glimpse on devices most recent,what new devices are being created. No need to report unless there are large amount of devices. usually less than 10 or les sthan 20. there are a few everyday. Huge a mount of 100 should bne mentioned to Kevin or Kurt
+
+If SevOne break heres we will hear frmo Nelli team. 
+
+Object maanger => enable filter to show links => Show only links
+=> Object Summary
+
+Administration => Calculation Editor
+Shows rule that is used to show traffic

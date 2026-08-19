@@ -1,0 +1,41 @@
+Noora Shadow Session 4
+
+Automation and Scripting:
+- Monitor cron jobs and automated scripts
+- Check script execution times and performance
+- Investigate script failures and errors
+- Run cleanup scripts for provisioning engine issues
+- Monitor script logs for anomalies
+- Document script execution and results
+
+Server Management:
+- SSH to ferguson server for health checks
+- Run one-liner commands for fatal errors
+- Check script execution times and thresholds
+- Monitor server performance and resource usage
+- Investigate server issues and anomalies
+- Document server status and findings
+
+Provisioning Control:
+- Monitor provisioning engine status and load
+- Check device provisioning phases and progress
+- Investigate stuck or failed provisioning
+- Run cleanup scripts when necessary
+- Document provisioning issues and resolutions
+- Report critical provisioning issues to Resource Manager
+
+System Reports:
+- Generate and review system reports
+- Check exporter group reports for data consistency
+- Monitor system statistics and capacity
+- Investigate report anomalies and errors
+- Document report findings and issues
+- Provide reports to Telia as required
+
+Best Practices:
+- Follow daily health check procedures
+- Monitor system performance and resource usage
+- Investigate anomalies and errors promptly
+- Document all actions and findings
+- Communicate issues and resolutions to Telia
+- Follow escalation procedures for critical issues

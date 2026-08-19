@@ -1,0 +1,25 @@
+WHO ARE WE?
+
+* Eero Kopperi (Fl MAA Network and B2X Analysts (Tommi Kahinoja))
+
++ Automated reporting and grouping structure designer for network infrastructure and services
++ Qlik reporting developer
+
+* Ville Soininen (CPS NSD IP NW & Transport IP Networks East (Paivi Londen))
+
++ Noora device support developer
++ Noora alert policy developer
+
+* CPS NSD IP NW & Transport IP Networks East (Paivi Londen)
++ Noora alert policy maintainer
+
+* Telia Employees
++ Group report management
+
+« External
+
++  Tieto —Noora development (provisioning engine, link handling)
+*  TechM — Noora maintenance (15 level Noora incident handling)
+
+Internal
+

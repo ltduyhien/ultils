@@ -1,0 +1,416 @@
+# Noora Shadow Playback - Specific Slides Content
+
+## Slide 1: Noora Shadow KT Playback
+
+### Overview
+The Noora Shadow Knowledge Transfer (KT) Playback is designed to provide a comprehensive understanding of the Noora system's operations, troubleshooting, and integration processes. This session aims to ensure that the support team is well-versed in the daily operations, incident handling, and problem management within the Noora environment.
+
+### Key Objectives
+- **Knowledge Transfer**: Ensure that the support team understands the operational workflows and business processes within the Noora system.
+- **Hands-on Exposure**: Provide practical exposure to Noora support activities, including daily health checks, incident management, and problem resolution.
+- **Reverse Shadow Preparation**: Prepare the team for the Reverse Shadow phase, where they will execute the tasks under the guidance of the incumbent team.
+- **Knowledge Validation**: Validate the knowledge acquired during the shadow sessions to ensure readiness for independent support activities.
+
+### Scope
+- **Operational Workflows**: Understand the daily operational workflows, including health checks, monitoring, and reporting.
+- **Incident Management**: Learn the processes for incident identification, prioritization, and resolution.
+- **Problem Management**: Gain insights into root cause analysis, problem identification, and preventive measures.
+- **Technical Support**: Understand the technical aspects of Noora, including device provisioning, data management, and system integration.
+
+## Slide 2: Noora Shadow KT Progress Review
+
+### Progress Overview
+The Noora Shadow KT sessions have been conducted over several weeks, covering various aspects of the Noora system. The sessions included observations of daily operations, incident handling, problem management, and technical troubleshooting.
+
+### Key Activities
+- **Daily Health Checks**: Observed and participated in daily health check procedures to ensure system operational status.
+- **Incident Handling**: Shadowed the incident management process, including severity assessment, stakeholder communication, and resolution workflows.
+- **Problem Management**: Participated in root cause analysis sessions and problem resolution activities.
+- **Technical Support**: Gained hands-on experience in device provisioning, data management, and system integration.
+
+### Achievements
+- **Operational Understanding**: Acquired a deep understanding of Noora's operational workflows and business processes.
+- **Incident Resolution**: Successfully participated in incident identification, prioritization, and resolution.
+- **Problem Analysis**: Conducted root cause analysis and implemented preventive measures for recurring issues.
+- **Technical Proficiency**: Gained proficiency in Noora's technical aspects, including device provisioning and data management.
+
+### Next Steps
+- **Reverse Shadow Sessions**: Transition to the Reverse Shadow phase, where the support team will execute tasks under the guidance of the incumbent team.
+- **Knowledge Validation**: Validate the acquired knowledge through practical exercises and assessments.
+- **Production Support Handover**: Prepare for the handover of production support responsibilities.
+
+## Slide 3: Noora Application Summary
+
+### Overview
+Noora is a comprehensive network monitoring and management system designed to ensure the reliability, performance, and security of Telia's network infrastructure. It integrates with various systems, including SurfManager&Operator (SM/O), SevOne, and Neli, to provide a unified monitoring and management platform.
+
+### Key Features
+- **Device Monitoring**: Noora monitors a wide range of network devices, including routers, switches, load balancers, and firewalls.
+- **Performance Metrics**: Collects and analyzes performance metrics such as CPU usage, memory utilization, and network traffic.
+- **Alert Management**: Generates and manages alerts based on predefined thresholds and policies.
+- **Reporting**: Provides comprehensive reporting capabilities for network performance, capacity planning, and troubleshooting.
+- **Integration**: Integrates with external systems such as SM/O for device provisioning and Neli for alert management.
+
+### Architecture
+- **Dual Data Center Architecture**: Noora operates in a dual data center setup, ensuring high availability and redundancy.
+- **Modular Design**: The system is designed with modular components, allowing for easy scalability and maintenance.
+- **API-Driven Integration**: Noora uses APIs to integrate with external systems, ensuring seamless data flow and interoperability.
+
+### Technologies
+- **SevOne**: Noora is built on top of the SevOne Network Management System, leveraging its monitoring and reporting capabilities.
+- **SM/O**: SurfManager&Operator is used for device provisioning and management.
+- **Neli**: Network Element Interface (Neli) is used for alert management and notification.
+- **Database**: Noora uses a robust database system to store and manage network performance data.
+
+## Slide 4: Noora - High Level
+
+### Provisioning Data Flow
+Noora's provisioning process is a multi-phase workflow that ensures devices are correctly configured and monitored. The process involves the following key steps:
+
+1. **SM/O Port Check**: The Port Check function in SM/O assigns a Generic Device Role to the device and checks whether the device should be enabled for Noora monitoring.
+2. **Device Provisioning**: SM/O verifies whether the device should be provisioned in Noora and enables monitoring based on the Generic Device Role.
+3. **Port Provisioning**: SM/O checks the need for port monitoring and enables ports based on the device's role and monitoring requirements.
+4. **Noora Loader**: Noora's provisioning machine receives the device data and instruction files from SM/O and checks the device's reachability.
+5. **Noora Pinning**: The device's type is determined, and it is checked whether the device is already registered in SevOne.
+6. **Noora Discovery**: All objects found during the SevOne discovery are registered, and SNMP objects are enabled based on the device's role.
+7. **Noora Link**: Link objects are built in the SevOne system to prevent the interruption of historical data during port migrations.
+
+### Polling
+Noora uses SNMP polling to collect performance data from network devices. The polling process involves:
+
+- **SNMP Configuration**: Devices are configured with SNMP settings to allow Noora to collect performance metrics.
+- **Data Collection**: Noora collects data such as CPU usage, memory utilization, and network traffic from the devices.
+- **Data Processing**: The collected data is processed and stored in Noora's database for analysis and reporting.
+
+### Data Pipeline
+Noora's data pipeline ensures that performance data is collected, processed, and stored efficiently. The pipeline includes:
+
+- **Data Ingestion**: Performance data is ingested from network devices using SNMP polling.
+- **Data Processing**: The ingested data is processed to extract relevant metrics and insights.
+- **Data Storage**: Processed data is stored in Noora's database for historical analysis and reporting.
+- **Data Visualization**: Stored data is visualized through dashboards and reports, providing insights into network performance and health.
+
+## Slide 5: Noora Shadow KT Overview
+
+### Objectives
+The Noora Shadow KT sessions aim to achieve the following objectives:
+
+- **Observation**: Observe the support activities performed by the incumbent team to understand the operational workflows and business processes.
+- **Hands-on Exposure**: Gain hands-on exposure to Noora support activities, including daily health checks, incident management, and problem resolution.
+- **Knowledge Validation**: Validate the knowledge acquired during the shadow sessions to ensure readiness for independent support activities.
+- **Reverse Shadow Preparation**: Prepare for the Reverse Shadow phase, where the support team will execute tasks under the guidance of the incumbent team.
+
+### Scope
+The Noora Shadow KT sessions cover the following areas:
+
+- **User Access and Provisioning**: Understand the processes for user access management and device provisioning in Noora.
+- **Technical Support**: Gain insights into the technical aspects of Noora, including device configuration, data management, and system integration.
+- **Incident & Problem Management**: Learn the processes for incident identification, prioritization, and resolution, as well as problem management and root cause analysis.
+- **Application Operations**: Understand the daily operational activities, including health checks, monitoring, and reporting.
+- **Data Management**: Learn the processes for data collection, processing, storage, and visualization.
+- **SLA/KPI Reporting**: Understand the reporting processes for Service Level Agreements (SLAs) and Key Performance Indicators (KPIs).
+- **IT Operations**: Gain insights into IT operations, including production support, incident management, and problem resolution.
+
+### Key Learnings
+- **Application Functionalities**: Understand the various functionalities of the Noora system, including device monitoring, performance metrics, alert management, and reporting.
+- **Monitoring Architecture**: Gain insights into Noora's monitoring architecture, including data collection, processing, storage, and visualization.
+- **Support Responsibilities**: Understand the responsibilities of the support team, including daily health checks, incident management, and problem resolution.
+- **Critical System Components**: Identify the critical components of the Noora system and understand their roles in ensuring network reliability and performance.
+
+## Slide 6: Technical Environment Understanding
+
+### Observed Components
+The Noora system comprises several key components that work together to ensure network monitoring and management:
+
+- **Device Manager**: Manages the configuration and monitoring of network devices.
+- **Object Manager**: Manages the configuration and monitoring of network objects, such as interfaces and links.
+- **Device and Object Group**: Groups devices and objects for easier management and monitoring.
+- **SNMP Walk**: Performs SNMP walks to collect performance data from network devices.
+- **Cluster Management**: Manages the clustering of Noora components for high availability and redundancy.
+- **Monitoring Configuration**: Configures monitoring settings, including thresholds, policies, and alerts.
+- **Report Manager**: Manages the generation and distribution of reports on network performance and health.
+- **Instant Graphs**: Provides real-time visualization of network performance metrics.
+- **TopN Reports**: Generates reports on the top N performers or issues in the network.
+
+### Key Learnings
+- **Application Functionalities**: Understand the various functionalities of the Noora system, including device monitoring, performance metrics, alert management, and reporting.
+- **Monitoring Architecture**: Gain insights into Noora's monitoring architecture, including data collection, processing, storage, and visualization.
+- **Support Responsibilities**: Understand the responsibilities of the support team, including daily health checks, incident management, and problem resolution.
+- **Critical System Components**: Identify the critical components of the Noora system and understand their roles in ensuring network reliability and performance.
+
+## Slide 7: System Architecture & Design
+
+### Dual Data Center Architecture
+Noora operates in a dual data center setup, ensuring high availability and redundancy. The dual data center architecture provides the following benefits:
+
+- **High Availability**: Ensures that the Noora system is always available, even in the event of a data center failure.
+- **Redundancy**: Provides redundant components and data storage to prevent data loss and ensure continuous operation.
+- **Load Balancing**: Distributes the workload across multiple data centers to optimize performance and resource utilization.
+
+### Monitoring Protocol
+Noora uses SNMP (Simple Network Management Protocol) for network metrics collection. SNMP provides the following capabilities:
+
+- **Data Collection**: Collects performance data from network devices, including CPU usage, memory utilization, and network traffic.
+- **Alert Generation**: Generates alerts based on predefined thresholds and policies.
+- **Data Visualization**: Provides real-time visualization of network performance metrics through dashboards and reports.
+
+### Supported Devices
+Noora supports a wide range of network devices, including:
+
+- **Routers**: Monitors and manages router performance and configuration.
+- **Switches**: Monitors and manages switch performance and configuration.
+- **Load Balancers**: Monitors and manages load balancer performance and configuration.
+- **Firewalls**: Monitors and manages firewall performance and configuration.
+- **Proxies**: Monitors and manages proxy performance and configuration.
+- **SAN Switches**: Monitors and manages SAN switch performance and configuration.
+
+### Virtual Appliances
+Noora is deployed on VMware virtual appliances, providing the following benefits:
+
+- **Scalability**: Allows for easy scaling of Noora components to meet growing network demands.
+- **Flexibility**: Provides flexibility in deploying and managing Noora components across different environments.
+- **Efficiency**: Optimizes resource utilization and reduces operational costs.
+
+## Slide 8: Noora Application Operations Shadowing
+
+### Observed Daily Activities
+The daily operations of the Noora system involve several key activities to ensure network reliability and performance:
+
+- **Availability Monitoring**: Ensures the availability of Noora to devices and end users.
+- **User Provisioning**: Manages the provisioning of users, including adding and removing users using the User Management System and Noora user manager.
+- **System Login**: Logs into Noora using the Authentication System account to perform administrative tasks.
+- **Device Monitoring**: Checks the amount of devices and license status for the systems and per controller.
+- **New Device Detection**: Identifies and configures new devices created in Noora.
+- **Cluster Monitoring**: Monitors the status of clusters to ensure high availability and redundancy.
+- **Alert Management**: Checks the status of alerts coming to Noora as per the current timestamp.
+- **Report Rendering**: Verifies that the rendering graph from the report manager for the Noora system is functioning correctly.
+- **Resource Monitoring**: Monitors CPU, memory, disk storage capacity, and disk I/O from the cluster nodes.
+- **Dashboard Monitoring**: Ensures that dashboard rendering and alert processing are functioning correctly.
+- **Log Analysis**: Analyzes system logs for errors and warnings to identify potential issues.
+- **Troubleshooting**: Follows a structured troubleshooting methodology with Root Cause Analysis (RCA) to resolve issues.
+
+### Understanding Gained
+- **Daily Operational Checklist**: Understands the daily operational checklist and ensures that all tasks are completed efficiently.
+- **Common Operational Issues**: Identifies and resolves common operational issues to ensure network reliability and performance.
+
+## Slide 9: Noora Application Code Walkthrough
+
+### Observed Components
+The Noora application comprises several key modules and configurations that ensure its functionality and performance:
+
+- **Application Modules**: Understands the various modules of the Noora application, including device management, monitoring, and reporting.
+- **Configurations**: Learns the configuration settings for Noora, including thresholds, policies, and alerts.
+- **Key Support-Related Areas**: Identifies the key areas related to support, including troubleshooting, incident management, and problem resolution.
+
+### Learning Outcome
+- **Application Flow Understanding**: Gains a deep understanding of the application flow, including data collection, processing, storage, and visualization.
+- **Troubleshooting Touchpoints**: Identifies the key touchpoints for troubleshooting, including logs, alerts, and performance metrics.
+
+## Slide 10: Noora Data Management Shadowing
+
+### Observed Processes
+The data management processes in Noora ensure that network performance data is collected, processed, stored, and visualized efficiently:
+
+- **Data Flow Process**: Understands the data flow process, including data ingestion, processing, storage, and visualization.
+- **Database Interactions**: Learns the interactions with the database, including data insertion, retrieval, and management.
+
+### Key Learnings
+- **Data Collection**: Understands the processes for collecting performance data from network devices using SNMP polling.
+- **Data Processing**: Learns the processes for processing the collected data to extract relevant metrics and insights.
+- **Data Storage**: Understands the processes for storing processed data in Noora's database for historical analysis and reporting.
+- **Data Visualization**: Learns the processes for visualizing stored data through dashboards and reports, providing insights into network performance and health.
+
+## Slide 11: Noora Incident Management Shadowing
+
+### Observed Activities
+The incident management processes in Noora ensure that incidents are identified, prioritized, and resolved efficiently:
+
+- **Multi-Channel Communication**: Uses multiple communication channels, including tickets, Teams, and email, to manage incidents.
+- **Severity Assessment**: Assesses the severity of incidents to prioritize resolution efforts.
+- **Team Coordination**: Contacts relevant teams for addressing and analyzing the issues.
+- **Stakeholder Communication**: Ensures effective communication with stakeholders and documents requirements.
+- **Escalation**: Contacts the Resource Manager as the primary escalation point and creates tickets based on the severity of the issue.
+- **Ticket Management**: Uses the Organization's ticket-based incident and problem management workflow to track and resolve incidents.
+- **IT Operations**: Contacts IT Ops for server/database issues and creates tickets based on the severity.
+- **Investigation and Resolution**: Follows a step-by-step investigation and resolution process to identify and resolve incidents.
+
+### Key Learnings
+- **Incident Prioritization Criteria**: Understands the criteria for prioritizing incidents based on their severity and impact.
+- **Stakeholder Communication Process**: Learns the processes for communicating with stakeholders, including escalation and documentation.
+- **Resolution Workflow**: Understands the workflow for resolving incidents, including investigation, analysis, and resolution.
+
+## Slide 12: Noora Problem Management & RCA Shadowing
+
+### Observed Activities
+The problem management processes in Noora ensure that problems are identified, analyzed, and resolved efficiently:
+
+- **Problem Ticket**: Creates and manages problem tickets to track and resolve issues.
+- **Root Cause Analysis Preparation**: Prepares for root cause analysis to identify the underlying causes of problems.
+- **Known Issues Summary**: Reviews a summary of known issues over the past 12 months to identify recurring problems.
+- **Indicator Issues**: Identifies and resolves issues with required indicators missing for specific devices.
+- **DNS Issues**: Investigates and resolves DNS resolving issues for specific devices.
+- **Power Issues**: Addresses incidents caused by electrical power cuts.
+
+### Key Learnings
+- **Root Cause Identification Approach**: Understands the approach for identifying the root causes of problems.
+- **Prevention Action Planning**: Learns the processes for planning and implementing preventive actions to avoid recurring problems.
+- **Documentation Standards**: Understands the standards for documenting problems, including investigation, analysis, and resolution.
+
+## Slide 13: Noora SLA, KPI & Reporting
+
+### Observed Reports
+The reporting processes in Noora ensure that Service Level Agreements (SLAs) and Key Performance Indicators (KPIs) are monitored and reported efficiently:
+
+- **Availability Reports**: Generates reports on the availability of network devices and services.
+- **Operational KPIs**: Monitors and reports on operational KPIs, including performance metrics and service levels.
+
+### Key Learnings
+- **Reporting in Noora**: Understands the reporting processes in Noora, including data collection, processing, and visualization.
+- **Data Collection Methods**: Learns the methods for collecting data for reporting, including SNMP polling and database interactions.
+- **Stakeholder Expectations**: Understands the expectations of stakeholders for reporting, including accuracy, timeliness, and relevance.
+
+## Slide 14: Noora IT Operations Readiness
+
+### Observed Activities
+The IT operations processes in Noora ensure that the system is ready for production support, including incident management, problem resolution, and governance control:
+
+- **Production Support Activities**: Participates in production support activities, including incident management and problem resolution.
+- **Incident and Problem Management**: Manages incidents and problems, including identification, prioritization, and resolution.
+- **Governance Control**: Ensures compliance with governance controls, including security, access, and documentation.
+- **Escalation Process**: Follows the escalation process to ensure that incidents and problems are resolved efficiently.
+
+### Key Learnings
+- **Operational Governance**: Understands the governance processes for IT operations, including security, access, and documentation.
+- **Daily Health Check**: Learns the processes for performing daily health checks to ensure system operational status.
+- **Support Model**: Understands the support model for IT operations, including incident management, problem resolution, and governance control.
+- **Major Incident Procedures**: Learns the procedures for managing major incidents, including escalation, communication, and resolution.
+
+## Slide 15: Noora Daily Health Check Protocol at A Glance
+
+### Overview
+The Daily Health Check (DHC) protocol outlines the steps for performing a daily health check on the Noora system. The goal is to ensure that the system is operational, alerts are functioning, capacity is stable, and server resources are monitored.
+
+### Steps
+1. **Login**: Log in to Noora using the Authentication System (Organization Central Authentication Directory).
+2. **Cluster Manager**: Navigate to the Cluster Manager to verify the number of devices and check the overall capacity.
+3. **Alerts**: Verify that alerts are flowing in and check the timestamp of the topmost/latest alert to ensure it is recent.
+4. **Device Managers**: Open the Device Manager to check for any changes in devices or configurations.
+5. **Reports**: Navigate to the Report Manager to verify that favorite reports are accessible and their graphs are functioning correctly.
+6. **User Provisioning**: Check emails and the User Management System for any new user provisioning requests.
+7. **Check, Verify, and Investigate**: Search for specific devices by name, click on the device summary, and test device settings by performing an SNMP walk function.
+8. **Escalation Procedures**: Escalate issues to the Resource Manager (RM) if necessary, following the Organization's process for creating problem and incident tickets.
+9. **Documentation**: Document any anomalies or issues encountered during the health check and ensure all steps are logged for future reference.
+
+## Slide 16: Noora Daily Health Check Protocol (Continued)
+
+### Device Managers
+- **Device Monitoring**: Open the Device Manager to monitor the status of devices and identify any changes or configurations.
+- **Recent Additions**: Add a column for "Date Added" and sort it to identify recent additions. Notify the Resource Manager (RM) if there is a large influx of new devices.
+
+### Reports
+- **Report Accessibility**: Navigate to the Report Manager to verify that favorite reports are accessible.
+- **Graph Functionality**: Ensure that the graphs in the reports are functioning correctly and providing accurate data.
+
+### User Provisioning
+- **Email Checks**: Check emails for user provisioning requests and verify their legitimacy.
+- **User Management System**: Check the User Management System for any new user provisioning requests and verify the status of user accounts.
+
+## Slide 17: Noora Daily Health Check Protocol (Continued)
+
+### Check, Verify, and Investigate
+- **Device Search**: Search for specific devices by name and click on the device summary to view detailed information.
+- **SNMP Walk**: Test device settings by performing an SNMP walk function to verify device activity and SNMP polling.
+- **Error Messages**: Regularly check for admin error messages and investigate new alerts as needed.
+- **Server Access**: Use SSH to access the Noora servers with users created specifically for troubleshooting.
+- **Disk Space**: Check disk space for critical partitions to ensure sufficient storage capacity.
+- **Server OS**: Verify server OS details using commands like `cat /etc/os-release`.
+
+### Escalation Procedures
+- **Issue Identification**: Identify issues such as missing data, alert failures, and disk space issues.
+- **Escalation**: Escalate identified issues to the Resource Manager (RM) for resolution.
+- **Screenshot Capture**: For cluster issues, take screenshots (ensuring confidentiality) and inform the RM.
+- **Incident Ticket Creation**: Follow the Organization's process for creating problem and incident tickets.
+
+## Slide 18: Noora Daily Health Check Protocol (Continued)
+
+### Documentation
+- **Anomaly Documentation**: Document any anomalies or issues encountered during the health check.
+- **Step Logging**: Ensure all steps are logged for future reference and auditing purposes.
+- **Storage Security**: Check the security and access of the sharing storage location.
+- **Issue Research**: Document any issues and research potential resolutions.
+- **Documentation Updates**: Keep documentation up-to-date for troubleshooting and auditing purposes.
+
+## Slide 19: Noora Reverse Shadow Plan
+
+### Activities to be Performed
+The Reverse Shadow phase involves the following activities to ensure that the support team is ready for independent support:
+
+- **Application Operations**: Execute application operations, including daily health checks, monitoring, and reporting.
+- **Daily Health Checks**: Perform daily health checks to ensure system operational status.
+- **User Provisioning**: Manage user provisioning, including adding and removing users.
+- **Incident Handling**: Handle incidents, including identification, prioritization, and resolution.
+- **Problem Investigation**: Investigate problems, including root cause analysis and preventive measures.
+- **Stakeholder Communication**: Communicate with stakeholders, including escalation and documentation.
+
+### Support Model
+- **Team A (Infosys Team)**: Execute the tasks under the guidance of the incumbent team.
+- **Team B (Accenture Team)**: Observe and guide the execution of tasks to ensure readiness for independent support.
+
+## Slide 20: Noora Shadow KT Schedule Activities Summary
+
+### Schedule
+- **Shadow Sessions**: Shadow session-1 to 10 for Noora.
+- **Start Date**: 23 July, 2026.
+- **End Date**: 6 August, 2026.
+- **Status**: Completed.
+
+### Achievements
+- **Shadow KT Completion**: Successfully completed the Shadow KT sessions.
+- **Operational Understanding**: Acquired a deep understanding of Noora's operational workflows and business processes.
+- **Incident Resolution**: Successfully participated in incident identification, prioritization, and resolution.
+- **Problem Analysis**: Conducted root cause analysis and implemented preventive measures for recurring issues.
+- **Technical Proficiency**: Gained proficiency in Noora's technical aspects, including device provisioning and data management.
+
+### Next Steps
+- **Reverse Shadow Sessions**: Transition to the Reverse Shadow phase, where the support team will execute tasks under the guidance of the incumbent team.
+- **Knowledge Validation**: Validate the acquired knowledge through practical exercises and assessments.
+- **Production Support Handover**: Prepare for the handover of production support responsibilities.
+
+## Slide 21: Noora Conclusion
+
+### Achievements
+- **Shadow KT Completion**: Successfully completed the Shadow KT sessions, gaining a comprehensive understanding of Noora's operations and support activities.
+- **Operational Understanding**: Acquired a deep understanding of Noora's operational workflows, including daily health checks, incident management, and problem resolution.
+- **Incident Resolution**: Successfully participated in incident identification, prioritization, and resolution, ensuring network reliability and performance.
+- **Problem Analysis**: Conducted root cause analysis and implemented preventive measures for recurring issues, improving system stability.
+- **Technical Proficiency**: Gained proficiency in Noora's technical aspects, including device provisioning, data management, and system integration.
+
+### Risks and Gaps
+- **Admin User Provisioning**: Pending the provisioning of Admin user and User Management System user roles.
+- **Governance Control**: Pending the implementation of Governance control for the Reverse Shadow phase.
+
+### Next Steps
+- **Reverse Shadow Sessions**: Transition to the Reverse Shadow phase, where the support team will execute tasks under the guidance of the incumbent team.
+- **Readiness Validation**: Validate the readiness of the support team through practical exercises and assessments.
+- **Production Support Handover**: Prepare for the handover of production support responsibilities, ensuring a smooth transition.
+
+## Slide 22: Noora Thank You
+
+### Acknowledgements
+- **Telia Team**: Thank you to the Telia team for their support and guidance throughout the Shadow KT sessions.
+- **Incumbent Team**: Thank you to the incumbent team for their expertise and assistance in understanding Noora's operations and support activities.
+- **Support Team**: Thank you to the support team for their dedication and commitment to learning and mastering Noora's operations.
+
+### Contact Information
+- **Resource Manager**: Kevin Kivi
+- **Technical Support**: Kurt Gunnelius
+- **Network Specialist**: Rami Kivirinta
+- **Capacity Planner**: Juho Kontio
+
+### Additional Resources
+- **Documentation**: Refer to the Noora documentation for detailed information on system operations, troubleshooting, and support activities.
+- **Training Materials**: Utilize the training materials provided during the Shadow KT sessions for ongoing learning and development.
+- **Support Portal**: Access the Noora support portal for additional resources, tools, and community support.
+
+### Conclusion
+The Noora Shadow KT sessions have provided a comprehensive understanding of Noora's operations, support activities, and technical aspects. The support team is now well-prepared for the Reverse Shadow phase and the handover of production support responsibilities. Thank you for your participation and commitment to ensuring the reliability and performance of the Noora system.

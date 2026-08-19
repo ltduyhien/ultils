@@ -1,0 +1,90 @@
+Generic Topics and Content Layout
+==================================================
+
+Slide 1
+--------------------------------------------------
+Title: Application Shadow KT Playback
+
+Slide 2
+--------------------------------------------------
+Title: Application Shadow KT Progress Review
+
+Slide 3
+--------------------------------------------------
+Title: Application Summary
+
+Slide 4
+--------------------------------------------------
+Title: Application - High Level
+
+Slide 5
+--------------------------------------------------
+Title: Application Shadow KT Overview
+
+Slide 6
+--------------------------------------------------
+Title: Technical Environment Understanding
+
+Slide 7
+--------------------------------------------------
+Title: System Architecture & Design
+
+Slide 8
+--------------------------------------------------
+Title: Application Operations Shadowing
+
+Slide 9
+--------------------------------------------------
+Title: Application Code Walkthrough
+
+Slide 10
+--------------------------------------------------
+Title: Data Management Shadowing
+
+Slide 11
+--------------------------------------------------
+Title: Incident Management Shadowing
+
+Slide 12
+--------------------------------------------------
+Title: Problem Management & RCA Shadowing
+
+Slide 13
+--------------------------------------------------
+Title: SLA, KPI & Reporting
+
+Slide 14
+--------------------------------------------------
+Title: IT Operations Readiness
+
+Slide 15
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance
+
+Slide 16
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance (Continued)
+
+Slide 17
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance (Continued)
+
+Slide 18
+--------------------------------------------------
+Title: Daily Health Check Protocol at A Glance (Continued)
+
+Slide 19
+--------------------------------------------------
+Title: Reverse Shadow Plan
+
+Slide 20
+--------------------------------------------------
+Title: Shadow KT Schedule Activities Summary
+
+Slide 21
+--------------------------------------------------
+Title: Conclusion
+
+Slide 22
+--------------------------------------------------
+Title: Thank You

@@ -1,0 +1,159 @@
+1. Hot fixes for broken links, common cases.
+FIxes are almost the same very times.
+Tomatti errors, new line on CSV files
+No bathc or big data activities
+We do data duplication, mnually, SMO external system.
+COnfig changes, Noora config, it is automated, we do not do data management
+
+Run a clean up scrip ton the main server, we run that if the provisioning engine is not normal
+Device dashboard "Noora povisioning engine load: normal"
+We are allowed to run it without 2nd approval, it list the devices that have problem, then ask whether you want to clean it. The sceript has very good prompt, it will explain what it does, it has 3 phases
+/opt/common/php/scripts/php run_cleanProvisioningEngine.php
+
+
+2. Server has data manipulation and transfer lrelated scripts, but location (make a list of script location, we do not have it yet, Joonas will do it)
+
+3. Built by the guy who buidl the system, we got approval for using it, if it is needed to prepare and dev new script for data manipulation, we will loop them in Kurt and Kevin
+
+4. We do not have a list of them, but we have very few couple of tomatti parsing error in a few months, links being bad. nO docs of failing rates or handling issues
+
+CHecking Noora health portal for that, we have Provisioning COntrol that list failing provisioned devices
+
+CHecking system tools for dashboard as well
+
+5. We are not doing extracting or running reports. only DHC reports that we run adn going thorugh
+
+Change reports => Device => 7 days, check briefly for the cahnges
+
+Objects changes are much bigger list => Look for very large number of obecjts changes. Taking not of the empty group => report to Telia weekly.
+
+Example of the report:
+
+Change report this week
+ 
+Devices:
+ 
+...
+ 
+Objects: 
+ 
+New groups
+ 
+LHJ-SOLB RER
+WAN Statistics (Metsä Board Oyj)
+ 
+Deleted groups
+None
+ 
+Empty groups
+ 
+HVK-HVK-RMK-LPI-LLN-KYT-PARN
+....
+
+Especially the points that need escalation
+
+If there is service request, we get a list
+
+Veha data rule is being strict, if a resuest come from outside the group, we should loop in Kevin. We needto verify whether they have the right to request for that data
+
+WE had person who ask for group names, how grouping is done in Noora. Stuufs that shed lights on how Noora data archietcutre. We shoudl be cautious. Veify GDPR before
+
+6. Veha data mangemeent and guidelines on sharing and storing rules.
+
+7. Incidents: create problems
+Service requests: Changes in configuration
+
+We do fix quickly, it happens over and over again. 
+
+Sometimes ago,SMO had a bug that it set wrong device role generic, it affect data models. FOr edxample fi regional catageory, it put "metro" there. 
+They run a port cehck, they ran a patch of devices in port check. a lof of change reports, more than 1 hundred device get duplciated, we have to manually fix it because it is faster than writing script. After that we follow change report more.
+
+It took a while to notice what was athe issue, There was some indicator that has brokne, an email from Rami Kivirinta, jnet work specialist. he wrote us what is wreong in the network, the moniroing is borken in large number of devices. What is visible in SevONe and SMO is that ther eis  a lot of borken links, 40-100 borken links. Every ring.
+Solution: Manually fix every thing, we try to think it in a batch, but at that time we did not have enoughe xpericen.
+
+it took weeks
+
+training material from 2008, we found, at the duplicated incident time.
+
+Depends on the impact and how big the size of of work
+
+8. For exmaple, in device change report, 7 days
+Ther eis a group that has a lot of changes, we loop in RM.
+
+Rami start to ahv eblind spot, he start to have borken links but he saw 100 of them. Clearly more problem than Juho problem.
+
+Kurt facilitates the procedure
+
+anyway, SMO put wrong info in the like, the link is duplicated and flag error => delete
+
+Kurt said we accelerate the qucik way that we do not preserve the history => just delete it flagged
+
+Long way: Go to calculation editor, check for graph, a month of data. delted flag one has data. copy the name,  
+
+Hmmm, we found exactly the same device with differnt names, same names but one with tupo in the name.
+
+Open questiosn
+1. Object sumamry
+in kT there used to be a system called horizon, 
+Horison, LDAP is for capacity planner
+6 months
+Included in Noora Tiga
+
+Note: Sense is Qlik full name
+
+Main critcal data is traFFIC data, otjher data types are much longer
+
+2. Onbaorduing on SMO:
+Automated rule book what we shown before
+
+3. Data aggregation
+If the device is active, most cases, beside consulting Kurt who has SMO authentication.
+
+roolups, if data is 30 days old:
+SevOne, Object types, cehck for all heirachy of Object types => eedit => OID => Measure as
+
+Object Types => Inteface => Edit => Synthetic indicator 
+It calculate, aggregate the data, It shows the sources where it find to use in syntehtic. Syntehtic one are with the Synthetic indication icon.
+
+Click edit on Object type
+Cannot find retention value. 
+
+4. It has been built in a way that it scaled, with data growth we have faced. Capacity get high, Kurt touched the rule book, apply a few things and fix it. If data growth encounter an issue, loop in Telia guys inmmediately
+
+For ewxample, what is the staus of network changes when decomisioned devices, and new replacment devices.
+
+data mediation, we have had no pressure or request to optimize storage. No copmplaint that Noora is using too much storage.
+
+5. Check SevOne manual for databse, we hav enot received direct acess to database, no credential, there has been no reason to access it. No need to mention scalability the system has been well built.
+
+6. Through Tcad and Tiga roles, we manage those who can access the system.
+
+7. Recovery is in place for data, we did not investigate this. There is most likely no documented procedure for this.
+Not taken, will research about this
+
+8. DOcuemnt what we do, tloop in Telia, DHC, dont make mistake, when have integration or do thigns with data, careful with the data fixes. DOnt make mistake. 
+
+Have shown best practices approaches. Docuemntaiton good because if make mistake we can check docuemtantion again.
+
+Telia has been nice place to work. profesisonal people.
+
+====================================
+
+Check from Juho issue, if the link has been providing data
+CLick on Object sumamry, see if data is flown in or not.
+
+Cleaning scripts
+sudo -iu provisor
+run the php script
+
+Cleaning has 3 pahses,
+Notify Kurtask him whether he can find the info of the not fgound devices from SMO
+Then we can run the clean up
+
+run_checkSoapFUnction
+RUn this si cehck SOAP API functions for tesitn purpoises
+run after udpate or check
+
+Next: poke aroudn the server more, automated task, sxcript that provision engine uses, mention if want to see something else.
+
+Noora before 2.

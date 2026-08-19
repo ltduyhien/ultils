@@ -1,0 +1,72 @@
+1. Explain most important alert and its business impacts
+Monitoring emails, Ferguson server, Nelli Pulse, email notification from the script. Always check fatal errors from the 1 liner during DHC. Bigger problems in provisioning should show up there, better check everyday.
+2. how do you determine whether an alert is actionable or informational
+RCA, basic evaluation of the incident/situation
+3. What are the common issue encountered
+look up to previous answer, integration stuffs ...etc
+4. Which dashboard reviewed 1st during daily health check
+I know already, DHC order could be adjusted
+5. What troubleshooting steps are typically performed for data colelction issue
+for external data: covered. SMO data missing but working. SevOne polling also covered, no XML, object enable, loop in Kurt
+6. What KPI's are considered most critical for platform health
+Licenses number, capacity, refer to other answer and Infosys contract with Telia 
+
+Platform health:
+1. Platform health. eg: all NMS and data insight components up and healthy?
+covered in DHC protocols
+2. Any active or critical alerts
+devices alerts sent to Nelli
+3. is polling functioning across all monitored devices
+we need to check, this is device configuration. unsupported device cannot get polled, no XML document. System Tools => Device Deviation
+Pooling could be disabled manually. Device with 8000 objects, disable mostly when polling.
+4. any packet loss or collection delay?
+Package lost if simple to check on SevOne. Rasmus and Horizon is good for that, also Noora Health => Device Dashboard => Package loss
+5. are all cluster instance synchronize and communicating properly
+No we dont check, no symptom, only ferguson running provisioning. Check cluster manager (we don not check it in DHC) only check poller server is green or ferguson ok or not.
+
+Monitoring Coverage:
+1. Any device unmanaged or unreachable
+Noora Health manage unreachable, if it is unmanaged it is no provisioned in SMO. only case need to be respibnsible.
+2. Any device added or removed last 24 months
+There are, DHC see those
+3. Any monitoring gaps or missing metrics
+Yes, investigate and check
+4. Is device discovery working as expected
+We will hear if it does not work. Noora Health Portal will show it
+
+===== left over questions
+
+Performance and capacity:
+1. How database / storage utilization trending
+There is limits on Storage capacity, consult the manuals and configs
+2. Any capacity concern
+Discussed capacity issues with Noora when it is closed to 100%, Kurt made config changes, that improve in term of weeks, now it is under 80%. DHC has the capacity check. It is instructed to follow the trend, report to the weekly meeting. SevOne manual: info how to react when capacity reach 100%, it stop polling. device still get provisioned but there will be no polling in that case. Planned Solution: add another poller server, complicated operation. So far it has been solved by disabling objects (done consulting with Kurt and Telia side, based on the rulebook)
+3. Noticed any  CPU , memory , disk utilization
+No in the past 12 months, usually we check graphs on ferguson server, the spikes on the automatic check run.
+4. Are retention policies functioning correctly
+We checked transport data retention on Horizon, 240 days, so far maybe Horizon has been polling for 6 months only not reaching 240 days yet. We did not face any issue with retention policy yet. Cpacity planner will reach out if they dont have data they need. insights will suffer if retention is not enough, but we dont have that problem so far.
+
+Alerts and Incidents:
+1. What critical incidents occured since previous health check?
+No incidents in the past.
+2. Were any generated alerts escalated and what kind of ?
+Admin messages on SevOne about alerts not working, that has been escalated, now we are pending on the resolving.
+3. Any recurring alerts that require permanent remediation.
+RCA of admin messages, Nelli heartbeat and application has their won scripts that will send alerts to shared mailbox.
+4. Any unresolved ticket?
+no open tickets but there are cases that is open:
+- Admin alert mailer need investigation
+- SMO update next day evening, usually it is conducted fine
+- continue, list of open tickets will be handled
+
+Data collection and reporting:
+1. Is data ingestion running without delays
+- no reported issues with this, DHC check external data flow integration, there are some common occur issues, we have discuss how to fix them. On Monday we have case where SMO info does not arrive on Noora, pending on that. Noora has logs on device provisioning, if there is problem, logs will show., Export to Qlik has also logs, we check for fatals that log many bad issues. Refer to the script to knows what is run.
+2. Are reports and dashboard generated successfully.
+Given in the DHC protocols
+3. Have users reported missing data
+When it is related to exporter, in Qlik, (2 yeras ago). beside Qlik, in SevOn,missing in polling data, missing link. the cases in shadow sessions mentioned these issues.
+4. Are scheduled reports being delivered successfully.
+DHC check PHP reports and many other places, check previous KT and shadow sessions
+========
+VeHa IT people are responsible for hardware, database related

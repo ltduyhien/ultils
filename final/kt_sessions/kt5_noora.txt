@@ -1,0 +1,177 @@
+Communication is a part of the DHC, we need to check the shared mailbox.
+
+1. Explain the complete modules in the applications
+
+2. What business process it supports or what part of business process ?
+
+3. How are the modules interacting with each other ?
+
+4. What are the modules directly talking to the integration systems and how do they communicate ?
+
+5. How is the data models or architecture of the application.
+
+6. What kind of changes we do to the database and how ?
+
+7. How dos the data flow through the modules and ultimately to the integration systems or from integration systems.
+No doc, CSVScript based integration. Basic PHP scripting and hjardcoded config very robusrt reliable has been working well
+
+8. What data comes from each system ?
+We can ask Kurt when he returns ex he can aswer where data coming in. we can figure out eventually
+Ext4rnal data tab
+see diferent sources system that we aare getting, we have SAP, SMO, Tomatti MIT we ignore. 
+Noora import is export to Qlik, Kurt can explain more about this. we can explain thoruhg the name but Kurt knows better.
+We di dnot have the ned to understand what the datar is because parsing checking that is correct, and the file keep coming everyday, rthat is our main focus
+
+9. what are the main database entities and their relationships ?
+
+10. Authentication and Authorization flow.
+Veha LDAP
+
+11. How are users added to the system and are they synced form other systems or in house ?
+Resposible for VeHa People, they do provisioning, set up the role and maintanance of the users. Veha users can update password when being prompted, 90 days cycle.
+
+12. What are the components which need license or certificates and what is their expiry or when to renew them ?
+IBM Sevone need license, Telia has been handleing the license since. Accenture has had IBM suppoirt crecentialm aleksi contacted but it was given that ther eis no suppoort package. 
+
+13. How is error logging and exception handling setup in the code base
+SecOne itself has login capability
+
+14. Do we use any logging framework ?
+
+15. What is the test coverage or even unit test cases in place ?
+
+16. What are the tech details related to the integrations ? like API, or message from queues or any other SQL job sharing data to the system
+
+=========
+Noora architecture follows business logics
+Provisioning has 4 phases
+Integration has its own script
+==========
+Daily health check
+
+SSH to server ferguson application server.
+TCAD username
+Noora Admin Veha, no server specific Tiga role
+Run 1 liner check:
+
+"find /var/log/provisor/ -name "*.log" -exec echo {} \; -exec bash -c "grep -B 8 -A 5 Fatal {} | tail -13 | sed -e 's/^/\tFATAL ERROR FOUND! : /'" \;"
+
+1 fatal appled to appltAllOjhectigroupRules.log
+If there is other fatals we will research adn investigate further
+
+sudo cahnge to provider user
+run another 1 liner that list the exxecution time
+
+"sudo -iu provisor
+ 
+grep -i "script finished" /var/log/provisor/exporter.log | tail -n 14"
+
+and we hope they will stay under 5000
+
+SevONe: 
+Login with TCAD Veha
+
+GO to Cluster Manager
+Check License consumption
+Go to Alerts check
+Go to Device Manager, there are some deleted links, and added network devices
+We can test device saved setting
+
+GO to Obejct Manager to cehck which objects are in this device
+
+In Device Gorups, we can cehck which group this device belongs to
+
+We can ask Kurt how the server name is defined, is it automated from the device groups
+
+Go to Devices => Goruping => Grouping devices
+
+Rasmus:
+Run Alert report
+Choose view by severity
+Choose Critical
+Choose select
+Choose Past 24 hours
+Alert Start date and Latest date
+
+Ruin Groupå Report
+Choose Sandbox
+Chooser 3rd sandbox, to Noora system statistic and choose Noora CPU ultilizarion
+Just check if the Ui is working
+
+From front page, choose the top most items to test if everything is working
+On the graphs check some buttons
+
+Noora Health Piortal,
+Check every tabs,
+Action requries, user suspect 
+
+change report
+cxhoose date, 1 week
+and cehck the list
+
+Go to System report, make sure "expoerter group report" run
+
+external data tab
+Follow the amount fo rows and Cols
+We care about the: Trend of the changes
+Also File size is reliable
+Monday: 2-3 more rows,
+Tuesday, less rows
+=> this is normal
+We report weekly to Telia about things that change
+
+Tomatti a yeaer ago, there is a drop in the data, but no problem came from it.
+
+We monitor the changes from the previous day
+
+=============
+Issue today
+Email gorup: noora-support@teliacompany.com
+Issue with missing link
+"Cna you fix this link error"
+
+Starting with SevOne UI
+Object manager => Search for the device name
+Object manager: Set filter, uncheck all, check calculation poller, Link
+red text jhas the link name/device name
+=> list of link devices: we ahve duplicated deleted links link and deleted_link
+The problem is the virtual device of the Link is flagged as deleted
+And it is the thing to fixed.
+(Last year, ther eis about a hundered of the same problem). When we fixed it, Telia want to preserve the history of the links/devices. They dont want to lose it.
+Resolve: delete one of them
+Preseve history: THe one that does not have delted_flag object is the newer one. 
+Then check the one with delted_object falg, no history. 
+
+Go to <adminitration => Monitoring ACOnfiguration => Calcualtion Editor
+Copy the link name, go to caöculatpm, use srearch function.
+
+Expression is used to calcualte and write for data
+In the deleted object, there is no expresison
+
+The deleted has the history, the non delted has the expression
+
+We want to save the delted one history, but the email says that there is no need to save because it is nea device nad no history to save
+
+If Telia want to save history, we delete the non flagged one.
+Click gear button, then remove the "deleted_" and save. Then we go to Noora Health, do the privisioning again, we will get the expresison again
+
+Click delete button to delete the device.
+
+Go to device maanger, search for the device, rename the device, remove the "deleted_" flag and the "_date"
+
+Press High Frequency Pooler
+If we wait 30 days, the 0bject will be remove, and also the device
+
+GO to Noora Health, go to Provisioning COntrol
+Type device, Get device, Start provisioning
+
+Now it involves 3 devices
+
+Others: the devices name is corect, we do not do anything
+Description is not matvched
+
+Take objectiname, 
+
+Verifuication: check if the graph is still drawing for the obejkct
+then notify Juho.
+Mention that service request in the weekly

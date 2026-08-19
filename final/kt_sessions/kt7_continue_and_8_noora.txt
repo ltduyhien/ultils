@@ -1,0 +1,71 @@
+Session 7
+7. we hav eweekly meeting fo rNoora and Telia, we can determine hwo to continue, with Kevin and Kurt. Additional can be scheduled but we maanged with weekly meeting,for status update, qwuesitons which are not urgent. Somtiems we do service requrest or incident in weekly meeting as well. Status reprot is based on DHC, we wucikly go through parts of Noora. Most of the time it is fine, there have been abnomaly in change report we want to point out.
+
+8. Not in active development, npo need to measure those. No knowledge whether we have such measurements outside of Joonas work.
+
+9. This is based on contract of Infosys of Telia
+
+10. We have clean up scripts, it is more reaction of provisioning having higher load than normal. In the past the system ahs been rebooted by Telia person, it was incident and the boot was done to fixed the issue.
+
+Looping Telia on capacity go over, incident based reaction, frequent preventive maintenance.
+
+11. Title: IT Operation take snapshot of Noora in Veha env, there is no more info aviaalable so far. The doc is in Joonas local machine. Noora found Noora runbook.
+
+12. 47 pages of Noora runbook, there is section for admin, Nora Health Portal and Rasmus has no trianing material for end user. End user is the network engineer.
+
+Session 8
+
+- Rescehduled
+
+Shadow Session 8
+
+Open case: Integration of Helix to Noora
+FIrewall
+endpoint
+farmiliar with Nelli
+Discussion in Teams
+
+Kevin has access to Fireproof secure app
+Form we used for a request
+Kevin will evaluate the opening, then disucss who will develop
+Kurt point out conencting to Kimmo Rouhiainen, Mark Ollikainen (handle firewall)
+Fireproff is used to request for firewall opening
+
+Open Ticket:
+Recap: take device name out
+
+Go to Noora SevOne, login
+
+"AlertMailer failed to send 5 alerts"
+Waiting for the person to comeback on Monday
+
+Link is missing, we will run port check, and do re provisioning, then we if it works again.
+
+Go to Noora Health
+Case: SMO screenshot in different state than Noora
+Safely try to re provision
+For a few devices it is ok, not be caution if do with a bunch
+
+Back to SevOne
+Back to CLuster manager to alert, we look for the logs
+Open main applciation server IP => SYstme Logs tab => last 1000 lines
+alertmailer.log  => see the time, most recent check for alert.
+
+Clear cache
+Object manager, link Bundle 3 is still missing
+
+Check Calculation Ediotr, check for the Calculation (need at least 15mn to pool new data) verify the data in the graph
+
+Bundle 4 and 6 is fixed, for bundle 3 we loop in Kurt, we chat with Kurt. Asking him whether we need a port check => Build new CSV config of the device, did not run port check (provisioning), sent to Noora.
+
+Check the provisioning log
+Run as provisor, tail deviceRinner
+Noora
+
+Suggested logs: devicePinner, 
+
+reprovision and check the 2st one, 
+
+/var/log/provisor
+
+cehck the folder of the CSV file, try

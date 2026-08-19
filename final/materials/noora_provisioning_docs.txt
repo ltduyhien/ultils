@@ -1,0 +1,54 @@
+# Noora Device Provisioning Process
+
+## Overview
+Noora's device provisioning automation is based on the Generic Device Role classification. The classification is set in the SurfManager&Operator (SM/O) system, and its management is handled using a rulebook controlled by Tela. The automation process always starts with the SM/O Port Check function. This function assigns the device to the Generic Device Role and then checks whether the device should be enabled for Noora monitoring and which ports should be enabled. After this, SM/O generates two CSV files (a data file and an instruction file) and sends them to Noora's provisioning machine. Noora has its own provisioning machine that controls the underlying SevOne machine via an API. The provisioning machine has four distinct phases, after which the entire provisioning process is complete. The entire provisioning process is fully automated, and there is no need to manually intervene in the device provisioning steps except in exceptional situations. The duration of the provisioning process depends on the device's configuration and type. Typically, general devices complete provisioning in 5-15 minutes.
+
+---
+
+## SurfManager&Operator (SM/O) Provisioning
+
+### SM/O - Phase 1: Port Check
+The Port Check function in SM/O is always used for monitoring automation. During the Port Check, the device is always assigned a Generic Device Role. This role assignment is managed by a rulebook under Tela's control. The role is assigned regardless of whether the device is "Managed" (SNMP-pollable by SM/O) or "UnManaged" (a dummy device with no remote connectivity). If no match is found in the rulebook, the device's role is set to "Unrecognized." This role should not be used in production. Once the Port Check is complete, a specific Noora job is triggered to check whether Noora monitoring should be enabled for the device.
+
+---
+
+### SM/O - Phase 2: Device Provisioning
+After the Port Check, it is verified whether the device should be provisioned in Noora (SevOne). In the first phase, it is checked whether SevOne monitoring should be enabled for the device. This decision is based on the Generic Device Role and uses Noora's provisioning rulebook, which is under Tela's control. If a match is found in the rulebook, monitoring is enabled, and the device provisioning process continues. If no match is found, no further action is taken, and the process ends.
+
+---
+
+### SM/O - Phase 3: Port Provisioning
+After device provisioning, the need for port monitoring is checked. The selection of ports for Noora (SevOne) monitoring is based on the Generic Device Role classification and other device monitoring requirements. This ensures that only ports marked as "SM/O Link" can be enabled for monitoring through this phase (though they can also be enabled on the Noora side). If the link is set, the opposite end port is checked. If this port is found in Noora's provisioning rulebook, SevOne monitoring is enabled for the port.
+
+---
+
+## Noora Provisioning Phases
+
+### Noora - Phase 1: Loader
+SM/O sends two files to Noora for each device: a CSV data file and an instruction file. The data file contains device-specific metadata, while the instruction file contains details about the ports selected during the SM/O port provisioning phase. The instruction file also includes SM/O links and information about aggregated ports.
+
+In the first phase, it is checked whether the device is allowed in the Noora system. This means that even if SM/O device provisioning enables the device for Noora monitoring, Noora automatically accepts the device's provisioning. If the device is accepted, its reachability is checked. If the device is unreachable, the provisioning process is interrupted, and an error is reported to Noora's management. If the device is reachable, a SevOne discovery is triggered for the device, which starts the device's provisioning process.
+
+---
+
+### Noora - Phase 2: Pinning
+During the Pinning phase, the type of device is determined. After this, it is checked whether the device is already registered in SevOne. If it is not, the process is interrupted, and an error is reported to Noora's management. If the device is registered, it is determined which SNMP object types the device supports, and these are set in the device. After this, SevOne is updated to enable all SNMP objects that the device supports.
+
+---
+
+### Noora - Phase 3: Discovery
+In the Discovery phase, all objects found during the SevOne discovery are registered. The first task is to enable the discovered objects. This is a critical part of Noora's architecture, where it is carefully controlled which objects are enabled, meaning which objects start collecting SNMP statistics. Objects can include individual CPU cores, individual interfaces, data, ports, logical interfaces, or even individual COS queues.
+
+First, hardware objects are enabled. These include, for example, CPU, memory, fans, and power supplies. What is enabled for each device is determined by Noora's discovery rulebook, taking into account the device's role. For example, access or CPE devices are enabled less than core network devices. After this, the device's SM/O instruction file is processed, meaning the ports selected by the SM/O port provisioning are enabled. In this context, additional settings are also made, such as filling in the port description fields according to the data coming from the SM/O database in the format `<deviceB> <portId> <speed>`. In SM/O, it is also possible to manually set a custom speed for a port, and this speed is also set at this point. Finally, other objects such as COS queues and service monitoring interfaces are enabled.
+
+---
+
+### Noora - Phase 4: Link
+In the final phase, link objects are built in the SevOne system. Link objects are used in reporting to prevent the interruption of historical data during port migrations. The SM/O link between two devices is entered into the SevOne database as a calculated object (COC), and the statistics for this object are copied from the SM/O link's end ports. If the end port of this link changes at time X to another port, the copied statistics are changed to point to the new port. Thus, by using link objects in reporting, the old port's statistics are retained even if the port was later allocated for another purpose. Link objects are not built by default for ports that have monitoring enabled. Noora has its own rulebook based on which link objects are only built for specific backbone network ports. After the link phase, the entire device provisioning process is complete.
+
+---
+
+## SevOne - Alarms
+After Noora Phase 3 (Discovery), the enabled objects are scanned against the alarm policy configuration. This is a SevOne functionality that is automatically activated during each device discovery. For threshold monitoring to be set for an object, the object must be of the correct type and belong to the correct object group. For example, if a new object type is introduced, a new alarm policy must also be created for that object type. The object group, in turn, controls which usage formulas are set for the object and which are left unset. This way, more critical devices can be monitored more closely than less critical ones.
+
+If SNMPTRAP forwarding to Neli is enabled in the alarm policy for this alarm type, the alert is automatically sent to Neli's trap receiver.
