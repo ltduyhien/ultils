@@ -1,0 +1,236 @@
+SEVONE NMS VERSION COMPARISON — 6.x / 7.x / 8.x
+=====================================================
+Purpose: reference material for planning the upgrade of Noora's SevOne NMS instance
+off its current version, 6.8.5.
+
+Sourcing note: this is compiled from IBM's own SevOne NMS/NPM documentation and
+release-note pages (ibm.com/docs/en/sevone-npm, IBM Community blog posts by the
+SevOne/IBM product team) as of this writing. IBM revises release notes, support-
+lifecycle dates, and even version-numbering/branding over time (the product line is
+now branded "IBM SevOne" rather than "SevOne NPM" as of the 8.x era) — treat the
+FEATURE information below as a reliable snapshot of what each release introduced, but
+verify exact SUPPORT/EOL DATES and current latest patch levels directly against IBM's
+Software Support Lifecycle page and your Passport Advantage / support portal before
+finalizing any plan, since those change independent of this document.
+=====================================================
+
+THE VERSION LINE (as currently documented by IBM)
+6.1 → 6.3 → 6.4 → 6.5 → 6.6 → 6.7 → 6.8 (← Noora is on 6.8.5) → 7.0 → 7.1 → 7.2 → 8.0 → 8.1 → 8.2 (latest documented at time of writing)
+
+Note: pre-6.5, SevOne's NMS, Data Insight, and Solutions components were versioned
+independently of each other. From roughly 6.5 onward, plan your upgrade path around
+the NMS release version specifically (Noora's relevant number).
+
+---
+
+SECTION 1 — THE THREE ERAS, IN PLAIN TERMS
+
+ERA 1: SevOne NMS 6.x — "the CentOS/MySQL era, application-aware monitoring"
+Where Noora is today (6.8.5). Traditional RPM-based install on CentOS, MySQL-family
+database, mature and stable, heavy investment in application-awareness and flow
+analytics during this era.
+
+ERA 2: SevOne NMS 7.x — "the containerization / RHEL era"
+The single biggest architectural shift in the product's recent history: SevOne moved
+to container-based deployment, moved its OS base to Red Hat Enterprise Linux, and
+began the pivot toward "network observability" branding. This is also where the
+product's own documentation explicitly warns that homegrown customizations and
+scripts are at risk (more on this in Section 3 — this is the era most relevant to
+Noora's own risk profile).
+
+ERA 3: SevOne NMS 8.x — "IBM SevOne / observability + AI era"
+Rebranded simply "IBM SevOne." Emphasis shifts to cloud-native telemetry (AWS flow
+logs, Kubernetes/cloud workloads), machine-learning-driven anomaly detection, and
+deeper correlation between network and application behavior ("app-aware, automated
+network operations").
+
+---
+
+SECTION 2 — VERSION-BY-VERSION FEATURE NOTES
+
+6.4 (GA November 2022)
+- "Application-aware NPM" push begins: expanded flow policy rules selectable at the
+  interface/object-group level
+- Multi-vendor SD-WAN/Wi-Fi expansion: Fortinet SD-WAN support added; curated SD-WAN
+  reports for Cisco Viptela, Fortinet, Versa
+- Early AIOps ecosystem integration: SevOne physical/virtual device-relationship data
+  feeding into Watson AIOps topology correlation
+
+6.5 (2023)
+- Continued application-awareness and cloud-monitoring improvements (webinar-level
+  detail only found; full release notes not reviewed in depth for this document)
+
+6.6 (2023)
+- Expanded AWS cloud-service support
+- Automatic application recognition/classification directly from flow data (no manual
+  tagging) — described internally as a headline feature of this release
+- "Flow to Metric" workflows added
+- General device/reporting management flexibility improvements
+
+6.7 (GA November 2023)
+- Database migration: MySQL replaced by MariaDB 10.6.12 — this resolved MySQL's own
+  end-of-support situation
+- This is also the FIRST version from which a direct upgrade to 7.0.1 is possible
+  (see Section 3 — upgrade path constraints)
+
+6.8 (GA February 2024) — Noora's current major version (running patch level 6.8.5)
+- Operating system migration begins: CentOS replaced by Red Hat Enterprise Linux
+  (RHEL) 8 — CentOS had an announced EOL of 31 May 2024, forcing this move
+- Expanded physical deployment flexibility: customers can now bring their own
+  hardware for physical appliances (must meet minimum resource requirements and be
+  RHEL 8-compatible) — enables refresh/migration scenarios (physical→virtual, Dell/
+  non-Dell hardware)
+- Device Mover performance improved — faster physical-to-virtual moves, peer load
+  balancing, filesystem migrations
+- Some older SD-WAN solution widgets and the Wi-Fi heatmap widget deprecated in favor
+  of standard SevOne Data Insight widgets
+- This is also the SECOND (alongside 6.7) version from which a direct upgrade to
+  7.0.1 is possible — 6.8.x is effectively the "last stop" on the 6.x line before the
+  architectural jump
+
+7.0 (GA mid-2024) — THE BIG ARCHITECTURAL BREAK
+- Containerization: SevOne is now distributed as containers rather than RPM packages
+  - Faster, more reliable upgrades going forward; less dependence on host state
+  - Containers are READ-ONLY BY DEFAULT (improves security-scan pass rates) — this is
+    the change most likely to affect Noora directly (see Section 3)
+- Clustering redesigned to be more intuitive and faster to initially build
+- OS baseline confirmed as RHEL 8.10 ("Ootpa")
+- Documentation platform migrated from offline PDFs to IBM's online documentation
+  site; NMS REST API v3 documentation moved to IBM's API Hub as part of the same shift
+- Upgrade path constraint: 7.0.1 (the first "real" 7.0.x release reachable from prior
+  versions) can ONLY be reached from 6.7.x or 6.8.x — you cannot jump from, say, 6.4
+  straight to 7.0
+- SevOne Data Insight 7.x is only guaranteed compatible with SevOne NMS 6.8.x and
+  7.x — anything outside that band is explicitly "not guaranteed" for full feature
+  compatibility/performance by IBM
+
+7.1
+- Minimum mandatory version to upgrade INTO 7.1.0 is 7.0.1 — you cannot skip straight
+  from an earlier 7.0.x or from 6.x
+- Downgrade from 7.1.0 lands you back at 7.0.1 specifically (not wherever you came
+  from) — e.g. if you went 7.0.2 → 7.1.0, downgrading takes you to 7.0.1, not 7.0.2
+- AWS instance-type changes relevant here too: older r4.<x> instance types need
+  migration to r6i.<x> before this upgrade if running in AWS
+
+7.2 (GA February 2025) — "Enhancing Public Cloud Monitoring and SD-WAN Support"
+- Enhanced public cloud monitoring: faster correlation of metadata with performance
+  metrics, smoother integration into existing monitoring workflows
+- New SD-WAN vendor support added
+- Improved metadata management and device fingerprinting
+- Flow widget enhancements, including new Capacity Management metrics
+- Report scheduling can now be configured per-user
+- New alert-analysis side panel for faster troubleshooting
+- Refreshed Data Insight visual theme
+- Bulk editing capability added to Device Manager (streamlines large-scale device
+  management — directly relevant to Noora's ~4,000-device scale)
+- Expanded deployment-option flexibility
+
+8.0 (GA July 2025) — rebranded simply "IBM SevOne"
+- Explicit strategic pivot: "from reactive monitoring to intelligent, application-
+  aware, and automated network operations" — i.e. positioning as an observability
+  platform, not just an NMS
+- AWS VPC and Transit Gateway (TGW) flow log collection added (Private Preview at GA)
+- Enhanced SevOne Data Insight: "smart flow filtering" for drilling into application-
+  specific traffic patterns
+- Machine-learning-based anomaly surfacing (proactive detection before user impact)
+- Deeper network-to-application behavior correlation for faster root-cause resolution
+- Designed with hybrid/cloud-native environments in mind (multi-cloud, Kubernetes,
+  SD-WAN, edge)
+
+8.1 (targeted December 2025 per IBM product-team community posts)
+- Positioned around the tagline "CloudSmart visibility for modern networks" per the
+  announcement blog title
+- NOTE: at the time these community threads were captured, there was visible
+  customer confusion/pushback about whether 8.1 was actually generally available for
+  download yet (Passport Advantage was still showing 8.0.0 as latest when the
+  announcement blog went out) — treat 8.1's exact feature list and GA status as
+  something to CONFIRM directly with IBM support/your account team, not something to
+  take at face value from a blog post date
+- Full detailed feature breakdown not established with confidence in this document
+
+8.2 (latest version appearing in IBM's documentation site navigation at time of
+writing)
+- Exists and is documented on IBM's site; a specific "what's new" feature breakdown
+  was not surfaced during this research pass — before planning around 8.2
+  specifically, pull the official "NMS 8.2 Release Notes" and "What's new" pages
+  directly from IBM's documentation site
+
+---
+
+SECTION 3 — WHAT ACTUALLY MATTERS FOR NOORA (cross-cutting themes, not per-version)
+
+1. THE 7.0 CONTAINERIZATION WALL is the single most important fact in this whole
+   document for Noora's specific situation. IBM's own upgrade guide contains this
+   explicit warning (quoted near-verbatim from IBM's SevOne NMS Upgrade Process
+   Guide):
+     "DO NOT proceed to SevOne NMS 7.0.0 or above if you have Expert Labs
+     customizations. Please contact Expert Labs first. If you have deployed any of
+     your own custom scripting, you may also require amendment(s) to these custom
+     scripts if writing to directory structures that are now in the read-only pod."
+   Noora is, by its own architecture (see the companion Noora-System.md /
+   Noora-Health-Portal.md docs, and the KT transcripts), almost entirely custom
+   scripting layered on top of SevOne NMS: the Provisioning Engine, the rule files
+   under /opt/provisioning/cfg/, the crontab jobs on ferguson (device loader,
+   Calculation Poller, portlinkremover, Trigger, the Qlik exporter, the Nelli
+   heartbeatgenerator), and whatever writes/reads happen against SevOne's own
+   filesystem paths on the appliance itself. If ANY of that writes to a path that
+   becomes part of a read-only container filesystem post-7.0, it breaks on upgrade.
+   This is not a "maybe" — it is a named, explicit, documented risk category from
+   IBM for exactly this kind of deployment.
+
+2. MANDATORY STEPPING-STONE UPGRADE PATH. You cannot jump from 6.8.5 straight to the
+   latest version. The documented chain of gates is:
+     6.8.x → 7.0.1 (mandatory first stop; cannot skip)
+           → 7.1.0 (requires being on 7.0.1 minimum first)
+           → 7.2, 8.0, 8.1, 8.2 (each with their own prerequisite chains — confirm
+             current requirements per release notes at planning time, since IBM
+             adjusts these)
+   This means the realistic planning question is not "6.8.5 → latest" as one jump,
+   it's "6.8.5 → 7.0.1 → [validate] → 7.1 → [validate] → ... → target version," with
+   Noora's custom layer re-verified at every stop, not just the final one.
+
+3. DATABASE AND OS CHANGES ARE ALREADY BEHIND YOU. The MySQL→MariaDB migration (6.7)
+   and CentOS→RHEL migration (6.8) both already happened on the path Noora has
+   already traveled to reach 6.8.5. This is good news: it means the upgrade FROM
+   6.8.5 doesn't carry those two specific migration risks — they're historical, not
+   in front of you. The containerization change (item 1) is the next major
+   architectural cliff, and it's the one still ahead.
+
+4. API SURFACE CHANGE AT 7.0. Noora's provisioning engine and custom scripts talk to
+   SevOne via its SOAP/REST APIs. At 7.0, IBM moved NMS API v3 documentation onto
+   IBM's API Hub as part of the broader platform modernization. This is a strong
+   signal (though not independently confirmed against Noora's specific script code in
+   this document) that API behavior, versioning, or even the recommended
+   integration method may have shifted around this point. This needs direct,
+   hands-on verification against Noora's actual SOAP/REST call patterns — don't
+   assume backward compatibility.
+
+5. THINGS THAT GENUINELY IMPROVE FOR NOORA'S USE CASE, IF THE UPGRADE GOES CLEANLY:
+   - Bulk editing in Device Manager (7.2) — directly useful at Noora's ~4,000-device
+     scale for exactly the kind of manual link/device fixes covered in the DHC guide
+   - Faster, more reliable upgrades going forward once past 7.0's containerization,
+     since future upgrades become container swaps rather than RPM-based updates
+   - Improved Device Mover performance (6.8) — relevant if Noora's aura-pooler
+     capacity rebalancing (the "10th aura" idea mentioned in KT sessions) is ever
+     revisited
+   - Capacity Management metrics in flow widgets (7.2) — could plausibly reduce
+     reliance on the manual "watch the trend by eye" capacity-check habit documented
+     in Noora's current Daily Health Check
+   - Machine-learning anomaly detection (8.0+) — long-term potential to reduce
+     Noora's fully-manual DHC workload, though this would be a genuinely new
+     capability to evaluate, not a drop-in replacement for existing custom alerting
+
+6. THINGS THAT NEED EXPLICIT VERIFICATION BEFORE COMMITTING TO A TARGET VERSION:
+   - Exact current EOL/support date for 6.8.x (a modernization-planning table seen
+     during this research listed 6.8.x support ending around February 2026 and
+     7.0.x around June 2026, both marked "subject to change" — verify against IBM's
+     live Software Support Lifecycle page, since if those dates are accurate, 6.8.x
+     may already be at or past end of support as of today)
+   - Whether IBM Expert Labs (or equivalent paid engagement) needs to be involved
+     given Noora's level of customization — IBM's own guidance says to contact them
+     BEFORE attempting 7.0+ if you have this kind of custom deployment
+   - Current AWS instance-type requirements if any part of the Noora stack runs on
+     AWS (r4.<x> → r6i.<x> was a hard requirement noted at the 7.1 upgrade step)
+   - SevOne Data Insight compatibility if Noora uses it anywhere in its reporting
+     chain (7.x Data Insight only guarantees compatibility with NMS 6.8.x/7.x — a
+     jump to 8.x may require a matching Data Insight upgrade too)

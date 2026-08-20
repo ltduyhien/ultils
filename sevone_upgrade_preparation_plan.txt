@@ -1,0 +1,297 @@
+SEVONE NMS UPGRADE — ENGINEERING PREPARATION PLAN FOR NOORA
+=====================================================
+Perspective: this is written as a software/systems engineer would approach planning
+a major-version upgrade of a heavily-customized vendor platform that sits underneath
+a larger homegrown ecosystem. It combines (a) documented facts about SevOne NMS itself
+(see the companion file sevone_version_comparison.txt) with (b) what we know about
+Noora's specific architecture from the KT/shadow transcripts and direct system
+observation earlier in this engagement, and (c) standard engineering practice for this
+class of upgrade. Where a recommendation is my own judgment rather than a documented
+fact or a stated KT fact, it's written as a recommendation, not asserted as settled.
+=====================================================
+
+PART 1 — WHY THIS UPGRADE IS NOT A SIMPLE VERSION BUMP
+
+Noora is not "SevOne with some Telia branding." Based on everything documented so
+far, Noora is:
+- A SevOne NMS instance (6.8.5) used as a core polling/alerting/data-storage engine
+- Wrapped in a large layer of Telia-built custom software: a Provisioning Engine
+  (4 phases), rule files (_RULES_GENERIC.ini, _RULES_ADVANCED.ini,
+  _RULES_ENABLE_OBJECTS.ini) under /opt/provisioning/cfg/, custom scripts run via
+  crontab on ferguson (device loader, Calculation Poller, portlinkremover, Trigger,
+  the Nelli heartbeatgenerator, the Qlik exporter), and custom PHP-based reporting
+  UIs (Noora Health Portal, Rasmus, Rasmus Admin) that read/write against SevOne's
+  own data
+- Integrated with a chain of external systems on both sides: SM/O, Tomaatti, SAP ERP,
+  MIT, and Satellite Systems feeding IN; Rasmus/Rasmus Admin/Horizon/Qlik/Nelli
+  consuming OUT
+
+This means a SevOne version upgrade is really an upgrade of the FOUNDATION underneath
+an entire homegrown application stack that nobody currently at Telia/Infosys/Accenture
+fully documented when it was built (per the KT transcripts: "not documented, it was
+maintained by one guy who left, he took many processes with him"). That combination —
+undocumented custom integration + a vendor platform about to change its filesystem
+model out from under it — is exactly the scenario IBM's own upgrade guide warns about
+explicitly for the 7.0 jump (see Part 3).
+
+---
+
+PART 2 — HOW TO INVESTIGATE THE REQUIREMENTS (step by step)
+
+Step 2.1 — Establish the true current state (don't trust assumptions)
+- Confirm the exact running version/build: SevOne NMS → Administration → About page
+  gives the authoritative version string, not just what's been informally reported
+- Inventory every appliance in the cluster (ferguson + all aura0x pollers) and confirm
+  they're all actually on the same version/patch level — mixed-version clusters are a
+  common source of silent problems
+- Pull the current OS level on each appliance (already RHEL per 6.8, but confirm the
+  minor RHEL version) and current MariaDB version
+
+Step 2.2 — Inventory every point of custom integration
+This is the single highest-value piece of work before any upgrade discussion goes
+further, because it's exactly what the containerization change in 7.0 threatens.
+Build a literal inventory, ideally as a spreadsheet or checklist, covering:
+- Every cron job on ferguson and every poller (not just the ones already known from
+  KT — do a full `crontab -l` sweep as each relevant user, and check /etc/cron.d/ and
+  systemd timers too, in case something isn't in a user crontab at all)
+- Every file path any custom script reads from or writes to ON THE SEVONE APPLIANCE
+  ITSELF (as opposed to ferguson's own separate filesystem, which likely isn't
+  affected by SevOne's container change) — this is the specific thing IBM's warning
+  is about
+- Every place custom code calls SevOne's SOAP or REST API — endpoint, HTTP method,
+  auth mechanism, and what data it sends/expects back
+- Every place custom code queries SevOne's database directly (bypassing the API) —
+  if this exists anywhere, it is the highest-risk category of all, since internal
+  schema/table structure is far more likely to change across major versions than a
+  documented public API is
+- Every custom UI (Noora Health Portal, Rasmus, Rasmus Admin) and exactly what data
+  source each of their pages/tabs reads from — is it always via SevOne's API, or does
+  any of it touch SevOne's filesystem or database directly?
+
+Step 2.3 — Map the downstream blast radius
+For each of Rasmus, Rasmus Admin, Horizon, Qlik, and Nelli: confirm precisely how
+each one gets its data from SevOne. If it's "SevOne writes a CSV/export file to a
+known path, and the downstream tool picks it up from there," that export mechanism
+is squarely in the same risk category as Step 2.2's filesystem-write concern.
+
+Step 2.4 — Talk to the people who actually know things not in any document
+- Kurt Gunnelius: closest to the hardware/SM-O side, longest tenure — ask him
+  specifically what he knows about how the custom scripts interact with SevOne at
+  the filesystem/API level, even informally
+- IBM SevOne support / Expert Labs: per IBM's own guidance, this conversation should
+  happen BEFORE attempting a 7.0+ upgrade if there are Expert-Labs-originated or
+  homegrown customizations — confirm whether Telia has an active support contract
+  that includes this, and whether the original SevOne deployment for Noora had any
+  Expert Labs involvement historically (worth asking Kevin/Telia procurement)
+- Anyone at Telia who owns the CMDB/architecture documentation for Noora — the KT
+  notes mention CMDB access was requested but not granted; getting that access (or
+  getting someone who has it to pull the relevant records) belongs in this phase
+
+Step 2.5 — Get a real test environment that's actually representative
+A Noora test environment already exists (one test ferguson + one test poller, per the
+KT transcripts) — but the same transcripts note it does NOT have full integration,
+specifically calling out that Nelli isn't connected there. Before this upgrade project
+can validate anything meaningfully, that gap needs closing, or at minimum needs to be
+explicitly acknowledged as a testing blind spot in the plan (see Part 5).
+
+---
+
+PART 3 — WHAT WILL ACTUALLY CHANGE (technical risk areas, in priority order)
+
+RISK 1 (HIGHEST) — Filesystem write access changes at 7.0+
+SevOne containers are read-only by default from 7.0 onward. Any custom script that
+currently writes into a directory that lives inside the SevOne appliance's own
+filesystem (not ferguson's separate application-server filesystem) will fail post-
+upgrade unless it's redirected to a supported writable path, or unless IBM/Expert
+Labs confirms an alternative integration approach. This has to be resolved BEFORE
+attempting the 7.0 jump, not discovered after.
+
+RISK 2 — API surface / behavior changes
+SevOne's API documentation itself moved platforms at 7.0 (to IBM's API Hub, versioned
+as "v3"). This is a signal that the API surface Noora's provisioning engine and
+custom scripts depend on may have changed shape, even if the changes are additive
+rather than breaking. Every custom SOAP/REST call identified in Step 2.2 needs to be
+checked against the target version's current API documentation, field by field, not
+assumed to still work as-is.
+
+RISK 3 — Database schema access (if any exists)
+If Step 2.2 turns up any place where custom code queries SevOne's database directly
+(rather than through the API), this is a serious risk: internal schema is not a
+stable contract the way an API is, and it can change silently between major or even
+minor versions with zero notice in release notes aimed at API consumers.
+
+RISK 4 — Mandatory multi-hop upgrade path
+Because 6.8.5 cannot jump directly to a modern target version, the realistic plan
+involves multiple sequential upgrades (6.8.5 → 7.0.1 → 7.1 → ... ), each one a
+distinct change event with its own regression risk, and each one needing the custom
+layer re-verified — not just the final target version. This multiplies the total
+testing effort and elapsed time versus a naive "upgrade once" assumption.
+
+RISK 5 — Cluster-wide consistency during the upgrade
+Noora runs a Master (ferguson) + multiple Collector peers (the aura0x pollers).
+Confirm IBM's documented approach for upgrading a cluster of this shape (rolling vs.
+all-at-once, whether collectors and master can run different versions temporarily
+during a phased rollout) — this is standard IBM documentation to pull at plan time,
+not something to guess.
+
+RISK 6 — Licensing/capacity model changes
+Confirm the licensing model (currently per-active-object, ~1.2 EUR per license per
+the KT material) hasn't changed structurally in the target version, and confirm
+current license count/allocation carries over cleanly.
+
+RISK 7 (LOWER, BUT WORTH NAMING) — Deprecated features actually in use
+6.8 already deprecated some SD-WAN/WiFi widgets in favor of Data Insight equivalents.
+Confirm none of Noora's custom reporting depends on anything IBM has since removed —
+cross-check against each version's "Deprecated / Removed Features & Functions"
+section on the way up, not just the target version's.
+
+---
+
+PART 4 — HOW TO PREPARE (practical engineering steps)
+
+4.1 Build a dependency map, not just a checklist
+Turn the inventory from Part 2 into an actual dependency diagram: which Noora
+component depends on which specific SevOne capability, filesystem path, or API call.
+This becomes the test plan later — every line on that diagram is something that needs
+a pass/fail check after each upgrade hop.
+
+4.2 Establish a real staging environment before touching anything
+- Bring the existing test environment up to full integration parity, or explicitly
+  document what it can't test (Nelli integration being the known gap)
+- If full parity isn't achievable, define a manual/simulated verification step for
+  whatever the test environment can't cover for real (e.g., manually POSTing a test
+  alert payload to Nelli's endpoint in the shape SevOne would send it, to at least
+  verify the receiving side, even without a live SevOne-to-Nelli path in staging)
+
+4.3 Do a dry-run of the FIRST hop only, in isolation
+Given the mandatory 6.8.x → 7.0.1 stepping stone, treat that first hop as its own
+mini-project: get it done and fully verified in staging before even scheduling the
+subsequent hops. This is the highest-risk single step (containerization) — don't
+let it get bundled into a larger "upgrade to latest" timeline where schedule pressure
+tempts skipping verification.
+
+4.4 Write an explicit rollback plan per hop
+IBM documents specific downgrade constraints (e.g. 7.1.0 only downgrades to 7.0.1,
+not wherever you came from). Know, in writing, before each hop: what the supported
+downgrade target is, how long the appliance will be in a degraded/unavailable state
+during a rollback, and what happens to data collected during the failed forward
+attempt.
+
+4.5 Snapshot/backup everything that isn't the SevOne appliance itself
+The SevOne upgrade process handles its own appliance-level backups per IBM's process,
+but ferguson's own filesystem (custom scripts, cron definitions, PHP code for Noora
+Health Portal/Rasmus/Rasmus Admin, the rule .ini files) should be backed up and
+version-controlled independently before starting, since a SevOne-side rollback won't
+necessarily restore ferguson-side state.
+
+4.6 Sequence the downstream systems' own readiness
+For each of Rasmus, Rasmus Admin, Horizon, Qlik, Nelli: confirm whether THEY have any
+version dependency on SevOne's API version (per the version-comparison doc, SevOne
+Data Insight itself has an explicit compatibility matrix against NMS versions — the
+same kind of matrix may exist, formally or informally, for Noora's own downstream
+tools and needs to be discovered, not assumed away).
+
+4.7 Plan the outage/maintenance window realistically
+Multi-hop upgrades across a cluster with custom integration will take materially
+longer than a vendor's standard single-hop estimate. Build the schedule around the
+verified dependency map from 4.1, not around IBM's generic upgrade-time guidance
+alone.
+
+---
+
+PART 5 — HOW TO COMMUNICATE AND DISCUSS TRADE-OFFS
+
+5.1 Who needs to be in the room, and why
+- Kevin (Resource Manager): owns capacity/GRC sign-off, is the point of contact for
+  anything that needs Telia-side budget or governance approval, and per the KT
+  material already handles integration-proposal evaluation (the Helix case is a
+  precedent for how this kind of request gets routed)
+- Kurt: the only person with deep institutional knowledge of the hardware/SM-O side
+  and the closest thing to informal documentation of how the custom layer actually
+  behaves
+- IBM SevOne support/Expert Labs: needs to be engaged directly per IBM's own upgrade
+  guidance, given the level of customization involved
+- Telia's GRC/governance function (Biplob's track): a major platform upgrade is
+  exactly the kind of change that GRC review processes are meant to catch early,
+  not after the fact
+- Whoever owns Nelli on Telia's side: since Nelli integration is the known gap in the
+  test environment, they need to be part of validating the real production cutover,
+  possibly with a temporary heightened-monitoring arrangement during and just after
+  the upgrade
+
+5.2 Framing the trade-off conversation
+Present this as a genuine trade-off, not a foregone conclusion — because it is one:
+
+  PROS of upgrading:
+  - Gets off a version that may already be approaching or past its IBM support
+    window (needs confirming against current EOL dates, per the version-comparison
+    doc) — staying on an unsupported version means no security patches and no IBM
+    support escalation path if something breaks in production
+  - Unlocks real, usable features for Noora's actual scale and workflow: bulk device
+    editing (useful directly against the manual link-fixing workflow already
+    documented in the DHC), improved capacity-management metrics, faster/cleaner
+    upgrades going forward once past the 7.0 containerization change
+    (container-based updates are explicitly faster and less state-dependent than the
+    current RPM-based process)
+  - Reduces long-term technical debt — the longer Noora stays multiple major versions
+    behind, the bigger and riskier this same project becomes later, with a shrinking
+    pool of people (both IBM's and Telia's) who still remember the older architecture
+  - Potential to genuinely reduce manual DHC workload longer-term via 8.x's
+    machine-learning anomaly detection, if evaluated and adopted deliberately later
+
+  CONS / risks of upgrading:
+  - Real, documented risk of breaking Noora's custom provisioning/reporting layer at
+    the 7.0 containerization step specifically — this is not hypothetical, it's an
+    explicit IBM warning for deployments like Noora's
+  - The test environment cannot currently validate the full Nelli integration path,
+    meaning some production risk cannot be fully eliminated by pre-production testing
+    alone
+    -Multi-hop mandatory upgrade path means multiple change windows, multiple
+    verification cycles, and a longer overall project than a single-version bump
+  - Undocumented legacy customization (the departed engineer's work) is a known
+    unknown — some risk may only surface once actually attempted, no matter how
+    thorough the investigation phase is
+  - Cost/effort: IBM Expert Labs engagement, extended staging work, and multiple
+    maintenance windows likely represent real budget and time investment beyond a
+    routine patch cycle
+
+  CONS of NOT upgrading (staying on 6.8.5 indefinitely):
+  - Accumulating security exposure once support/patch coverage lapses
+  - Growing gap between Noora's version and IBM's current documentation/support
+    knowledge, making any FUTURE upgrade attempt progressively harder, not easier
+  - Missing out on capacity/scale-relevant improvements (bulk device editing, capacity
+    metrics) that would reduce current manual DHC burden
+
+5.3 How to actually present this to stakeholders
+- Lead with the dependency map and risk inventory (Parts 2-3), not the feature list —
+  decision-makers need to understand what could break before they're excited about
+  what's new
+- Present the multi-hop path explicitly as a phased project with a go/no-go decision
+  point after each hop, not a single all-or-nothing commitment
+- Be explicit about the testing gap (Nelli in staging) as a named, accepted risk if a
+  full fix isn't feasible, rather than letting it go unmentioned
+- Bring a recommended target version, not just "the latest," with reasoning — e.g. "7.2
+  captures the containerization change with two subsequent versions of stability but
+  isn't yet exposed to 8.x's much newer feature set" vs. "8.0/8.x for the cloud
+  observability features," and let stakeholders weigh that trade-off explicitly rather
+  than defaulting to the newest.
+
+---
+
+PART 6 — SUGGESTED SEQUENCE OF WORK (high level)
+
+1. Investigate current state + build the full custom-integration inventory (Part 2)
+2. Engage IBM Expert Labs / support for a compatibility assessment specific to
+   Noora's customizations
+3. Close or explicitly document the test-environment Nelli gap
+4. Get formal GRC/governance sign-off with the full risk picture presented (Part 5)
+5. Execute and fully verify the 6.8.5 → 7.0.1 hop in staging, in isolation
+6. Go/no-go decision before scheduling the production 7.0.1 cutover
+7. Repeat staged verification + go/no-go for each subsequent hop toward the agreed
+   target version
+8. Post-upgrade: heightened monitoring period per hop, with Nelli/Kurt/Kevin looped
+   in specifically to catch anything the staging environment couldn't have caught
+9. Update Noora's own documentation as you go — this upgrade project is also the
+   natural opportunity to finally document the previously-undocumented custom
+   integration layer, closing the exact gap that made this project risky in the
+   first place
