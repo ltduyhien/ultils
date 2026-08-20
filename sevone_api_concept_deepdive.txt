@@ -1,0 +1,290 @@
+SEVONE NMS — API, METHODS & CONCEPT CHANGES CRITICAL TO NOORA INTEGRATION
+=====================================================
+Perspective: senior software engineer, reviewing this specifically for integration
+risk to Noora's custom layer (Provisioning Engine, rule files, cron-driven scripts on
+ferguson, and the SOAP/REST calls they make against SevOne NMS).
+
+Sourcing: compiled from IBM's own SevOne NMS RESTful API Quick Start Guides (versions
+5.7 through 6.7 reviewed directly), SevOne NMS 7.0/7.1 Release Notes and Upgrade
+Process Guide, and SevOne's Object Types documentation. Where IBM's public
+documentation didn't give me enough to state something as fact (notably: the actual
+field-by-field diff between REST API v2 and v3, and whether SOAP is still supported
+in 7.x/8.x), I say so explicitly rather than guess — those are flagged as "VERIFY
+DIRECTLY" items and are, honestly, the single most important pieces of hands-on work
+in this whole document.
+=====================================================
+
+PART 0 — WHAT NOORA'S INTEGRATION SURFACE ACTUALLY LOOKS LIKE TODAY
+
+Before comparing versions, it's worth being precise about what "the API" means for
+Noora, because there isn't just one:
+
+1. SOAP API — per Telia's own internal slide material ("SevOne NMS is a commercial
+   all-in-one network performance monitoring product with build-in SOAP and REST API
+   interfaces for small- and large-scale tailoring purposes"), Noora's custom
+   components were explicitly built using SOAP as one of the two available
+   interfaces. Given the age of the original Noora build (undocumented, built years
+   ago by an engineer no longer at Telia, per the KT transcripts), SOAP is a
+   realistic candidate for what the OLDEST parts of the Provisioning Engine actually
+   use — SOAP was SevOne's more mature/comprehensive interface historically, and a
+   community-built "REST wrapper for SevOne" project existed specifically because
+   REST used to just wrap "the most used SOAP API methods" rather than being a first-
+   class citizen from day one.
+2. REST API v2 — confirmed present at least through the 6.x line (5.7 through 6.7
+   guides all documented it), Swagger/OpenAPI-based, versioned resource paths like
+   /api/v2/devices.
+3. REST API v3 — also documented as selectable alongside v2 as of at least 6.5-6.7
+   ("Administration > API Docs... you may choose Version 2 or Version 3").
+4. Direct filesystem/CSV interaction — the Provisioning Engine's actual mechanism,
+   per the KT transcripts, is heavily CSV/file-based (SM/O drops 2 CSVs, Noora's
+   scripts pick them up, provisioning happens in phases against SevOne). This is
+   NOT one of SevOne's documented/versioned API surfaces at all — it's Noora's own
+   custom file-drop convention sitting on top of, or alongside, whatever SevOne API
+   calls the Provisioning Engine also makes. This matters because file-based
+   integration isn't covered by ANY of SevOne's own API version compatibility
+   promises — it's entirely Noora's own contract with itself, but the file paths
+   involved live on the SevOne appliance's filesystem, which is exactly what
+   changes at 7.0 (see Part 3).
+
+ACTION ITEM (do this before anything else): for every custom script identified in
+the integration inventory, classify it into one of these 4 buckets. This
+classification alone determines which parts of this document apply to it.
+
+---
+
+PART 1 — THE CORE DATA MODEL (Devices → Objects → Indicators) — WHAT HAS STAYED STABLE
+
+This is genuinely good news and worth stating plainly: across every version reviewed
+(5.7 through the 7.x line), SevOne's fundamental conceptual model has NOT changed:
+
+- Devices contain Objects (e.g. CPU, Memory, an interface) contain Indicators (e.g.
+  CPU Utilization, Bits In)
+- Object Types and Indicator Types are managed under Administration > Monitoring
+  Configuration > Object Types — this is the same location Noora's Calculation
+  Editor workflow (documented in the DHC guide) already uses
+- Synthetic Indicators (indicators whose value derives from other indicators,
+  atomic or synthetic) are a stable, documented concept — this is very likely the
+  same mechanism behind the "rollup" behavior described for older/aggregated data
+  in Noora's own reporting
+- The SNMP plugin's OID-based object/indicator discovery model (MIB Manager, device
+  certification, device-type associations) appears structurally unchanged across
+  the versions reviewed
+
+Why this matters: Noora's rule files (_RULES_GENERIC.ini, _RULES_ADVANCED.ini,
+_RULES_ENABLE_OBJECTS.ini) are written entirely in terms of this model — Device Type
+Groups, Object Types, match_objtype, match_plugin, platformCategory/Class/Type. The
+CONCEPTS these rule files encode have a good track record of surviving version
+upgrades. The RISK is not that the model itself changes — it's that the API CALLS
+Noora's scripts use to manipulate this model change shape (see Part 2), or that the
+FILESYSTEM those scripts touch changes access rules (see Part 3).
+
+---
+
+PART 2 — API METHOD-LEVEL CHANGES AND GOTCHAS (the part that actually bites)
+
+2.1 HTTP verb semantics — PUT vs PATCH
+SevOne's REST API supports the full verb set: POST (create), GET (retrieve),
+DELETE (delete), PATCH (partial update), PUT (full update). This distinction is not
+cosmetic and is explicitly documented: "PUT /api/v2/devices is used for a FULL
+update of the devices."
+
+ENGINEERING RISK: if any of Noora's custom scripts use PUT to update a device or
+object, and that script was written against an older, smaller device schema, then
+upgrading to a version where the device schema has grown NEW fields creates a
+dangerous failure mode: a PUT request that doesn't include those new fields may
+reset them to default/null rather than leaving them untouched, because PUT is a
+full-replace operation, not a merge. This is a classic vendor-API upgrade bug class
+and is exactly the kind of thing that fails silently (the request succeeds, no
+error is thrown, but data is quietly lost or reset).
+
+ACTION ITEM: audit every PUT call in Noora's codebase specifically. For each one,
+confirm whether it should actually be a PATCH (partial update) instead — this is
+both a correctness fix worth doing regardless of the SevOne upgrade, and a critical
+pre-upgrade risk-reduction step. If a script MUST use PUT, it needs to first GET
+the current full resource, merge in only the changed fields, and PUT the complete
+merged object back — never construct a PUT payload from scratch with only the
+fields you think you need to set.
+
+2.2 Authentication model — token vs. session, and where it's cached
+- Authentication is API-key/token-based: a POST to the Authentication endpoint
+  returns a token; that token is placed in the X-AUTH-TOKEN header for
+  subsequent calls
+- When accessed via an already-logged-in browser session, "authentication token is
+  no longer required and X-AUTH-TOKEN field is automatically filled" — but this
+  ONLY applies to interactive browser use. Noora's server-side cron scripts are, by
+  definition, NOT interactive browser sessions — they must be doing explicit
+  token acquisition (or using long-lived stored credentials) somewhere in their
+  code path. Find that code path specifically as part of the inventory.
+- A 7.1.8 bug-fix note (S1NPM-117515) explicitly describes an internal change to
+  how "SOA caches on the entire base64 encoded API key and not just on the UUID" —
+  this confirms token/key CACHING BEHAVIOR is not stable even within a single
+  minor version line (6.x → 7.1.x), and has been actively changed by IBM engineers
+  as recently as a 7.1.8 patch. If Noora's scripts do anything non-standard with
+  how they store, reuse, or refresh tokens (e.g. caching a token long-term instead
+  of re-authenticating per run), this specific area needs direct testing after
+  each upgrade hop, not just assumed to keep working.
+- ACTION ITEM: confirm whether Noora's scripts authenticate fresh on every run
+  (safer, recommended) or reuse a stored/cached token (riskier, and specifically
+  named as an area IBM has changed internal behavior around).
+
+2.3 Pagination and filtering conventions
+- Listing endpoints use page/size query parameters (e.g.
+  /api/v2/devices?page=0&size=20) — "Paging has been chosen as a standard in
+  SevOne API"
+- Filtering is implemented as a POST to a /filter sub-resource (e.g.
+  POST /api/v2/devices/filter), even though semantically a filter is a read
+  operation — this is because a filter DTO (a structured request body) needs to be
+  sent, and GET requests conventionally don't carry a body. This is a deliberate,
+  documented design choice, not an accident, but it's a non-obvious REST
+  convention that a script written by someone unfamiliar with SevOne's specific
+  API design could easily get wrong (e.g. expecting GET with query params for a
+  complex filter, retrying against the wrong verb, or being confused when a
+  security/WAF layer blocks POST-based reads).
+- ACTION ITEM: for any Noora script that lists/searches devices or objects at scale
+  (this almost certainly includes parts of the Provisioning Engine, given ~4,000
+  devices and ~120,000 objects), confirm it correctly paginates rather than
+  assuming a single unbounded response — and confirm this pagination approach is
+  validated again on the target version, since "SevOne does not guarantee full
+  feature compatibility or expected performance" outside documented Data-Insight-
+  to-NMS version bands, which suggests IBM itself treats large-scale query behavior
+  as something that can shift across versions.
+
+2.4 API version selection is mandatory, not optional
+"Specifying the RESTful API version is mandatory. It refers to the major version of
+RESTful API you want to [use]." This means every single API call Noora's code makes
+already hardcodes a version indicator somewhere (URL path segment like /api/v2/... or
+an equivalent header/parameter). This is actually helpful for the upgrade project:
+it means you can grep the entire Noora codebase for the literal string "api/v2" (or
+whatever pattern is in use) and get a near-complete, mechanically-generated inventory
+of every REST call site — far more reliable than trying to manually remember or
+document them.
+ACTION ITEM: run this grep across every script location identified in the
+integration inventory. Do the same for any SOAP endpoint/WSDL references, using
+whatever pattern those calls follow (SOAP calls typically reference a WSDL URL or a
+SOAPAction header — grep for both).
+
+2.5 VERIFY DIRECTLY — the actual v2 vs v3 field/behavior diff
+IBM's publicly available Quick Start Guides describe HOW to use the API (verbs,
+auth, pagination, endpoints for common object types like Devices) but do not, in
+the material reviewed here, give a clean "here is exactly what changed between v2
+and v3" changelog. This is the single most important piece of information this
+document could NOT establish with confidence from public sources, and it is also
+the single most important thing to nail down before writing a line of migration
+code. The correct way to get this is NOT further web research — it's:
+  a) Log into the actual Noora SevOne NMS instance (or a staging/upgraded copy of
+     it), go to Administration > API Docs, and diff the v2 and v3 Swagger/OpenAPI
+     schema definitions directly, endpoint by endpoint, field by field
+  b) Do the same comparison again against the TARGET version once upgraded in
+     staging, since the "v2 vs v3" question may itself evolve release to release
+     (e.g. v2 could be deprecated or removed entirely in a later release — this
+     needs confirming per target version, not assumed to be static)
+  c) Ask IBM Expert Labs / SevOne Support directly for a v2→v3 migration guide if
+     one exists — vendors with a versioned API almost always have this internally
+     even when it's not the top public search result
+
+---
+
+PART 3 — CONCEPT-LEVEL / ARCHITECTURAL CHANGES (bigger than any single API call)
+
+3.1 Containerization (7.0) — the filesystem contract changes, not just the API
+This is worth restating from a pure "concept" angle, separate from the API
+discussion above: prior to 7.0, SevOne is an RPM-based install on a Linux host,
+meaning the filesystem is, practically speaking, whatever a script with sufficient
+privileges wants it to be. From 7.0 onward, SevOne runs as containers that are
+read-only by default. This is a change in DEPLOYMENT PHILOSOPHY, not just a
+technical detail: the vendor is explicitly moving toward "the appliance is not a
+general-purpose Linux box you can script against at the filesystem level, it's a
+sealed unit you talk to only through defined interfaces (API)." Any part of Noora
+that was built on the OLD philosophy (a script that assumes it can write a file
+directly onto the SevOne appliance, read a log file that lives inside it, etc.)
+is fighting the new architecture, not just risking a bug.
+CONCEPT-LEVEL RECOMMENDATION: treat this not as "find and fix the broken file
+writes" but as "identify anywhere Noora currently treats SevOne as an open Linux
+host rather than an API-fronted appliance, and re-architect that specific
+integration to go through the API (or an explicitly supported extension point)
+instead." This is a bigger, more durable fix than patching individual file paths.
+
+3.2 Clustering model redesign (7.0)
+"SevOne NMS clustering functions have been redesigned so that the initial cluster
+builds are more intuitive and faster to complete." Noora's cluster (ferguson as
+master + the aura0x pollers as collectors) was built under the OLD clustering
+model. A redesign at this level can plausibly affect: how Cluster Manager reports
+peer/capacity data (relevant to the DHC's daily license-consumption check), how
+peers are added/removed (relevant if the "10th aura" pooler-expansion idea is ever
+revisited), and potentially the underlying API/data shape Cluster Manager's own UI
+and API present. This needs explicit validation in staging — don't assume the
+Cluster Manager checks in Noora's Daily Health Check procedure will look and behave
+identically post-upgrade.
+
+3.3 TopN / group-size behavior (patch-level, but conceptually relevant)
+A 7.1.8 fix note: "SOA: Addressed a defect in TopN that caused it to request all
+resources when the number of resolved objects surpassed the configured maximum
+group size per peer." This tells us two useful things: (1) TopN reporting has a
+per-peer maximum-group-size concept that interacts with how many resources get
+requested, and (2) this specific interaction has been buggy enough to need a fix as
+late as a 7.1.8 patch. Given Noora's scale (~120,000 objects) and its own TopN
+Reports usage (documented in the SevOne NMS feature walkthrough), this is a
+concrete area to load-test specifically post-upgrade, not just functionally test.
+
+3.4 SOAP's status going forward — VERIFY DIRECTLY
+None of the version-specific release notes reviewed for this document mention SOAP
+API deprecation or removal explicitly (the deprecation/removal notices found were
+about UI widgets and clustering, not the SOAP interface itself). However, the
+overall trajectory of the product — containerization, an "API Hub"-published REST
+v3, a rebrand toward "IBM SevOne" observability platform — is the classic shape of
+a vendor gradually de-emphasizing an older interface in favor of a newer one, even
+without an explicit announcement yet. Given Noora's original build era likely
+predates REST becoming the primary interface (see Part 0), this is a real, currently
+UNQUANTIFIED risk.
+ACTION ITEM: explicitly ask IBM SevOne Support/Expert Labs, in writing, for SOAP
+API's current support status and any known end-of-life plans, as part of the
+requirements-gathering phase. Do not infer an answer from the absence of a removal
+notice — absence of evidence is not evidence of absence here, especially for an
+interface that was already the "older" of two options years ago.
+
+---
+
+PART 4 — SENIOR-ENGINEER SUMMARY: WHAT TO ACTUALLY DO WITH ALL OF THIS
+
+Ranked by leverage (highest-value engineering work first):
+
+1. Grep the entire Noora codebase for API version markers (api/v2, api/v3, any SOAP
+   WSDL/SOAPAction references) — this converts "we think we know our integration
+   points" into an actual, complete, mechanically-verified list. (Part 2.4)
+
+2. For every REST call found, classify by HTTP verb. Flag every PUT for the
+   full-vs-partial-update risk specifically (Part 2.1) — this is a concrete,
+   fixable code-review task that reduces risk regardless of when the upgrade
+   happens.
+
+3. Get IBM Expert Labs (or SevOne Support) to hand over an actual v2→v3 diff and a
+   SOAP end-of-life statement in writing (Parts 2.5, 3.4) — this is the piece of
+   information no amount of further desk research will produce, and it's the
+   single biggest open unknown blocking a confident migration-effort estimate.
+
+4. Classify every filesystem touchpoint on the SevOne appliance itself (not
+   ferguson) as "must move to API-based integration before 7.0" (Part 3.1) — this
+   is architecturally the biggest single piece of migration engineering work, and
+   it should be scoped and estimated as its own workstream, separate from "the
+   SevOne upgrade project" in the timeline, because it can start NOW, independent
+   of when the actual version upgrade happens.
+
+5. Confirm the authentication code path Noora's cron jobs use (fresh token per run
+   vs. cached) (Part 2.2) — quick to check, meaningfully de-risks the upgrade if
+   caching is happening.
+
+6. Once in staging on the target version, specifically load-test TopN/group-based
+   reporting and Cluster Manager capacity reporting (Parts 3.2, 3.3) — these are
+   the two documented areas with known historical bugginess around exactly the kind
+   of group/peer-scale behavior Noora relies on operationally.
+
+The overarching engineering judgment call here: this upgrade is not primarily a
+"SevOne version number" problem. It's an opportunity — arguably an overdue one,
+given the KT transcripts describe Noora's integration layer as originally built by
+someone no longer at the company, undocumented — to properly formalize Noora's
+contract with SevOne as a set of versioned, tested, API-only integration points,
+rather than the informal mix of API calls and appliance-filesystem assumptions it
+may currently be. Approached that way, the upgrade project pays for itself twice:
+once by getting Noora onto a supported version, and once by finally making Noora's
+own SevOne integration something a future engineer (unlike the last one) can
+actually understand and maintain.

@@ -1,0 +1,763 @@
+NOORA / SEVONE NMS UPGRADE — FULL TECHNICAL PROJECT PLAN
+=====================================================
+Scope: this is the master technical playbook for upgrading Noora's SevOne NMS
+instance off 6.8.5, covering discovery, environment strategy, backup/recovery,
+development work, testing, cutover, and post-upgrade validation. It synthesizes
+everything established in this engagement: Noora's documented architecture
+(Noora-System.md, Noora-Health-Portal.md, Rasmus.md), the KT/shadow transcripts
+(daily operations, incident history, automation inventory), and the SevOne
+version/API research already compiled (sevone_version_comparison.txt,
+sevone_upgrade_preparation_plan.txt, sevone_api_concept_deepdive.txt). Read this as
+the execution-level companion to those documents, not a replacement for them.
+
+Written from a senior/lead software engineer's perspective. Where something is a
+documented SevOne/IBM fact, it's stated plainly. Where something is a Noora-specific
+fact from the KT material, it's stated plainly and traceable to that source. Where
+something is engineering judgment/recommended practice, it's framed as a
+recommendation, not asserted as settled fact.
+=====================================================
+
+
+TABLE OF CONTENTS
+0. Ground truth and starting assumptions
+1. Phase 0 — Discovery and inventory (the work that de-risks everything else)
+2. Phase 1 — Requirements and target-version decision
+3. Environment strategy (dev / staging / test during the update)
+4. Backup and recovery plan
+5. Development / migration work plan
+6. Testing plan (all layers)
+7. Cutover / execution plan, hop by hop
+8. Rollback plan
+9. Monitoring, hypercare, and post-upgrade validation
+10. Documentation and knowledge capture
+11. Governance, communication, and change management
+12. Risk register
+13. Suggested timeline / phasing template
+14. RACI (who does what)
+15. Definition of Done for the whole project
+
+
+=====================================================
+0. GROUND TRUTH AND STARTING ASSUMPTIONS
+=====================================================
+
+- Current state: SevOne NMS 6.8.5, cluster of ferguson (master/app server) + aura06
+  through aura09 (poller/collector appliances) at minimum (confirmed peers observed
+  in KT sessions; do not assume this list is exhaustive — Phase 0 must confirm the
+  full peer roster).
+- Noora = SevOne NMS core + a large custom layer: Provisioning Engine (4 phases),
+  rule files under /opt/provisioning/cfg/ (_RULES_GENERIC.ini, _RULES_ADVANCED.ini,
+  _RULES_ENABLE_OBJECTS.ini), cron-driven scripts on ferguson (device loader,
+  Calculation Poller, portlinkremover, Trigger, Nelli heartbeatgenerator, Qlik
+  exporter), and custom PHP UIs (Noora Health Portal, Rasmus, Rasmus Admin).
+- Downstream consumers: Horizon, Qlik (QlikView/Sense), Nelli (alarms), plus
+  upstream feeders SM/O, Tomaatti, SAP ERP, MIT, Satellite Systems.
+- The original integration layer is UNDOCUMENTED and was built by an engineer no
+  longer at Telia ("maintained by one guy who left, he took many processes with
+  him" — kt4). This is the single biggest risk multiplier on the entire project and
+  shapes almost every recommendation below: assume nothing about how the custom
+  layer works until it's been directly verified, because there is no reliable
+  design document to check against.
+- A test environment already exists: 1 test ferguson + 1 test poller, URLs on the
+  IT wiki (shadow9). It is explicitly known NOT to have full integration — Nelli in
+  particular is not connected there (kt4). Treat this as the starting point for
+  Phase 0's environment work, not a finished solution.
+- SevOne's own vendor guidance is explicit and must anchor the whole plan: DO NOT
+  attempt the jump to SevOne NMS 7.0+ with Expert-Labs or homegrown customizations
+  without first engaging IBM Expert Labs, because 7.0 introduces read-only
+  containerized deployment that can break custom scripts writing to appliance
+  filesystem paths.
+- Upgrade path is NOT a single hop. Documented mandatory stepping stones exist
+  (6.7/6.8 → 7.0.1 → 7.1.0 requires 7.0.1 minimum → onward). Plan for a multi-hop
+  program, not a single change window.
+
+
+=====================================================
+1. PHASE 0 — DISCOVERY AND INVENTORY
+=====================================================
+Nothing else in this plan can be estimated, scheduled, or resourced accurately until
+this phase is substantially complete. Treat it as its own mini-project with its own
+deliverable sign-off before Phase 1 begins.
+
+1.1 Cluster and appliance inventory
+- Enumerate every SevOne appliance in the Noora cluster: role (master/collector),
+  hostname, current exact version/build (from Administration > About — not from
+  memory or hearsay), IP, hardware or VM specs, current disk utilization, current
+  license/capacity consumption
+- Confirm all appliances are actually on the same version — mixed-version clusters
+  are a common latent-bug source and must be resolved before any upgrade planning
+  proceeds
+- Document current cluster topology: which peers are in which security/network
+  zone, firewall rules between zones, any Hot Standby Appliance (HSA) pairs in use
+
+1.2 Custom integration inventory (the most important deliverable of Phase 0)
+Build a literal, artifact-based inventory — a spreadsheet or tracked document, not
+tribal knowledge — covering:
+- Every cron job on every relevant server (ferguson, each poller if applicable), not
+  just the ones already known from KT sessions. Do a full sweep: `crontab -l` as
+  every relevant user (provisor and any others), plus /etc/cron.d/, plus any
+  systemd timers, since not everything scheduled lives in a user crontab
+- Every script invoked by those jobs — full source location, language, last-modified
+  date, last-known-working date if determinable from logs
+- For every script: does it call SevOne's API (SOAP, REST v2, REST v3 — grep for
+  literal patterns: api/v2, api/v3, WSDL references, SOAPAction headers), does it
+  read/write files on the SevOne appliance's own filesystem (as opposed to
+  ferguson's separate application filesystem), or does it query a database directly
+  (this is the highest-risk category — direct DB access bypasses any API contract
+  entirely)
+- For every REST call found: HTTP verb used (flag every PUT specifically — see
+  Section 5.2), endpoint, auth mechanism used (fresh token per call vs. a
+  cached/stored token — see Section 5.3)
+- Every custom PHP UI (Noora Health Portal, Rasmus, Rasmus Admin) — for each
+  tab/feature, what does it read from and how (API call, direct DB query, file
+  read)?
+- Every export/import file convention Noora relies on: SM/O's 2 CSVs in, the Qlik
+  exporter's output, anything Horizon consumes, anything External Data validates —
+  document the exact file paths, on which host's filesystem, and which of those
+  paths live ON the SevOne appliance itself versus on ferguson
+
+1.3 Downstream dependency mapping
+For each of Rasmus, Rasmus Admin, Horizon, Qlik, Nelli: confirm precisely and
+concretely how it gets data from SevOne/Noora — API call, file drop, database read.
+Any tool with an undocumented or assumed data path here becomes untestable later, so
+this has to be nailed down now.
+
+1.4 Data-model and rule-file audit
+- Confirm every Device Type Group, Object Type, and platformCategory/Class/Type
+  value referenced in the three rule .ini files actually still exists and is used —
+  stale references here are exactly the kind of thing an upgrade can silently break
+  if the underlying names/IDs shift
+- Pull a full export of current Control Device Groups (via Noora Health Portal >
+  System Control > Control Groups, or SevOne's own group export) as a point-in-time
+  baseline to diff against post-upgrade
+
+1.5 Vendor engagement
+- Confirm Telia's current IBM support/contract status (standard support vs. legacy/
+  flexible contract — this determines the exact support channel per IBM's own
+  documentation)
+- Formally engage IBM SevOne Support / Expert Labs for: (a) a compatibility
+  assessment given Noora's customization profile, (b) a REST API v2→v3 diff (not
+  reliably available from public documentation — see sevone_api_concept_deepdive.txt
+  Part 2.5), (c) SOAP API's current support/EOL status in writing (also not
+  confirmable from public sources — same document, Part 3.4)
+- Ask specifically whether the original Noora SevOne deployment had any Expert Labs
+  involvement historically (worth raising with Kevin/Telia procurement, since this
+  affects what IBM already knows about the deployment)
+
+1.6 Phase 0 exit criteria (do not proceed to Phase 1 planning in earnest until):
+- Full appliance/cluster inventory is signed off
+- Custom integration inventory is complete enough that every script has an assigned
+  risk classification (API-based / filesystem-based / DB-direct / unknown-needs-
+  investigation) — "unknown" should be a shrinking, tracked category, not an
+  accepted permanent state
+- IBM has responded on the v2→v3 diff and SOAP EOL questions, in writing
+- A baseline export of current groups/rules/config exists and is stored somewhere
+  durable (see Section 4)
+
+
+=====================================================
+2. PHASE 1 — REQUIREMENTS AND TARGET-VERSION DECISION
+=====================================================
+
+2.1 Requirements to gather explicitly (don't assume, ask)
+- Business/compliance driver: is this upgrade driven by an approaching or already-
+  passed IBM support/EOL date for 6.8.x? Get the actual current date from IBM's
+  Software Support Lifecycle page or your account team — do not rely on a cached
+  planning table (the one found during research was explicitly marked "subject to
+  change")
+- Any specific new capability actually wanted (e.g. bulk device editing from 7.2,
+  ML-based anomaly detection from 8.x) — this affects the target version choice, not
+  just "get to latest"
+- Any hard external deadline (audit, GRC cycle, budget window)
+- Telia's own governance/GRC process requirements for a change of this magnitude —
+  loop in the GRC track (Biplob's track per the KT material) early, not as an
+  afterthought
+
+2.2 Target version decision framework
+Do not default to "the latest version" without deliberately weighing:
+- Each additional hop = additional testing/validation cycle, additional risk, and
+  additional elapsed time (see Section 7 for why this compounds)
+- A nearer target (e.g. landing on 7.1 or 7.2, stable a couple of versions past the
+  7.0 containerization break) trades some newer features for a shorter, lower-risk
+  path
+- A further target (8.x) captures the newer observability/ML capabilities but adds
+  more hops and more unknowns, and 8.1's actual GA/feature-completeness status was
+  found to be ambiguous even in IBM's own community channels at time of research —
+  treat "the latest" as a moving target that needs re-confirming at decision time,
+  not something to lock in based on this document alone
+- Present this as an actual decision with a recommendation and reasoning to
+  stakeholders (see Section 11), not as a foregone technical conclusion
+
+2.3 Deliverable of Phase 1: a written target-version decision, with reasoning, signed
+off by the relevant stakeholders (Kevin at minimum; GRC as appropriate).
+
+
+=====================================================
+3. ENVIRONMENT STRATEGY (DEV / STAGING / TEST DURING THE UPDATE)
+=====================================================
+
+3.1 Current state and the core gap
+One test ferguson + one test poller already exist (shadow9). This is a genuine
+asset — don't rebuild from scratch. But it has a known, explicitly stated gap: no
+full integration, Nelli specifically named as disconnected. Any environment
+strategy must either close this gap or explicitly compensate for it.
+
+3.2 Recommended environment tiers
+
+TIER 1 — Isolated sandbox (new-ish work, lowest risk to anything real)
+Purpose: first-contact testing of the SevOne upgrade mechanics themselves
+(containerization, the 6.8.5 → 7.0.1 hop specifically) with NO connection to any
+real Noora data or downstream system. This can be a throwaway VM/appliance spun up
+purely to answer "does the upgrade process itself work, and does the base SevOne UI/
+API come up correctly" before risking anything else. Cheap, fast, disposable —
+use it to fail fast on pure SevOne-level upgrade mechanics before spending staging-
+environment time on it.
+
+TIER 2 — Staging (the existing test ferguson + test poller, upgraded)
+Purpose: validate Noora's actual custom layer against the upgraded SevOne version.
+This is where the custom integration inventory from Phase 0 gets exercised for
+real: run the Provisioning Engine against test data, run the rule files, run the
+cron scripts, hit the API endpoints Noora's code actually calls.
+Required work before this tier is trustworthy:
+- Point staging's Provisioning Engine at a realistic (ideally anonymized/sampled,
+  not literally empty) copy of SM/O-style CSV input, not synthetic toy data — the
+  goal is to exercise real-world data shapes and volumes, not just "does it run at
+  all"
+- Decide and document how the Nelli gap gets handled here (see 3.3 below) — do not
+  let this silently stay a blind spot
+- Ensure staging's rule files (_RULES_GENERIC.ini etc.) are kept in sync with
+  production's actual current rules, not a stale historical copy
+
+TIER 3 — Production
+The real cluster (ferguson + aura0x pollers), upgraded only after Tier 1 and Tier 2
+have both signed off on the specific hop being attempted.
+
+3.3 Closing (or explicitly compensating for) the Nelli gap
+Options, in order of preference:
+a) Best: negotiate a genuine test-mode connection to Nelli (or a Nelli test/sandbox
+   endpoint if Telia's Nelli team has one) so staging can validate the real
+   heartbeat/alarm path end to end. This requires reaching out to the Nelli team
+   directly (per the escalation map already established) — flag this as a Phase 0/
+   early Phase 3 action item, since it may take lead time to arrange.
+b) Acceptable fallback if (a) isn't achievable in time: build a lightweight mock/
+   stub Nelli receiver in staging that accepts the same heartbeat/alarm payload
+   shape the real Nelli integration sends, purely to verify SevOne/Noora's SENDING
+   side still constructs and transmits correctly post-upgrade. This does NOT
+   validate Nelli's receiving/processing behavior, and that limitation must be
+   explicitly documented and communicated to stakeholders — don't let a mock quietly
+   become treated as equivalent to the real integration.
+c) Minimum acceptable: if neither (a) nor (b) is feasible, document this as an
+   accepted, named risk in the go/no-go decision materials for production cutover,
+   with an explicit heightened-monitoring plan for the Nelli path specifically
+   during the post-upgrade hypercare window (Section 9).
+
+3.4 Environment hygiene during the multi-hop program
+- Staging should be re-baselined (fresh copy from production config/rules) at the
+  START of each hop's testing cycle, not left drifting from a much earlier snapshot
+  — otherwise you risk testing against a staging environment that no longer matches
+  what production actually looks like by the time you get to hop 3 or 4
+- Keep a clear version label on every environment at all times (a simple, visible
+  "this environment is on version X" marker) — in a multi-hop program spanning
+  weeks or months, environment/version confusion is a realistic and costly mistake
+- Access control: restrict who can push changes to staging during active testing
+  windows, to avoid the classic "someone else changed something in staging and now
+  the test results are meaningless" problem
+
+
+=====================================================
+4. BACKUP AND RECOVERY PLAN
+=====================================================
+
+4.1 What needs to be backed up, and where it lives
+SevOne-appliance-side (each appliance in the cluster):
+- The appliance's own backup, per IBM's documented upgrade process (SevOne's
+  upgrade tooling handles appliance-level backup as part of its own process — confirm
+  the exact mechanism and retention in the current SevOne NMS Upgrade Process Guide
+  for your target version, since this is IBM-managed, not something to reinvent)
+- CONFIG database (replicated across the cluster) — confirm the backup mechanism
+  captures this at a cluster-consistent point in time, not per-appliance in
+  isolation, given CONFIG is shared
+- DATA database (unique per appliance) — decide explicitly whether this needs to be
+  backed up at all for upgrade-rollback purposes, versus treated as re-creatable via
+  re-polling; raw stats have a 240-day retention already, so the cost/benefit of
+  backing up DATA specifically for an upgrade rollback (versus just accepting some
+  historical-data gap if a rollback is needed) should be a deliberate decision, not
+  a default
+
+ferguson-side (NOT covered by SevOne's own appliance backup, since ferguson is
+Noora's separate application server):
+- All custom script source code (device loader, Calculation Poller,
+  portlinkremover, Trigger, heartbeatgenerator, Qlik exporter, and anything else
+  Phase 0 inventoried)
+- The three rule files (_RULES_GENERIC.ini, _RULES_ADVANCED.ini,
+  _RULES_ENABLE_OBJECTS.ini) and anything else under /opt/provisioning/cfg/
+- The Noora Health Portal / Rasmus / Rasmus Admin PHP codebases (/var/www/custom/...
+  and wherever else they live)
+- Crontab definitions for every relevant user (these are configuration, easy to
+  lose, and NOT typically covered by a generic OS-level backup unless explicitly
+  included)
+- Any local config files, credentials/secrets stores, or environment-specific
+  settings the scripts depend on
+
+4.2 Backup strategy recommendations
+- Put everything in 4.1's "ferguson-side" list under version control (git or
+  equivalent) BEFORE this project starts, not as an upgrade-specific one-off backup
+  — this is a durable improvement regardless of the SevOne upgrade, and it directly
+  supports the earlier recommendation (sevone_upgrade_preparation_plan.txt) to
+  finally document the previously-undocumented custom layer
+- Take an explicit, timestamped, clearly-labeled snapshot of both the SevOne-side
+  and ferguson-side state immediately before EACH hop, not just once at the start
+  of the whole project — a multi-hop program needs a rollback point per hop, not
+  just a rollback point back to the very beginning
+- Store backups somewhere independent of both ferguson and the SevOne appliances
+  themselves (a separate backup target/location) — a backup that lives on the same
+  host you're upgrading is not a real backup
+- Test restoring from backup at least once in the Tier 1/Tier 2 environments before
+  relying on the backup plan for a real production rollback — an untested backup is
+  a hypothesis, not a plan
+
+4.3 Recovery point and recovery time expectations
+- Define, in writing, before cutover: what is the maximum acceptable data loss
+  (RPO) and maximum acceptable downtime (RTO) for each hop, and confirm the backup/
+  restore mechanism can actually meet those numbers in practice (verified via the
+  test-restore above, not assumed)
+- Document exactly what "success" and "we need to roll back" look like for each hop
+  ahead of time, so that decision doesn't get made under time pressure during a live
+  cutover window
+
+
+=====================================================
+5. DEVELOPMENT / MIGRATION WORK PLAN
+=====================================================
+
+5.1 Prioritization principle
+Sequence the development work by RISK, not by convenience. The highest-risk items
+(read-only filesystem impact, PUT-as-full-replace bugs) should be tackled first and
+can, in most cases, START BEFORE the actual SevOne version upgrade happens — they
+are correctness improvements to Noora's own code regardless of vendor version.
+
+5.2 Workstream A — PUT vs PATCH audit and fix
+- From the Phase 0 inventory, list every REST call using PUT
+- For each: determine whether it should be PATCH (partial update) instead
+- Where PUT must remain (e.g. because the target API version doesn't support PATCH
+  for that resource), refactor the calling code to GET-merge-PUT: fetch the current
+  full resource, merge in only the intended changes, then PUT the complete object —
+  never construct a PUT body from a partial/assumed field set
+- This is independently valuable regardless of the SevOne version and can be
+  completed and deployed against the CURRENT 6.8.5 environment first, as a
+  risk-reduction step that also serves as a dry run for how the team handles
+  API-touching code changes
+
+5.3 Workstream B — Authentication path hardening
+- Confirm (from Phase 0) whether scripts authenticate fresh per run or reuse a
+  cached token
+- Standardize on fresh-per-run authentication unless there's a specific, understood
+  reason not to (given IBM's own bug-fix history shows token-caching internals have
+  changed across versions — see sevone_api_concept_deepdive.txt Part 2.2)
+- Centralize authentication logic into one shared function/module if it currently
+  exists in multiple places with subtly different implementations (a very likely
+  finding given the undocumented, multi-script nature of the custom layer)
+
+5.4 Workstream C — Filesystem-to-API migration
+- From Phase 0's classification, take every script flagged as writing to or reading
+  from the SevOne appliance's own filesystem
+- For each: design and implement an API-based replacement (or confirm with IBM/
+  Expert Labs what the supported extension point is, if a pure API replacement
+  isn't obviously available)
+- This is the single largest piece of engineering work in the whole project and
+  should be scoped, estimated, and resourced as its own sub-project with its own
+  timeline, explicitly separate from "the SevOne version upgrade" line item —
+  because, critically, it should START now, independent of the target version
+  decision, and its completion is a PREREQUISITE for attempting the 7.0 hop, not
+  something that can be done in parallel with it under time pressure
+
+5.5 Workstream D — Direct database access removal (if any found)
+- If Phase 0 finds any script querying SevOne's database directly, this is the
+  single highest-priority item to fix, full stop — internal schema is not a stable
+  contract across versions the way a documented API is
+- Replace with the equivalent API call; if no equivalent API exists, this is a gap
+  to raise with IBM directly before proceeding
+
+5.6 Workstream E — API v2 → v3 migration (once the diff is in hand from Phase 0)
+- Once IBM/Expert Labs has provided the actual v2/v3 diff, produce a concrete
+  migration checklist per affected script
+- Prioritize by call frequency/criticality: the Provisioning Engine's core device/
+  object calls first, reporting-only calls later
+- Where v3 offers a materially better contract (e.g. clearer partial-update
+  semantics, better pagination), prefer migrating to it outright rather than
+  staying on v2 purely out of inertia — but only once verified working in staging
+
+5.7 Workstream F — Rule file and configuration re-validation
+- After each hop, re-run the Device Type Group / Object Type / platformCategory
+  audit from Phase 0 against the new version, since IBM's release notes should be
+  checked per hop for anything renamed, deprecated, or restructured in the
+  object/device-type taxonomy
+- Any rule referencing something no longer valid needs updating before that hop is
+  considered complete, not discovered later via a silent provisioning failure
+
+5.8 Code review and pairing recommendation
+Given the departed original author and lack of documentation, treat every piece of
+this migration work as an opportunity for a second engineer to genuinely understand
+the code, not just patch it. Pair or require thorough review on every change in this
+project — the goal is that by the end, more than one person deeply understands each
+piece of Noora's custom layer.
+
+
+=====================================================
+6. TESTING PLAN
+=====================================================
+
+6.1 Test levels, mapped to Noora's actual components
+
+UNIT / SCRIPT-LEVEL TESTING
+- Each modified script (from Section 5's workstreams) gets tested in isolation
+  against the Tier 1 sandbox first: does it authenticate, does it make the expected
+  API call, does it handle both success and error responses sensibly
+- For the PUT→PATCH fixes specifically: write an explicit before/after test that
+  proves a partial update no longer clobbers unrelated fields — this is exactly the
+  kind of regression that's invisible unless specifically tested for
+
+INTEGRATION TESTING (Tier 2 staging)
+- Run the full Provisioning Engine cycle (all 4 phases) against realistic sample
+  SM/O-style CSV input in staging, on the upgraded SevOne version, and verify:
+  - Devices land correctly with expected metadata/enrichment
+  - Rule files correctly pin devices to the right Device Type Groups
+  - Objects get discovered and correctly start disabled (per the documented
+    Rules Generic behavior), then correctly get enabled per Rules Enable
+  - No unexpected objects, no missing objects, versus a known-good baseline run
+    on the CURRENT (pre-upgrade) version with the same input data
+- Test the cron-driven scripts individually: device loader, Calculation Poller,
+  portlinkremover, Trigger, the Qlik exporter, the Nelli heartbeatgenerator (against
+  whichever Nelli-path option was chosen in Section 3.3)
+- Test each custom UI (Noora Health Portal, Rasmus, Rasmus Admin) tab by tab against
+  the upgraded backend — this can literally follow the Daily Health Check guide
+  structure already documented, treating it as a de facto integration test script:
+  if every DHC step works correctly against staging, that's strong evidence of
+  integration health
+
+REGRESSION TESTING
+- Before/after comparison of Change Reports, System Statistics, and object/group
+  counts between a pre-upgrade production snapshot and the equivalent staging state
+  post-upgrade, using the same input data, to catch anything that silently behaves
+  differently
+- Specifically regression-test TopN/group-based reporting and Cluster Manager
+  capacity reporting given the documented historical bugginess in these areas
+  around exactly this kind of group/peer-scale behavior (see
+  sevone_api_concept_deepdive.txt Part 3.3)
+
+LOAD / SCALE TESTING
+- Noora operates at real scale (~4,000 devices, ~120,000 objects, ~2.7M
+  indicators). A staging test with a handful of sample devices proves the code
+  PATH works but says nothing about whether it works AT SCALE
+- Where feasible, test the Provisioning Engine and reporting paths against a
+  staging dataset that approximates real production volume, not just a small
+  sample — this is the only way to catch the kind of pagination/timeout/max-
+  group-size issues documented as historically real in SevOne's own bug history
+- Specifically test polling performance and license/capacity-consumption reporting
+  under realistic device counts
+
+SECURITY / ACCESS TESTING
+- Confirm authentication and authorization behavior is unchanged for every role
+  that currently accesses Noora Health Portal, Rasmus, Rasmus Admin, and SevOne
+  NMS directly (Veha LDAP / TCAD flows) — an upgrade is also a reasonable trigger to
+  verify no unintended access changes slipped in
+
+USER ACCEPTANCE TESTING (UAT)
+- Have Kurt and/or Kevin (or whoever does the DHC day to day) actually run a full
+  Daily Health Check against the upgraded staging environment as a real UAT pass —
+  this validates not just "the system works" but "the system works the way the
+  people who actually operate it expect it to"
+- Include at least one worked real-world scenario from the known-issues quick
+  reference (e.g. the broken-link fix procedure) run end-to-end against staging, to
+  confirm the actual operational playbook still functions, not just the underlying
+  API calls
+
+ROLLBACK TESTING
+- Explicitly test the documented downgrade path (e.g. 7.1.0 → 7.0.1 specifically,
+  per IBM's documented constraint) in staging BEFORE it's ever needed in production
+  — don't let the rollback plan's first real execution be during an actual incident
+
+6.2 Test data strategy
+- Prefer a realistic, ideally anonymized, sample or subset of real production data
+  over synthetic/toy data wherever feasible, specifically because Noora's known
+  failure modes (malformed CSVs, control-character metadata bugs, missing chassis
+  inventory) are exactly the kind of messy real-world data issues synthetic test
+  data won't reproduce
+- Deliberately include at least one known-problematic case from the "Known Issues &
+  Recurring Fixes" reference in the test dataset (e.g. a device shaped like the
+  historical duplicate-link case) to confirm the upgraded system still handles it
+  the same way, or handles it better, not worse
+
+6.3 Exit criteria per hop
+Define, before starting, what "this hop passed" means concretely: e.g., zero
+unexplained differences in Change Report output between pre/post-upgrade runs on
+identical input; DHC fully executable against staging with no unexpected errors;
+UAT sign-off from Kurt/Kevin; rollback tested and confirmed working. Do not proceed
+to production cutover for a hop without every exit criterion explicitly checked off.
+
+
+=====================================================
+7. CUTOVER / EXECUTION PLAN, HOP BY HOP
+=====================================================
+
+7.1 General structure per hop
+1. Freeze scope: confirm exactly which version this hop targets (respecting IBM's
+   mandatory stepping-stone constraints)
+2. Pre-cutover backup (Section 4) — SevOne-side and ferguson-side, both
+3. Final go/no-go review against the hop's exit criteria (Section 6.3)
+4. Execute the upgrade during an agreed maintenance window, following IBM's
+   documented Upgrade Process Guide procedure for that specific version step
+5. Immediate smoke test: SevOne UI reachable, API reachable, core Cluster
+   Manager/Device Manager pages load correctly
+6. Run the Provisioning Engine and cron jobs for at least one full cycle and verify
+   expected behavior against the pre-upgrade baseline
+7. Run a full Daily Health Check pass against production, treating it as the
+   primary go/stay decision tool
+8. Formal sign-off that the hop is complete before scheduling the next one
+
+7.2 Cluster-wide sequencing
+Confirm IBM's documented approach for the specific version jump regarding
+master-vs-collector upgrade order and whether temporary mixed-version operation
+within the cluster is supported during a rolling upgrade, or whether the whole
+cluster must move together — pull this from the target version's own Upgrade
+Process Guide rather than assuming either approach.
+
+7.3 Change window and communication during cutover
+- Notify all known stakeholders and downstream consumers (Kevin, Kurt, the Nelli
+  team, anyone relying on Rasmus/Horizon/Qlik reporting) of the planned window in
+  advance, with expected impact clearly stated
+- Have a live communication channel open during the actual cutover window (not just
+  a ticket) for real-time coordination if something unexpected happens
+- Explicitly define who has authority to call the go/no-go and rollback decisions
+  during the window, before the window starts — this should not be improvised live
+
+
+=====================================================
+8. ROLLBACK PLAN
+=====================================================
+
+8.1 Rollback triggers
+Define concrete, objective triggers in advance, e.g.:
+- Provisioning Engine fails to complete a full cycle successfully
+- Any core Noora UI (Health Portal, Rasmus, Rasmus Admin) becomes non-functional and
+  can't be fixed within an agreed time-box during the window
+- Data integrity issue discovered (e.g. object/device counts diverge unexpectedly
+  from the pre-upgrade baseline)
+- Nelli integration path (real or the chosen fallback validation) fails
+- Anything discovered that wasn't caught in staging and can't be confidently
+  triaged within the maintenance window's remaining time
+
+8.2 Rollback mechanics
+- Follow IBM's documented downgrade constraints exactly (e.g. 7.1.0 only downgrades
+  to 7.0.1, not further back) — do not assume you can jump back further than what's
+  documented as supported
+- Restore ferguson-side state (scripts, rule files, crontab) from the pre-hop backup
+  taken in Section 4, since a SevOne-side downgrade alone won't restore
+  ferguson's own state
+- Re-run the DHC against the rolled-back environment to confirm it's genuinely back
+  to known-good, not just nominally downgraded
+
+8.3 Post-rollback actions
+- Root-cause the failure before attempting the same hop again
+- Update the risk register (Section 12) with the new finding
+- Re-run the relevant staging tests with a fix in place before re-attempting
+
+
+=====================================================
+9. MONITORING, HYPERCARE, AND POST-UPGRADE VALIDATION
+=====================================================
+
+9.1 Immediately post-cutover (first 24-48 hours per hop)
+- Heightened-frequency Daily Health Check (more than once a day) for at least the
+  first day after each hop
+- Actively watch the Nelli integration path specifically, given it's the least
+  fully testable piece pre-production (Section 3.3) — this is the single area most
+  likely to fail silently if it's going to fail at all
+- Watch capacity/license consumption trend closely — an upgrade is a reasonable
+  moment for a capacity behavior change to first become visible
+- Keep the rollback option genuinely live (not just theoretically available) during
+  this window — don't consider the hop "done" until this window has passed cleanly
+
+9.2 First week
+- Run a full weekly Change Report review specifically comparing against the last
+  pre-upgrade weekly baseline, looking for anything anomalous beyond normal
+  week-to-week variance
+- Confirm all downstream reporting (Rasmus, Horizon, Qlik) is receiving and
+  displaying data correctly, not just that SevOne itself looks healthy
+
+9.3 Longer-term validation
+- After the FULL multi-hop program reaches its target version, do a final,
+  comprehensive comparison against the Phase 0 baseline: device counts, object
+  counts, group structure, alert volume trends, capacity trend — confirm the system
+  is operating equivalently to (or better than) its pre-upgrade state
+- Formally close out the project only after this final validation, not after the
+  last technical hop completes
+
+
+=====================================================
+10. DOCUMENTATION AND KNOWLEDGE CAPTURE
+=====================================================
+
+This project is the best available opportunity to close the documentation gap that
+made it risky in the first place. Make this an explicit deliverable, not an
+afterthought:
+- The Phase 0 custom-integration inventory becomes a living document, not a
+  one-time artifact — keep it current going forward
+- Document the final, as-built API integration approach for every script (which
+  endpoints, which auth pattern, which version) so a future engineer doesn't have to
+  reverse-engineer it the way this project had to
+- Record the actual v2/v3 diff and SOAP status information obtained from IBM,
+  since this is genuinely hard-to-find information worth preserving internally
+- Update Noora's own architecture documentation (the kind of material already
+  captured in this engagement — Noora-System.md, Noora-Health-Portal.md, Rasmus.md)
+  with the new SevOne version and any behavior changes discovered
+- Capture lessons learned per hop, not just at the very end — write them down while
+  memory is fresh, not reconstructed after the fact
+
+
+=====================================================
+11. GOVERNANCE, COMMUNICATION, AND CHANGE MANAGEMENT
+=====================================================
+
+11.1 Stakeholders and their role in this specific project
+- Kevin (Resource Manager): overall sign-off authority, GRC/budget liaison, primary
+  point for any integration-proposal-style decisions (target version choice, Nelli
+  test-path negotiation)
+- Kurt: technical SME for the hardware/SM-O side and informal institutional
+  knowledge of the custom layer; essential participant in Phase 0 inventory and UAT
+- IBM SevOne Support / Expert Labs: technical authority on SevOne-side behavior,
+  required engagement point per IBM's own guidance given Noora's customization level
+- Telia GRC/governance function: formal review and sign-off before production
+  cutover, given the scale of change involved
+- Nelli team: co-owner of validating the alarm-integration path, both in staging (if
+  achievable) and during hypercare
+- Whoever owns Rasmus/Horizon/Qlik on the reporting-consumer side: needs advance
+  notice and involvement in downstream validation
+
+11.2 Communication cadence
+- Weekly status updates through the discovery/dev/test phases (folding naturally
+  into the existing weekly Kevin/Kurt meeting cadence already established for DHC
+  matters)
+- Explicit, separate communication ahead of each production cutover window (not
+  just folded into the regular weekly update) given the operational impact
+- A single point of truth for current project status (a shared document/board), not
+  status scattered across email/Teams threads
+
+11.3 Formal change management
+- Treat each hop as its own formal change record (whatever Telia's change-management
+  process requires — likely tied to the TeliaNow/ITSM tooling already in use for
+  incidents), not one giant change covering the whole multi-hop program
+- Attach the relevant risk register entries (Section 12) and exit criteria (Section
+  6.3) to each change record, so the approval reviewer has the real risk picture,
+  not just "upgrading SevOne"
+
+
+=====================================================
+12. RISK REGISTER (starting set — expand as Phase 0 discovers more)
+=====================================================
+
+R1. Custom scripts writing to SevOne appliance filesystem paths break at 7.0
+    containerization. Likelihood: high (explicitly the scenario IBM warns about).
+    Impact: high (breaks provisioning/reporting). Mitigation: Workstream C
+    (Section 5.4), completed and verified BEFORE attempting the 7.0 hop.
+
+R2. PUT-based API calls silently clobber fields on an upgraded, expanded schema.
+    Likelihood: medium (depends on how many PUT calls exist and how schemas
+    actually change). Impact: high (silent data loss, hard to detect). Mitigation:
+    Workstream A (Section 5.2).
+
+R3. Staging cannot fully validate the Nelli integration path. Likelihood: certain,
+    unless Section 3.3 option (a) is achieved. Impact: medium-high (a real
+    production failure here affects alarm delivery). Mitigation: hypercare
+    monitoring (Section 9.1) plus whichever 3.3 fallback is chosen.
+
+R4. Undocumented legacy customization behaves unexpectedly in ways Phase 0's
+    inventory didn't catch. Likelihood: medium (inherent to an undocumented
+    legacy system). Impact: variable. Mitigation: thorough Phase 0 inventory,
+    conservative multi-hop testing, live rollback capability per hop.
+
+R5. Multi-hop upgrade path takes materially longer than initially estimated,
+    creating schedule/budget pressure that tempts skipping validation steps.
+    Likelihood: medium-high (common pattern in this class of project). Impact:
+    high if it leads to skipped testing. Mitigation: set expectations early with
+    stakeholders (Section 11) that this is a multi-hop program with a real
+    timeline, not a single weekend project.
+
+R6. IBM's REST v2/v3 diff or SOAP EOL information isn't available or is slow to
+    obtain. Likelihood: medium. Impact: medium (blocks confident scoping of
+    Workstream E). Mitigation: escalate through Kevin/account management if the
+    standard support channel is slow; treat as a Phase 0 blocking item.
+
+R7. Direct database access is discovered somewhere in the custom layer.
+    Likelihood: unknown until Phase 0 completes (possible given the system's age
+    and lack of documentation). Impact: very high if found. Mitigation: Workstream
+    D (Section 5.5), treated as top priority the moment it's found.
+
+R8. Downstream systems (Rasmus/Horizon/Qlik) have their own undiscovered version
+    dependency on SevOne's API shape. Likelihood: medium. Impact: medium-high.
+    Mitigation: Section 1.3 dependency mapping, tested explicitly in Section 6.1's
+    integration testing.
+
+
+=====================================================
+13. SUGGESTED TIMELINE / PHASING TEMPLATE
+=====================================================
+(Illustrative structure, not a committed schedule — actual durations depend on
+Phase 0 findings, resourcing, and IBM's response times.)
+
+- Phase 0 (Discovery): allow enough time for a genuinely thorough inventory of an
+  undocumented system — this is easy to underestimate. Exit only when the criteria
+  in Section 1.6 are met.
+- Phase 1 (Requirements/target decision): short, but gated on Phase 0's findings
+  and IBM's written responses on v2/v3 and SOAP status.
+- Workstreams A/B/D (Section 5): can start in parallel with Phase 0's later stages,
+  since they're improvements to current (6.8.5) code, not upgrade-dependent.
+- Workstream C (filesystem-to-API migration): the largest single piece of work;
+  scope and resource it as its own sub-project, starting as early as Phase 0
+  identifies enough of the affected scripts to begin.
+- Environment build-out (Section 3): start early, in parallel with Phase 0/1, since
+  closing the Nelli gap especially may have its own lead time with the Nelli team.
+- Hop 1 (6.8.5 → 7.0.1): the highest-risk single hop. Give it its own full
+  discovery→dev→test→cutover→hypercare cycle in isolation before even scheduling
+  Hop 2.
+- Subsequent hops: each gets its own abbreviated but real cycle — re-verify the
+  integration inventory's risk items, re-run the test suite, re-confirm rollback,
+  cutover, hypercare.
+- Final validation and documentation close-out (Section 9.3, Section 10): don't
+  compress this at the end just because the technical hops are done.
+
+
+=====================================================
+14. RACI (illustrative — confirm actual names/roles with Telia)
+=====================================================
+- Overall project sign-off: Kevin (Accountable), Telia GRC (Consulted)
+- Technical execution (Infosys/Accenture engineering team): Responsible
+- SevOne/IBM-side technical authority: IBM Expert Labs/Support (Consulted,
+  Responsible for anything requiring vendor-side action)
+- Hardware/SM-O/network-adjacent issues: Kurt (Responsible/Consulted as needed)
+- Nelli integration validation: Nelli team (Responsible for their side), Infosys/
+  Accenture (Responsible for Noora's sending side)
+- Firewall/network changes if needed for any environment work: Mark Ollikainen /
+  Kimmo Rouhiainen, routed via Kurt/Kevin (per the existing escalation map)
+- Change record approval: per Telia's standard change-management process owner
+
+
+=====================================================
+15. DEFINITION OF DONE FOR THE WHOLE PROJECT
+=====================================================
+The project is complete only when ALL of the following are true, not just when the
+final version number is reached:
+- Target SevOne version is live in production across the full cluster, confirmed
+  consistent across all appliances
+- Every item in the Phase 0 custom-integration inventory has a confirmed-working
+  status on the target version (not just "assumed fine because nothing broke")
+- Filesystem-to-API migration (Workstream C) is fully complete — zero remaining
+  custom writes to SevOne appliance filesystem paths
+- PUT→PATCH audit (Workstream A) is fully complete and verified
+- Final validation (Section 9.3) shows the system operating equivalently to, or
+  better than, the Phase 0 baseline
+- Documentation (Section 10) is updated and stored durably, including the
+  previously-missing architecture/integration documentation this project produced
+  as a byproduct
+- A written project retrospective exists, capturing what was harder or easier than
+  expected, for whoever plans the NEXT SevOne upgrade
